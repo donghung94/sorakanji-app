@@ -26,6 +26,8 @@
 	<true/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>SoraKanji cần micro để ghi âm giọng của bạn khi luyện Shadowing và chấm điểm phát âm.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>SoraKanji dùng nhận diện giọng nói để nghe và chấm điểm phát âm tiếng Nhật của bạn khi luyện Shadowing.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

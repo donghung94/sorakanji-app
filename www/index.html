@@ -1247,8 +1247,10 @@
 
   /* ---------- Shadowing video bài 2 (Shorts dọc, kênh OkkeiJapanese): 4 tab
      Phụ đề / Shadowing / Chính tả / Điền từ dưới video; giữ tông SoraKanji ---------- */
-  .sv2-videowrap{aspect-ratio:9/16; width:min(100%, 320px); margin:0 auto;}
-  /* Bài video nằm ngang 16:9 (bài hát Marigold): cùng khung sv2, chỉ đổi tỉ lệ */
+  /* Khung video LUÔN nằm ngang 16:9 kiểu Miraa — kể cả video dọc (Shorts):
+     trình phát YouTube tự chèn viền đen 2 bên, khung không còn chiếm cả màn
+     hình (user yêu cầu 2026-11-13). Class .wide giữ lại cho tương thích. */
+  .sv2-videowrap{aspect-ratio:16/9; width:100%;}
   .sv2-videowrap.wide{aspect-ratio:16/9; width:100%;}
   .sv2-seek{flex:1; min-width:0; -webkit-appearance:none; appearance:none; height:4px; border-radius:99px; background:var(--line); outline:none; cursor:pointer;}
   .sv2-seek::-webkit-slider-thumb{-webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:var(--red); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); cursor:pointer;}
@@ -8067,7 +8069,56 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(!st.text || !scNorm(st.text)) return {msg: "Máy chưa nghe rõ bạn nói gì nên chưa chấm được điểm. Bạn nói to, rõ và gần micro hơn rồi ghi âm lại nhé — bản ghi âm vẫn nghe lại được bình thường."};
     return scEvaluate(refs, st.text) || {msg: "Máy chưa nghe rõ bạn nói gì nên chưa chấm được điểm. Bạn nói to, rõ và gần micro hơn rồi ghi âm lại nhé — bản ghi âm vẫn nghe lại được bình thường."};
   }
+  /* ----- Chấm điểm bằng nhận diện giọng nói NATIVE (Capacitor plugin) -----
+     WKWebView trên iOS KHÔNG có webkitSpeechRecognition (chỉ Safari mới có),
+     nên trong app đã cài, scBegin() bản web luôn trả {supported:false} và
+     không bao giờ có điểm. Code native của plugin
+     @capacitor-community/speech-recognition (SFSpeechRecognizer của iOS) được
+     nhúng thẳng vào target App (SpeechRecognitionPlugin.swift/.m — plugin này
+     chỉ có CocoaPods, project dùng SPM nên không tích hợp qua pod được). Phía
+     JS gọi thẳng qua cầu nối Capacitor bằng registerPlugin (không có bundler
+     nên không nạp được file JS của plugin). Chạy song song với MediaRecorder
+     (ghi âm để nghe lại) — cả hai cùng dùng micro. */
+  function scNativeSR(){
+    try{
+      if(window.Capacitor && window.Capacitor.registerPlugin && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())
+        return window.Capacitor.registerPlugin("SpeechRecognition");
+    }catch(_){}
+    return null;
+  }
+  function scBeginNative(){
+    var SR = scNativeSR();
+    var st = {supported: true, native: true, text: "", err: null, active: true, ended: false, restarts: 0, cb: null, _sr: SR, _lis: null, _started: false};
+    if(!SR){ st.supported = false; return st; }
+    /* Bất đồng bộ: kiểm tra khả dụng → xin quyền → bắt đầu nghe. Đối tượng st
+       trả về ngay để khớp giao diện sync của scBegin; lỗi (nếu có) ghi vào
+       st.err để scResultFor hiện đúng thông báo khi dừng ghi âm. partialResults
+       của plugin trả toàn bộ câu nghe được tới thời điểm đó nên GHI ĐÈ chứ
+       không nối chuỗi như web SpeechRecognition. */
+    SR.available().then(function(r){
+      if(!r || !r.available){ st.err = "unsupported"; st.supported = false; return null; }
+      return SR.requestPermissions();
+    }).then(function(p){
+      if(!p) return null;
+      if(p.speechRecognition !== "granted"){ st.err = "not-allowed"; st.active = false; return null; }
+      return SR.addListener("partialResults", function(data){
+        if(data && data.matches && data.matches[0]) st.text = data.matches[0];
+      }).then(function(h){
+        st._lis = h;
+        if(!st.active) return null; /* đã dừng trước khi kịp bắt đầu nghe */
+        return SR.start({language: "ja-JP", partialResults: true, popup: false});
+      });
+    }).then(function(){
+      if(st.active) st._started = true;
+      else if(st._sr){ try{ st._sr.stop(); }catch(_){} }
+    }).catch(function(e){
+      if(!st.err) st.err = (e && e.message && /denied|not-allowed/i.test(e.message)) ? "not-allowed" : "unknown";
+      st.active = false;
+    });
+    return st;
+  }
   function scBegin(){
+    if(scNativeSR()) return scBeginNative();
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if(!SR) return {supported: false};
     var rec;
@@ -8099,6 +8150,20 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function scStop(st, cb){
     if(!st || !st.supported){ if(cb) cb(st); return; }
+    if(st.native){
+      st.active = false;
+      var called = false;
+      var done = function(){ if(called) return; called = true; if(cb) cb(st); };
+      setTimeout(done, 2500);
+      try{
+        Promise.resolve(st._sr ? st._sr.stop() : null).catch(function(){}).then(function(){
+          if(st._lis){ try{ st._lis.remove(); }catch(_){} st._lis = null; }
+          st.ended = true;
+          done();
+        });
+      }catch(_){ done(); }
+      return;
+    }
     st.active = false;
     if(st.ended){ if(cb) cb(st); return; }
     st.cb = function(){ if(cb) cb(st); };
@@ -8107,6 +8172,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function scAbort(st){
     if(!st || !st.supported) return;
+    if(st.native){
+      st.active = false; st.cb = null;
+      try{ if(st._sr) st._sr.stop(); }catch(_){}
+      try{ if(st._lis) st._lis.remove(); }catch(_){}
+      st._lis = null;
+      return;
+    }
     st.active = false; st.cb = null;
     try{ if(st.rec.abort) st.rec.abort(); else st.rec.stop(); }catch(_){}
   }
@@ -10060,7 +10132,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.getElementById("sv2HeadSub").textContent = d.headSub;
     document.getElementById("sv2SrcNote").textContent = d.srcNote;
     var wrap = document.getElementById("sv2VideoWrap");
-    /* Video nằm ngang 16:9 (bài hát) dùng khung rộng; Shorts dọc giữ khung 9/16 */
+    /* Khung video luôn 16:9 (kể cả Shorts dọc) — class .wide chỉ còn để tương thích */
     wrap.classList.toggle("wide", !!d.wide);
     wrap.innerHTML = '<button class="sv-facade" type="button" id="sv2Facade" aria-label="' + svEsc(d.facadeLabel) + '">' +
       (d.facadeImg ? '<img src="' + svEsc(d.facadeImg) + '" alt="' + svEsc(d.facadeAlt) + '">' : "") +

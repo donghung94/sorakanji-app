@@ -1132,6 +1132,22 @@
   .sv-card-chan{display:block; font-size:12px; color:var(--ink-2); margin:0 10px 2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .sv-card-stats{display:block; font-size:12px; color:var(--ink-2); margin:0 10px;}
   .sv-empty{font-size:13px; color:var(--ink-2); line-height:1.55; margin:4px 0 16px; padding:14px 12px; background:var(--card); border:1px dashed var(--line); border-radius:12px; text-align:center;}
+  /* Thẻ "Xem thêm" cuối hàng lướt ngang (chỉ hiện khi chuỗi có hơn 4 video) */
+  .sv-more{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:8px; background:var(--red-soft); border-color:var(--red);}
+  .sv-more-t{font-size:14px; font-weight:800; color:var(--red);}
+  .sv-more-n{font-size:12px; color:var(--ink-2);}
+  /* Trang "xem tất cả video của 1 chuỗi": danh sách dọc, thumb trái + thông tin phải */
+  .sv-all-entry{
+    width:100%; display:flex; gap:12px; align-items:center; text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:10px; margin-bottom:10px;
+  }
+  .sv-all-entry:active{border-color:var(--red);}
+  .sv-all-thumb{position:relative; flex:0 0 118px; aspect-ratio:16/9; background:#14141c; border-radius:9px; overflow:hidden;}
+  .sv-all-thumb img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+  .sv-all-meta{flex:1 1 auto; min-width:0;}
+  .sv-all-title{display:block; margin:0 0 3px; font-size:14.5px; font-weight:700; line-height:1.4;}
+  .sv-all-chan{display:block; font-size:12.5px; color:var(--ink-2); line-height:1.5;}
+  .sv-all-stats{display:block; font-size:12.5px; color:var(--ink-2); line-height:1.5;}
   /* Ô dán link YouTube tự tạo bài (trong tab "Video tôi tạo") */
   .svu-box{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:12px; margin-bottom:12px;}
   .svu-label{display:block; font-size:13.5px; font-weight:700; line-height:1.45; margin-bottom:8px;}
@@ -3378,9 +3394,6 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
             <div class="sv-catpanel" id="svCat-daily" hidden></div>
             <div class="sv-catpanel" id="svCat-jlpt" hidden></div>
           </div>
-          <button class="setrow" id="listenGoShadow">
-            <span class="r1"><h3>Shadowing · 8 câu mẫu Minna</h3><span class="cnt">MỞ ›</span></span>
-          </button>
           <div class="wv-endpad" aria-hidden="true"></div>
         </div>
         <div id="svPanelMine" hidden>
@@ -3395,6 +3408,20 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <div id="svMyRows"></div>
           <div class="wv-endpad" aria-hidden="true"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- ============ SHADOWING BẰNG VIDEO: XEM TẤT CẢ VIDEO CỦA 1 CHUỖI ============ -->
+    <div class="overlay front" id="svAllOverlay" aria-hidden="true">
+      <div class="detailhead">
+        <button class="iconbtn" id="closeSvAll" aria-label="Quay lại — về trang Luyện nghe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
+        </button>
+        <div><h2 id="svAllTitle">Video</h2></div>
+      </div>
+      <div class="detailbody">
+        <div id="svAllList"></div>
+        <div class="wv-endpad" aria-hidden="true"></div>
       </div>
     </div>
 
@@ -8737,9 +8764,6 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
 
   document.getElementById("closeListen").addEventListener("click", function(){ hideOv(listenOverlay); });
   document.getElementById("closeRead").addEventListener("click", function(){ hideOv(readOverlay); });
-  document.getElementById("listenGoShadow").addEventListener("click", function(){
-    hideOv(listenOverlay); shRender(); showOv(shadowOverlay);
-  });
   lsRenderLevels();
 
   /* ---------- Shadowing bằng video (bản thử 1 bài): YouTube nhúng + phụ đề đồng bộ ----------
@@ -8801,6 +8825,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   /* 2 tab trên cùng (Video có sẵn / Video tôi tạo) + 4 tab thể loại
      Podcast / Anime / Đời thường / JLPT + hàng video lướt ngang kiểu app mẫu.
      Mỗi thẻ: thumb 16:9 + thời lượng + nhãn cấp + tên + kênh + lượt xem/số câu.
+     Mỗi hàng chỉ hiện tối đa 4 thẻ; chuỗi có hơn 4 video thì khung cuối là thẻ
+     "Xem thêm" dẫn tới trang danh sách tất cả video của chuỗi đó.
      Lượt xem = số lần mở bài trên máy này (localStorage "sk_sv_plays");
      số câu lấy từ dữ liệu bài thật, không bịa. Video user tự tạo lưu danh sách
      (chỉ videoId + thông tin hiển thị) ở localStorage "sk_sv_mine"; nội dung
@@ -8842,15 +8868,35 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       '<span class="sv-card-stats">' + svEsc(stats) + '</span>' +
     '</button>';
   }
-  function svRowHTML(series, videos){
-    var cards = videos.map(function(v){ return svCardHTML(v, svPlaysGet(v.id)); }).join("");
+  /* Hàng lướt ngang chỉ hiện tối đa 4 thẻ video; chuỗi có hơn 4 video thì
+     khung cuối là thẻ "Xem thêm" dẫn tới trang danh sách tất cả video. */
+  var SV_ROW_MAX = 4;
+  function svMoreHTML(allKey, total){
+    var attrs = (allKey === "mine")
+      ? 'data-all-mine="1"'
+      : 'data-all-cat="' + svEsc(allKey.cat) + '" data-all-idx="' + allKey.idx + '"';
+    return '<button class="sv-card sv-more" type="button" ' + attrs + ' aria-label="Xem thêm video">' +
+      '<span class="sv-more-t">Xem thêm ›</span>' +
+      '<span class="sv-more-n">' + total + ' video</span>' +
+    '</button>';
+  }
+  function svRowHTML(series, videos, allKey){
+    var shown = videos.slice(0, SV_ROW_MAX);
+    var cards = shown.map(function(v){ return svCardHTML(v, svPlaysGet(v.id)); }).join("");
+    if(videos.length > SV_ROW_MAX) cards += svMoreHTML(allKey, videos.length);
     return '<div class="sv-row"><div class="sv-rowhead"><h4>' + svEsc(series) + '</h4></div>' +
       '<div class="sv-hscroll">' + cards + '</div></div>';
   }
   function svBindCards(root){
     if(!root) return;
-    root.querySelectorAll(".sv-card").forEach(function(card){
+    root.querySelectorAll(".sv-card:not(.sv-more)").forEach(function(card){
       card.addEventListener("click", function(){ svOpenCard(card.getAttribute("data-vid")); });
+    });
+    root.querySelectorAll(".sv-more").forEach(function(more){
+      more.addEventListener("click", function(){
+        if(more.getAttribute("data-all-mine")){ svOpenAllMine(); return; }
+        svOpenAllSeries(more.getAttribute("data-all-cat"), parseInt(more.getAttribute("data-all-idx"), 10));
+      });
     });
   }
   function svOpenCard(id){
@@ -8869,9 +8915,16 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         panel.innerHTML = '<p class="sv-empty">Chưa có video ' + svEsc(SV_CAT_LABEL[cat]) + ' — sắp có.</p>';
         return;
       }
-      panel.innerHTML = rows.map(function(r){ return svRowHTML(r.series, r.videos); }).join("");
+      panel.innerHTML = rows.map(function(r, ri){ return svRowHTML(r.series, r.videos, {cat: cat, idx: ri}); }).join("");
     });
     svBindCards(document.getElementById("svCatPanels"));
+  }
+  /* Video user lưu chỉ có videoId + thông tin hiển thị — dựng lại dạng thẻ video. */
+  function svMineToCard(v){
+    return {id: v.id, name: v.title, channel: "Video của bạn", level: "",
+      lines: v.lines, dur: v.dur,
+      thumb: "https://i.ytimg.com/vi/" + v.id + "/hqdefault.jpg",
+      alt: "Ảnh xem trước video: " + v.title};
   }
   function svRenderMine(){
     var box = document.getElementById("svMyRows");
@@ -8881,14 +8934,48 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       box.innerHTML = '<p class="sv-empty">Chưa có video nào. Dán link YouTube ở trên để tạo bài shadowing đầu tiên của bạn.</p>';
       return;
     }
-    var cards = mine.map(function(v){
-      return svCardHTML({id: v.id, name: v.title, channel: "Video của bạn", level: "",
-        lines: v.lines, dur: v.dur,
-        thumb: "https://i.ytimg.com/vi/" + v.id + "/hqdefault.jpg",
-        alt: "Ảnh xem trước video: " + v.title}, svPlaysGet(v.id));
+    var shown = mine.slice(0, SV_ROW_MAX);
+    var cards = shown.map(function(v){
+      return svCardHTML(svMineToCard(v), svPlaysGet(v.id));
     }).join("");
+    if(mine.length > SV_ROW_MAX) cards += svMoreHTML("mine", mine.length);
     box.innerHTML = '<div class="sv-row"><div class="sv-hscroll">' + cards + '</div></div>';
     svBindCards(box);
+  }
+  /* Trang "xem tất cả video của 1 chuỗi": danh sách dọc đầy đủ. */
+  function svAllEntryHTML(v, plays){
+    var stats = (plays > 0 ? plays + " lượt xem · " : "") + v.lines + " câu";
+    return '<button class="sv-all-entry" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
+      '<span class="sv-all-thumb">' +
+        '<img src="' + svEsc(v.thumb) + '" alt="' + svEsc(v.alt || ("Ảnh xem trước video: " + v.name)) + '" loading="lazy">' +
+        (v.level ? '<span class="sv-card-lv">' + svEsc(v.level) + '</span>' : '') +
+        '<span class="sv-card-dur">' + svEsc(v.dur) + '</span>' +
+      '</span>' +
+      '<span class="sv-all-meta">' +
+        '<span class="sv-all-title">' + svEsc(v.name) + '</span>' +
+        '<span class="sv-all-chan">' + svEsc(v.channel) + '</span>' +
+        '<span class="sv-all-stats">' + svEsc(stats) + '</span>' +
+      '</span>' +
+    '</button>';
+  }
+  function svOpenAllList(title, videos){
+    document.getElementById("svAllTitle").textContent = title;
+    var box = document.getElementById("svAllList");
+    box.innerHTML = videos.map(function(v){ return svAllEntryHTML(v, svPlaysGet(v.id)); }).join("");
+    box.querySelectorAll(".sv-all-entry").forEach(function(entry){
+      entry.addEventListener("click", function(){ svOpenCard(entry.getAttribute("data-vid")); });
+    });
+    hideOv(listenOverlay);
+    showOv(document.getElementById("svAllOverlay"));
+  }
+  function svOpenAllSeries(cat, idx){
+    var groups = svGroupByCat(SV_VIDEOS);
+    var row = groups[cat] && groups[cat][idx];
+    if(!row) return;
+    svOpenAllList(row.series, row.videos);
+  }
+  function svOpenAllMine(){
+    svOpenAllList("Video tôi tạo", svMineLoad().map(svMineToCard));
   }
   function svSetTopTab(tab){
     svTopTab = tab;
@@ -8919,6 +9006,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.getElementById("svTopMine").addEventListener("click", function(){ svSetTopTab("mine"); });
     document.querySelectorAll(".sv-cattab").forEach(function(b){
       b.addEventListener("click", function(){ svSetCat(b.getAttribute("data-cat")); });
+    });
+    document.getElementById("closeSvAll").addEventListener("click", function(){
+      hideOv(document.getElementById("svAllOverlay"));
+      showOv(listenOverlay);
     });
   }
   /* Mở bài user tạo ở phiên trước: nội dung nằm trong cache server theo videoId

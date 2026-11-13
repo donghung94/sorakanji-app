@@ -1037,12 +1037,13 @@
      Ô của cấp đang chọn mang class .on (viền đỏ, nền đỏ nhạt, chữ cấp đỏ). */
   .ls-lvgrid{display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:2px;}
   .ls-lvtile{
-    background:var(--card); border:1.5px solid var(--line); border-radius:11px; padding:9px 2px 8px;
+    background:var(--card); border:1.5px solid var(--line); border-radius:11px; padding:7px 2px 6px;
     font-family:inherit; color:var(--ink); cursor:pointer; text-align:center;
-    transition:transform .12s, border-color .12s, background .12s;
+    box-shadow:0 2px 5px rgba(20,20,28,.10);
+    transition:transform .12s, border-color .12s, background .12s, box-shadow .12s;
   }
-  .ls-lvtile b{display:block; font-size:16px; font-weight:800; line-height:1.1;}
-  .ls-lvtile:active{transform:scale(.96); border-color:var(--red); background:var(--red-soft);}
+  .ls-lvtile b{display:block; font-size:14.5px; font-weight:800; line-height:1.1;}
+  .ls-lvtile:active{transform:scale(.96); border-color:var(--red); background:var(--red-soft); box-shadow:none;}
   .ls-lvtile.on{border-color:var(--red); background:var(--red-soft);}
   .ls-lvtile.on b{color:var(--red);}
 
@@ -1091,36 +1092,47 @@
 
   /* ---------- Shadowing bằng video (bản thử): video YouTube + phụ đề chạy đồng bộ + bấm câu xem giải thích ---------- */
   #shadowVideoOverlay{z-index:59;}
-  /* Danh sách video: hàng ngang — thumb nhỏ bên trái, tiêu đề + mô tả bên phải.
-     Mỗi trang 5 video, video mới nhất ở đầu trang 1; phân trang ở #svPager. */
-  .sv-entry{
-    width:100%; display:flex; gap:12px; align-items:center; text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);
-    background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:10px; margin-bottom:10px;
+  /* ---------- Luyện nghe: 2 tab Video có sẵn / Video tôi tạo + 4 tab thể loại + hàng video lướt ngang ---------- */
+  .sv-toptabs{display:flex; gap:8px; margin:2px 0 14px;}
+  .sv-toptab{
+    flex:1; padding:10px 4px; border:1.5px solid var(--line); border-radius:12px;
+    background:var(--card); color:var(--ink); font-family:inherit; font-size:15px; font-weight:800;
+    cursor:pointer; box-shadow:0 2px 5px rgba(20,20,28,.08);
+    transition:transform .12s, border-color .12s, background .12s;
   }
-  .sv-entry:active{border-color:var(--red);}
-  .sv-thumb{position:relative; flex:0 0 118px; aspect-ratio:16/9; background:#14141c; border-radius:9px; overflow:hidden;}
-  .sv-thumb img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
-  .sv-thumb .sv-play{
-    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:36px; height:26px;
-    background:var(--red); border-radius:7px; display:flex; align-items:center; justify-content:center;
-    box-shadow:0 4px 12px rgba(0,0,0,.35);
+  .sv-toptab.on{border-color:var(--red); background:var(--red-soft); color:var(--red);}
+  .sv-toptab:active{transform:scale(.97);}
+  #svPanelReady[hidden], #svPanelMine[hidden], .sv-catpanel[hidden]{display:none;}
+  .sv-cattabs{display:flex; gap:6px; margin:0 0 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+  .sv-cattabs::-webkit-scrollbar{display:none;}
+  .sv-cattab{
+    flex:0 0 auto; padding:7px 14px; border:1.5px solid var(--line); border-radius:999px;
+    background:var(--card); color:var(--ink); font-family:inherit; font-size:13.5px; font-weight:700;
+    cursor:pointer; box-shadow:0 1.5px 4px rgba(20,20,28,.07);
+    transition:transform .12s, border-color .12s, background .12s;
   }
-  .sv-thumb .sv-play svg{width:13px; height:13px; color:#fff;}
-  .sv-thumb .sv-dur{position:absolute; right:5px; bottom:5px; background:rgba(0,0,0,.78); color:#fff; font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:5px;}
-  .sv-entry .sv-meta{flex:1 1 auto; min-width:0;}
-  .sv-entry .sv-meta h3{margin:0 0 3px; font-size:14.5px; font-weight:700; line-height:1.4;}
-  .sv-entry .sv-meta p{margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.5;}
-  .sv-pager{display:flex; align-items:center; justify-content:center; gap:6px; margin:2px 0 14px; flex-wrap:wrap;}
-  .sv-pager:empty{display:none;}
-  .sv-pgbtn{
-    min-width:34px; height:34px; padding:0 9px; border:1px solid var(--line); border-radius:9px;
-    background:var(--card); color:var(--ink); font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer;
-    display:inline-flex; align-items:center; justify-content:center;
+  .sv-cattab.on{border-color:var(--red); background:var(--red); color:#fff;}
+  .sv-cattab:active{transform:scale(.96);}
+  .sv-row{margin-bottom:16px;}
+  .sv-rowhead{margin:0 0 8px;}
+  .sv-rowhead h4{margin:0; font-size:15px; font-weight:800;}
+  .sv-hscroll{display:flex; gap:10px; overflow-x:auto; padding:2px 2px 8px; -webkit-overflow-scrolling:touch; scroll-snap-type:x mandatory; scrollbar-width:none;}
+  .sv-hscroll::-webkit-scrollbar{display:none;}
+  .sv-card{
+    flex:0 0 168px; scroll-snap-align:start; text-align:left; cursor:pointer;
+    font-family:inherit; color:var(--ink); background:var(--card);
+    border:1px solid var(--line); border-radius:12px; padding:0 0 8px; overflow:hidden;
   }
-  .sv-pgbtn.on{background:var(--red); border-color:var(--red); color:#fff;}
-  .sv-pgbtn:disabled{opacity:.4; cursor:default;}
-  .sv-pgdots{font-size:13.5px; font-weight:700; color:var(--ink-2); padding:0 2px;}
-  /* Ô dán link YouTube tự tạo bài (đầu danh sách Shadowing bằng video) */
+  .sv-card:active{border-color:var(--red);}
+  .sv-card-thumb{position:relative; display:block; aspect-ratio:16/9; background:#14141c;}
+  .sv-card-thumb img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+  .sv-card-dur{position:absolute; right:5px; bottom:5px; background:rgba(0,0,0,.78); color:#fff; font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:5px;}
+  .sv-card-lv{position:absolute; left:5px; top:5px; background:var(--red); color:#fff; font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:5px;}
+  .sv-card-title{display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:2.7em; font-size:13.5px; font-weight:700; line-height:1.35; margin:8px 10px 2px;}
+  .sv-card-chan{display:block; font-size:12px; color:var(--ink-2); margin:0 10px 2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .sv-card-stats{display:block; font-size:12px; color:var(--ink-2); margin:0 10px;}
+  .sv-empty{font-size:13px; color:var(--ink-2); line-height:1.55; margin:4px 0 16px; padding:14px 12px; background:var(--card); border:1px dashed var(--line); border-radius:12px; text-align:center;}
+  /* Ô dán link YouTube tự tạo bài (trong tab "Video tôi tạo") */
   .svu-box{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:12px; margin-bottom:12px;}
   .svu-label{display:block; font-size:13.5px; font-weight:700; line-height:1.45; margin-bottom:8px;}
   .svu-row{display:flex; gap:8px;}
@@ -1138,7 +1150,6 @@
   .svu-msg{margin:9px 2px 0; font-size:12.5px; line-height:1.55; color:var(--ink-2); display:none;}
   .svu-msg.show{display:block;}
   .svu-msg.err{color:var(--red); font-weight:600;}
-  .sv-newtag{display:inline-block; font-size:10.5px; font-weight:800; letter-spacing:.06em; padding:3px 8px; border-radius:999px; background:var(--red); color:#fff; vertical-align:2px; margin-left:7px;}
   .sv-videowrap{position:relative; aspect-ratio:16/9; background:#000; border-radius:14px; overflow:hidden;}
   /* Lớp phủ trong suốt trên khung video: bấm vào video chỉ phát/dừng qua nút của app,
      iframe YouTube không nhận click trực tiếp nên không bị kéo ra ngoài YouTube */
@@ -3344,30 +3355,46 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="iconbtn" id="closeListen" aria-label="Quay lại — đóng Luyện nghe">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5L8 12l6.5 6.5"/></svg>
         </button>
-        <div><h2>Luyện nghe</h2><span>Chọn cấp độ — mỗi cấp có bài nghe Part 3 và Shadowing theo hội thoại</span></div>
+        <div><h2>Luyện nghe</h2></div>
       </div>
       <div class="detailbody">
-        <h3 class="wvsec">Luyện nghe theo cấp JLPT</h3>
-        <p class="wvinfo">Cả 5 cấp N5–N1 đều đã có nội dung: 149 hội thoại Part 3 có file nghe giọng đã duyệt, kèm Shadowing luyện từng câu trong chính các hội thoại đó.</p>
-        <div id="lsLevels" class="ls-lvgrid"></div>
-        <h3 class="wvsec">Shadowing bằng video</h3>
-        <p class="wvinfo">Xem video, phụ đề chạy theo ở dưới, bấm vào từng câu để xem giải thích. Video mới nhất nằm ở đầu danh sách, mỗi trang 5 video.</p>
-        <div class="svu-box">
-          <label class="svu-label" for="svuInput">Dán link YouTube — tự tạo bài shadowing từ video bạn chọn</label>
-          <div class="svu-row">
-            <input class="svu-input" id="svuInput" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Dán link YouTube vào đây…">
-            <button class="svu-btn" id="svuBtn" type="button">Tạo bài học</button>
-          </div>
-          <p class="svu-msg" id="svuMsg" role="status" aria-live="polite"></p>
+        <div class="sv-toptabs" role="tablist" aria-label="Video shadowing">
+          <button class="sv-toptab on" id="svTopReady" type="button" role="tab" aria-selected="true">Video có sẵn</button>
+          <button class="sv-toptab" id="svTopMine" type="button" role="tab" aria-selected="false">Video tôi tạo</button>
         </div>
-        <div id="svList"></div>
-        <nav class="sv-pager" id="svPager" aria-label="Chuyển trang danh sách video shadowing"></nav>
-        <h2 class="secttl">Phần nghe đã có sẵn</h2>
-        <button class="setrow" id="listenGoShadow">
-          <span class="r1"><h3>Shadowing</h3><span class="cnt">MỞ ›</span></span>
-          <p>8 câu mẫu — nghe câu mẫu, nhắc lại theo rồi ghi âm nghe lại để so sánh.</p>
-        </button>
-                <div class="wv-endpad" aria-hidden="true"></div>
+        <div id="svPanelReady">
+          <h3 class="wvsec">Luyện nghe theo đề JLPT</h3>
+          <div id="lsLevels" class="ls-lvgrid"></div>
+          <h3 class="wvsec">Shadowing bằng video</h3>
+          <div class="sv-cattabs" role="tablist" aria-label="Thể loại video shadowing">
+            <button class="sv-cattab on" type="button" role="tab" data-cat="podcast" aria-selected="true">Podcast</button>
+            <button class="sv-cattab" type="button" role="tab" data-cat="anime" aria-selected="false">Anime</button>
+            <button class="sv-cattab" type="button" role="tab" data-cat="daily" aria-selected="false">Đời thường</button>
+            <button class="sv-cattab" type="button" role="tab" data-cat="jlpt" aria-selected="false">JLPT</button>
+          </div>
+          <div id="svCatPanels">
+            <div class="sv-catpanel" id="svCat-podcast"></div>
+            <div class="sv-catpanel" id="svCat-anime" hidden></div>
+            <div class="sv-catpanel" id="svCat-daily" hidden></div>
+            <div class="sv-catpanel" id="svCat-jlpt" hidden></div>
+          </div>
+          <button class="setrow" id="listenGoShadow">
+            <span class="r1"><h3>Shadowing · 8 câu mẫu Minna</h3><span class="cnt">MỞ ›</span></span>
+          </button>
+          <div class="wv-endpad" aria-hidden="true"></div>
+        </div>
+        <div id="svPanelMine" hidden>
+          <div class="svu-box">
+            <label class="svu-label" for="svuInput">Dán link YouTube — tự tạo bài shadowing từ video bạn chọn</label>
+            <div class="svu-row">
+              <input class="svu-input" id="svuInput" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Dán link YouTube vào đây…">
+              <button class="svu-btn" id="svuBtn" type="button">Tạo bài học</button>
+            </div>
+            <p class="svu-msg" id="svuMsg" role="status" aria-live="polite"></p>
+          </div>
+          <div id="svMyRows"></div>
+          <div class="wv-endpad" aria-hidden="true"></div>
+        </div>
       </div>
     </div>
 
@@ -8332,7 +8359,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var LS_GRID_LEVELS = ["N5", "N4", "N3", "N2", "N1"];
   var LS_COUNTS = {N5: 24, N4: 28, N3: 28, N2: 32, N1: 37};
   var LS_TYPES = {1:"Dạng 1 · Chọn hình", 2:"Dạng 2 · Chọn đáp án", 3:"Dạng 3 · Chọn lời đáp", 4:"Dạng 4 · Chọn câu trả lời", 5:"Dạng 5 · Thảo luận"};
-  var lsLevel = "N5";
+  var lsLevel = null; /* Chưa chọn cấp nào khi mới mở trang — các ô N5–N1 đều trắng, bấm vào ô nào ô đó mới đỏ. */
   var lsData = {};       /* cấp -> mảng hội thoại (sau khi nạp) */
   var lsLoad = {};       /* cấp -> {state: 0 chưa nạp · 1 đang nạp · 2 xong · 3 lỗi, queue: []} */
   var lsAnswered = {};   /* khóa "N4:3" -> đáp án đã chọn trong phiên */
@@ -8741,24 +8768,27 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   var svAutoPause = false, svAutoP = -1, svRates = [1, 1.25, 1.5, 0.75, 0.5], svRateIdx = 0;
   var svSegs = [], svKaraKey = "", svLastT = 0;
   function svEsc(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-  /* Danh sách video shadowing — MỚI NHẤT Ở ĐẦU mảng (video mới thêm lên đầu,
-     tự xuống trang sau khi quá 5 video/trang). thumb là ảnh bìa lưu trong app. */
+  /* Video shadowing có sẵn — mỗi video thuộc 1 thể loại (cat) + 1 chuỗi (series).
+     Thêm video làm tay: thêm 1 entry với đúng cat + series là tự hiện thành thẻ
+     trong hàng lướt ngang của thể loại đó (series mới = hàng mới). lines = số câu
+     phụ đề thật (bài 2 có 24 dòng SV2_SUBS nhưng 1 dòng trống nên tính 23 câu).
+     Thumb Marigold dùng ảnh YouTube vì ảnh bìa local chưa có trên repo. */
   var SV_VIDEOS = [
-    {id: "PFvoDVgrroA", title: "Bài hát · マリーゴールド (Marigold)", tag: "MỚI",
-     meta: "Video 5:22 của kênh Tiếng Nhật Thực Chiến · 50 câu lời bài hát có phụ đề Nhật–Việt + romaji · 4 tab luyện: Phụ đề / Shadowing (có chấm điểm phát âm) / Chính tả / Điền từ.",
-     dur: "5:22", thumb: "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/sv-thumb-marigold.jpg",
-     alt: "Ảnh xem trước video bài hát Marigold: bông cúc vạn thọ đỏ trên mặt nước"},
-    {id: "mKPRQF70PvA", title: "N5 · Easy N5 Japanese Podcast: đi Thụy Sĩ", tag: "MỚI",
-     meta: "Video 1 phút của kênh OkkeiJapanese · phụ đề đã sửa tay · 4 tab luyện: Phụ đề / Shadowing (có chấm điểm phát âm) / Chính tả / Điền từ.",
-     dur: "1:02", thumb: "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/sv-thumb-swiss-podcast.jpg",
+    {id: "PFvoDVgrroA", cat: "daily", series: "Bài hát tiếng Nhật", channel: "Tiếng Nhật Thực Chiến",
+     name: "マリーゴールド (Marigold)", level: "", lines: 50, dur: "5:22",
+     thumb: "https://i.ytimg.com/vi/PFvoDVgrroA/hqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát Marigold"},
+    {id: "mKPRQF70PvA", cat: "podcast", series: "Easy N5 Japanese Podcast", channel: "OkkeiJapanese",
+     name: "Easy N5 Japanese Podcast: đi Thụy Sĩ", level: "N5", lines: 23, dur: "1:02",
+     thumb: "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/sv-thumb-swiss-podcast.jpg",
      alt: "Ảnh xem trước video Easy N5 Japanese Podcast của kênh OkkeiJapanese"},
-    {id: "r_o5gRWkkaA", title: "N5 · Ở nhà ga: hỏi tàu đi Tokyo", tag: "THỬ",
-     meta: "Video 22 giây · 9 câu phụ đề · bấm câu để xem giải thích ngữ pháp và từ mới.",
-     dur: "0:22", thumb: "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/sv-thumb-tokyo-station.jpg",
+    {id: "r_o5gRWkkaA", cat: "daily", series: "Shadowing mẫu N5", channel: "Tiếng Nhật Thực Chiến",
+     name: "Ở nhà ga: hỏi tàu đi Tokyo", level: "N5", lines: 9, dur: "0:22",
+     thumb: "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/sv-thumb-tokyo-station.jpg",
      alt: "Ảnh xem trước video shadowing: hỏi tàu đi ga Tokyo ở nhà ga"}
   ];
-  var SV_PAGE_SIZE = 5, svListPage = 1;
   function svOpenLesson(){
+    svPlaysBump(SV_ID);
     hideOv(listenOverlay);
     svRenderLines();
     if(svCur < 0) svSetNow(0);
@@ -8767,67 +8797,150 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     svTimer = setInterval(svTick, 120);
     svStartKaraLoop();
   }
-  function svRenderList(){
-    var box = document.getElementById("svList");
-    var pager = document.getElementById("svPager");
-    if(!box || !pager) return;
-    var pages = Math.max(1, Math.ceil(SV_VIDEOS.length / SV_PAGE_SIZE));
-    if(svListPage > pages) svListPage = pages;
-    if(svListPage < 1) svListPage = 1;
-    box.innerHTML = "";
-    SV_VIDEOS.slice((svListPage - 1) * SV_PAGE_SIZE, svListPage * SV_PAGE_SIZE).forEach(function(v){
-      var b = document.createElement("button");
-      b.className = "sv-entry";
-      b.setAttribute("aria-label", "Mở video shadowing: " + v.title);
-      b.innerHTML =
-        '<span class="sv-thumb">' +
-          '<img src="' + svEsc(v.thumb) + '" alt="' + svEsc(v.alt) + '" loading="lazy">' +
-          '<span class="sv-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>' +
-          '<span class="sv-dur">' + svEsc(v.dur) + '</span>' +
-        '</span>' +
-        '<span class="sv-meta">' +
-          '<h3>' + svEsc(v.title) + (v.tag ? '<span class="sv-newtag">' + svEsc(v.tag) + '</span>' : '') + '</h3>' +
-          '<p>' + svEsc(v.meta) + '</p>' +
-        '</span>';
-      b.addEventListener("click", function(){
-        if(v.id === SV_ID) svOpenLesson();
-        else if(typeof SVU_DATA !== "undefined" && SVU_DATA[v.id]) svuActivate(SVU_DATA[v.id]);
-      });
-      box.appendChild(b);
+  /* ----- Luyện nghe: tab video + hàng lướt ngang ----- */
+  /* 2 tab trên cùng (Video có sẵn / Video tôi tạo) + 4 tab thể loại
+     Podcast / Anime / Đời thường / JLPT + hàng video lướt ngang kiểu app mẫu.
+     Mỗi thẻ: thumb 16:9 + thời lượng + nhãn cấp + tên + kênh + lượt xem/số câu.
+     Lượt xem = số lần mở bài trên máy này (localStorage "sk_sv_plays");
+     số câu lấy từ dữ liệu bài thật, không bịa. Video user tự tạo lưu danh sách
+     (chỉ videoId + thông tin hiển thị) ở localStorage "sk_sv_mine"; nội dung
+     bài nằm trong cache server theo videoId nên mở lại không cần tạo lại. */
+  var SV_CATS = ["podcast", "anime", "daily", "jlpt"];
+  var SV_CAT_LABEL = {podcast: "Podcast", anime: "Anime", daily: "Đời thường", jlpt: "JLPT"};
+  var svTopTab = "ready";
+  var svCat = "podcast";
+  function svPlaysLoad(){ try{ var p = JSON.parse(window.localStorage.getItem("sk_sv_plays") || "{}"); return (p && typeof p === "object") ? p : {}; }catch(_){ return {}; } }
+  function svPlaysGet(id){ var p = svPlaysLoad(); return p[id] || 0; }
+  function svPlaysBump(id){ try{ var p = svPlaysLoad(); p[id] = (p[id] || 0) + 1; window.localStorage.setItem("sk_sv_plays", JSON.stringify(p)); }catch(_){} }
+  function svMineLoad(){ try{ var m = JSON.parse(window.localStorage.getItem("sk_sv_mine") || "[]"); return Array.isArray(m) ? m : []; }catch(_){ return []; } }
+  function svMineSave(list){ try{ window.localStorage.setItem("sk_sv_mine", JSON.stringify(list)); }catch(_){} }
+  function svMineAdd(entry){ var m = svMineLoad().filter(function(x){ return x.id !== entry.id; }); m.unshift(entry); svMineSave(m); }
+  /* Nhóm video theo thể loại rồi theo chuỗi, giữ đúng thứ tự mảng gốc.
+     Thể loại lạ (gõ sai cat) thì bỏ qua để không hiện nhầm chỗ. */
+  function svGroupByCat(videos){
+    var out = {}; SV_CATS.forEach(function(c){ out[c] = []; });
+    videos.forEach(function(v){
+      if(!out[v.cat]) return;
+      var list = out[v.cat], row = null;
+      for(var i = 0; i < list.length; i++){ if(list[i].series === v.series){ row = list[i]; break; } }
+      if(!row){ row = {series: v.series, videos: []}; list.push(row); }
+      row.videos.push(v);
     });
-    pager.innerHTML = "";
-    if(pages <= 1) return;
-    function pgBtn(label, page, opts){
-      opts = opts || {};
-      var b = document.createElement("button");
-      b.className = "sv-pgbtn" + (opts.on ? " on" : "");
-      b.innerHTML = label;
-      if(opts.label) b.setAttribute("aria-label", opts.label);
-      if(opts.disabled){ b.disabled = true; }
-      else b.addEventListener("click", function(){ svListPage = page; svRenderList(); });
-      pager.appendChild(b);
-    }
-    pgBtn("«", svListPage - 1, {label: "Trang trước", disabled: svListPage <= 1});
-    /* Số trang: hiện hết nếu ≤7 trang; nhiều hơn thì rút gọn 1 … quanh trang hiện tại … trang cuối. */
-    var nums = [];
-    if(pages <= 7){ for(var i = 1; i <= pages; i++) nums.push(i); }
-    else{
-      nums = [1];
-      var lo = Math.max(2, svListPage - 1), hi = Math.min(pages - 1, svListPage + 1);
-      if(lo > 2) nums.push("…");
-      for(var j = lo; j <= hi; j++) nums.push(j);
-      if(hi < pages - 1) nums.push("…");
-      nums.push(pages);
-    }
-    nums.forEach(function(n){
-      if(n === "…"){
-        var d = document.createElement("span");
-        d.className = "sv-pgdots"; d.textContent = "…";
-        pager.appendChild(d);
-      } else pgBtn(String(n), n, {on: n === svListPage, label: "Trang " + n});
-    });
-    pgBtn("»", svListPage + 1, {label: "Trang sau", disabled: svListPage >= pages});
+    return out;
   }
+  /* 1 thẻ video — hàm thuần (nhận plays làm tham số) để test được bằng node. */
+  function svCardHTML(v, plays){
+    var stats = (plays > 0 ? plays + " lượt xem · " : "") + v.lines + " câu";
+    return '<button class="sv-card" type="button" data-vid="' + svEsc(v.id) + '" aria-label="Mở video shadowing: ' + svEsc(v.name) + '">' +
+      '<span class="sv-card-thumb">' +
+        '<img src="' + svEsc(v.thumb) + '" alt="' + svEsc(v.alt || ("Ảnh xem trước video: " + v.name)) + '" loading="lazy">' +
+        (v.level ? '<span class="sv-card-lv">' + svEsc(v.level) + '</span>' : '') +
+        '<span class="sv-card-dur">' + svEsc(v.dur) + '</span>' +
+      '</span>' +
+      '<span class="sv-card-title">' + svEsc(v.name) + '</span>' +
+      '<span class="sv-card-chan">' + svEsc(v.channel) + '</span>' +
+      '<span class="sv-card-stats">' + svEsc(stats) + '</span>' +
+    '</button>';
+  }
+  function svRowHTML(series, videos){
+    var cards = videos.map(function(v){ return svCardHTML(v, svPlaysGet(v.id)); }).join("");
+    return '<div class="sv-row"><div class="sv-rowhead"><h4>' + svEsc(series) + '</h4></div>' +
+      '<div class="sv-hscroll">' + cards + '</div></div>';
+  }
+  function svBindCards(root){
+    if(!root) return;
+    root.querySelectorAll(".sv-card").forEach(function(card){
+      card.addEventListener("click", function(){ svOpenCard(card.getAttribute("data-vid")); });
+    });
+  }
+  function svOpenCard(id){
+    if(id === SV_ID){ svOpenLesson(); return; }
+    if(typeof SVU_DATA !== "undefined" && SVU_DATA[id]){ svuActivate(SVU_DATA[id]); return; }
+    /* Bài user tạo ở phiên trước: chưa có trong SVU_DATA, tải lại từ cache server. */
+    svuOpenMine(id);
+  }
+  function svRenderRows(){
+    var groups = svGroupByCat(SV_VIDEOS);
+    SV_CATS.forEach(function(cat){
+      var panel = document.getElementById("svCat-" + cat);
+      if(!panel) return;
+      var rows = groups[cat];
+      if(!rows.length){
+        panel.innerHTML = '<p class="sv-empty">Chưa có video ' + svEsc(SV_CAT_LABEL[cat]) + ' — sắp có.</p>';
+        return;
+      }
+      panel.innerHTML = rows.map(function(r){ return svRowHTML(r.series, r.videos); }).join("");
+    });
+    svBindCards(document.getElementById("svCatPanels"));
+  }
+  function svRenderMine(){
+    var box = document.getElementById("svMyRows");
+    if(!box) return;
+    var mine = svMineLoad();
+    if(!mine.length){
+      box.innerHTML = '<p class="sv-empty">Chưa có video nào. Dán link YouTube ở trên để tạo bài shadowing đầu tiên của bạn.</p>';
+      return;
+    }
+    var cards = mine.map(function(v){
+      return svCardHTML({id: v.id, name: v.title, channel: "Video của bạn", level: "",
+        lines: v.lines, dur: v.dur,
+        thumb: "https://i.ytimg.com/vi/" + v.id + "/hqdefault.jpg",
+        alt: "Ảnh xem trước video: " + v.title}, svPlaysGet(v.id));
+    }).join("");
+    box.innerHTML = '<div class="sv-row"><div class="sv-hscroll">' + cards + '</div></div>';
+    svBindCards(box);
+  }
+  function svSetTopTab(tab){
+    svTopTab = tab;
+    var ready = tab === "ready";
+    var bR = document.getElementById("svTopReady"), bM = document.getElementById("svTopMine");
+    bR.classList.toggle("on", ready);
+    bR.setAttribute("aria-selected", ready ? "true" : "false");
+    bM.classList.toggle("on", !ready);
+    bM.setAttribute("aria-selected", !ready ? "true" : "false");
+    document.getElementById("svPanelReady").hidden = !ready;
+    document.getElementById("svPanelMine").hidden = ready;
+    if(ready) svRenderRows(); else svRenderMine();
+  }
+  function svSetCat(cat){
+    svCat = cat;
+    document.querySelectorAll(".sv-cattab").forEach(function(b){
+      var on = b.getAttribute("data-cat") === cat;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    SV_CATS.forEach(function(c){
+      var p = document.getElementById("svCat-" + c);
+      if(p) p.hidden = (c !== cat);
+    });
+  }
+  function svInitListenTabs(){
+    document.getElementById("svTopReady").addEventListener("click", function(){ svSetTopTab("ready"); });
+    document.getElementById("svTopMine").addEventListener("click", function(){ svSetTopTab("mine"); });
+    document.querySelectorAll(".sv-cattab").forEach(function(b){
+      b.addEventListener("click", function(){ svSetCat(b.getAttribute("data-cat")); });
+    });
+  }
+  /* Mở bài user tạo ở phiên trước: nội dung nằm trong cache server theo videoId
+     nên gọi lại function là có ngay, không tạo lại. */
+  function svuOpenMine(id){
+    var fn = svuGetFn();
+    if(!fn){ svuShowMsg(SVU_NOT_READY, true); return; }
+    svuShowMsg("Đang mở bài...", false);
+    fn({videoId: id}).then(function(res){
+      var lesson = res && res.data;
+      if(!lesson || !lesson.videoId || !lesson.lines || !lesson.lines.length)
+        throw {code: "functions/internal", message: "Không mở được bài này. Thử dán lại link của video."};
+      var d = svuBuildData(lesson);
+      SVU_DATA[d.id] = d;
+      svuShowMsg("", false);
+      svuActivate(d);
+    }).catch(function(err){
+      var msg = (err && err.message) || "Không mở được bài này. Thử dán lại link của video.";
+      svuShowMsg(msg, true);
+    });
+  }
+  /* ----- Hết tab video + hàng lướt ngang ----- */
   function svFmt(t){
     t = Math.max(0, Math.floor(t));
     return Math.floor(t / 60) + ":" + ("0" + (t % 60)).slice(-2);
@@ -9266,11 +9379,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     svCapUpdate();
     svKaraoke(svLastT);
   });
-  svRenderList();
+  svInitListenTabs();
+  svRenderRows();
+  svRenderMine();
   document.getElementById("closeShadowVideo").addEventListener("click", function(){
     if(svPlayer && svPlayer.pauseVideo) svPlayer.pauseVideo();
     if(svTimer){ clearInterval(svTimer); svTimer = null; }
-    hideOv(svOverlay); showOv(listenOverlay);
+    hideOv(svOverlay); svRenderRows(); showOv(listenOverlay);
   });
 
   /* ---------- Shadowing bằng video (bài 2): Easy N5 Japanese Podcast — kênh OkkeiJapanese ----------
@@ -10342,11 +10457,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     sv2Audio.pause();
     if(sv2Player && sv2Player.pauseVideo) sv2Player.pauseVideo();
     if(sv2Timer){ clearInterval(sv2Timer); sv2Timer = null; }
-    hideOv(sv2Overlay); showOv(listenOverlay);
+    hideOv(sv2Overlay); svRenderRows(); svRenderMine(); showOv(listenOverlay);
   });
 
   /* ---------- Dán link YouTube → tự tạo bài shadowing (bài của người học) ----------
-     Ô nhập nằm ở đầu mục "Shadowing bằng video" (trang Luyện nghe). Luồng:
+     Ô nhập nằm trong tab "Video tôi tạo" (trang Luyện nghe). Luồng:
      validate link ngay ở client theo đúng luật parse của backend
      (functions/src/videoId.js) → gọi Firebase callable makeLessonFromVideo
      (region asia-northeast1, project donghung-3208d) → nạp lesson JSON trả về
@@ -10452,7 +10567,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     headTitle: "Shadowing · Bài hát",
     headSub: "マリーゴールド - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
     srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video đăng ẩn trên kênh Tiếng Nhật Thực Chiến.",
-    facadeImg: "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/sv-thumb-marigold.jpg",
+    facadeImg: "https://i.ytimg.com/vi/PFvoDVgrroA/hqdefault.jpg",
     facadeAlt: "Ảnh xem trước video bài hát Marigold: bông cúc vạn thọ đỏ trên mặt nước",
     facadeLabel: "Phát video bài hát Marigold — học tiếng Nhật qua bài hát",
     wide: true
@@ -10475,6 +10590,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   /* Nạp 1 bài (bài 2 gốc hoặc bài tự tạo) vào player sv2* rồi mở bằng sv2OpenLesson() */
   function svuActivate(d){
+    svPlaysBump(d.id);
     SV2_ID = d.id; SV2_DUR = d.dur; SV2_SUBS = d.subs; SV2_WIN = d.win;
     SV2_PRACTICE = d.practice; SV2_FILL = d.fill;
     sv2StopRecIfAny();
@@ -10729,14 +10845,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         throw {code: "functions/internal", message: "Lỗi máy chủ khi xử lý video. Thử lại sau ít phút."};
       var d = svuBuildData(lesson);
       SVU_DATA[d.id] = d;
-      SV_VIDEOS.unshift({
-        id: d.id, title: d.listTitle, tag: "CỦA BẠN",
-        meta: d.listMeta, dur: svFmt(d.dur),
-        thumb: "https://i.ytimg.com/vi/" + d.id + "/hqdefault.jpg",
-        alt: "Ảnh xem trước video: " + d.listTitle
-      });
-      svListPage = 1;
-      svRenderList();
+      /* Lưu vào danh sách "Video tôi tạo" (chỉ videoId + thông tin hiển thị;
+         nội dung bài nằm trong cache server theo videoId). */
+      svMineAdd({id: d.id, title: d.listTitle, dur: svFmt(d.dur), lines: d.subs.length, createdAt: Date.now()});
+      svRenderMine();
       svuShowMsg("", false);
       svuActivate(d);
     }).catch(function(err){

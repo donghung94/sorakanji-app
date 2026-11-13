@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SoraKanji YouTube bridge</title>
+<!--
+  YouTube bridge for the SoraKanji native (Capacitor) app.
+
+  WHY: the native app runs on capacitor://localhost, which YouTube's IFrame
+  player rejects with error 153 ("Video player configuration error"). This
+  page runs on a real https origin (raw.githack.com), so YouTube accepts it.
+  The app embeds this page in an iframe and drives the player through
+  postMessage; the page reports back ready/state/time the same way.
+
+  Served from: https://raw.githack.com/donghung94/sorakanji-app/main/www/yt-bridge.html
+  Query params: v=VIDEO_ID, host=youtube|nocookie (default youtube),
+  autoplay=1 (play as soon as the player is ready).
+
+  Protocol (parent <-> bridge, postMessage, JSON objects):
+    parent -> bridge: {t:'load', v, host} {t:'play'} {t:'pause'}
+                      {t:'seek', s} {t:'rate', r} {t:'time'}
+    bridge -> parent: {t:'ready'} {t:'state', s} {t:'time', c, d}
+                      {t:'error', code}
+  Time updates are also pushed every 150ms while playing.
+-->
+<style>
+  html, body { margin: 0; padding: 0; background: #000; width: 100%; height: 100%; overflow: hidden; }
+  #p { width: 100%; height: 100%; }
+  #p iframe { width: 100%; height: 100%; border: 0; display: block; }
+</style>
+</head>
+<body>
+<div id="p"></div>
+<script>
+(function () {
+  var qs = new URLSearchParams(location.search);
+  var player = null, ready = false, timer = null, pendingLoad = null;
+
+  function post(m) { try { parent.postMessage(m, "*"); } catch (e) {} }
+
+  function sendTime() {
+    if (!player || !ready) return;
+    try { post({ t: "time", c: player.getCurrentTime() || 0, d: player.getDuration() || 0 }); } catch (e) {}
+  }
+  function startTimer() { if (!timer) timer = setInterval(sendTime, 150); }
+  function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
+
+  function create(vid, host) {
+    if (player && player.loadVideoById) { player.loadVideoById(vid); return; }
+    player = new YT.Player("p", {
+      host: host === "nocookie" ? "https://www.youtube-nocookie.com" : "https://www.youtube.com",
+      videoId: vid,
+      playerVars: {
+        playsinline: 1, rel: 0, modestbranding: 1,
+        origin: location.origin,
+        autoplay: qs.get("autoplay") === "1" ? 1 : 0
+      },
+      events: {
+        onReady: function (e) {
+          ready = true;
+          post({ t: "ready" });
+          if (qs.get("autoplay") === "1") { try { e.target.playVideo(); } catch (err) {} }
+        },
+        onStateChange: function (e) {
+          post({ t: "state", s: e.data });
+          if (e.data === 1) startTimer(); else { stopTimer(); sendTime(); }
+        },
+        onError: function (e) { post({ t: "error", code: e.data }); }
+      }
+    });
+  }
+
+  window.onYouTubeIframeAPIReady = function () {
+    if (pendingLoad) { create(pendingLoad.v, pendingLoad.host); pendingLoad = null; return; }
+    var v = qs.get("v");
+    if (v) create(v, qs.get("host") || "youtube");
+  };
+
+  window.addEventListener("message", function (ev) {
+    var m = ev.data;
+    if (!m || typeof m !== "object") return;
+    if (m.t === "load") {
+      if (window.YT && YT.Player) create(m.v, m.host);
+      else pendingLoad = { v: m.v, host: m.host };
+    }
+    else if (m.t === "play") { if (player && player.playVideo) player.playVideo(); }
+    else if (m.t === "pause") { if (player && player.pauseVideo) player.pauseVideo(); }
+    else if (m.t === "seek") { if (player && player.seekTo) { player.seekTo(m.s, true); sendTime(); } }
+    else if (m.t === "rate") { if (player && player.setPlaybackRate) player.setPlaybackRate(m.r); }
+    else if (m.t === "time") { sendTime(); }
+  });
+
+  var tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+})();
+</script>
+</body>
+</html>

@@ -5709,12 +5709,17 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     kdContent.querySelectorAll("[data-say]").forEach(function(b){
       b.addEventListener("click", function(){ speakJP(b.getAttribute("data-say"), 0.8); });
     });
-    /* Facade video: bấm thumbnail mới nạp iframe YouTube (nocookie + referrerpolicy + autoplay) */
+    /* Facade video: bấm thumbnail mới nạp iframe YouTube (nocookie + referrerpolicy + autoplay).
+       Bản native chạy qua cầu nối https (tránh lỗi 153 trên origin capacitor://). */
     var kdFacade = kdContent.querySelector(".kdfacade");
     if(kdFacade) kdFacade.addEventListener("click", function(){
       var vid = kdFacade.getAttribute("data-vid");
       var wrap = kdFacade.parentNode;
-      wrap.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + vid + '?autoplay=1&playsinline=1" title="Video Kanji qua câu chuyện" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+      if(isNativeApp()){
+        wrap.innerHTML = '<iframe src="' + YT_BRIDGE_URL + '?v=' + vid + '&autoplay=1" title="Video Kanji qua câu chuyện" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+      } else {
+        wrap.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + vid + '?autoplay=1&playsinline=1" title="Video Kanji qua câu chuyện" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+      }
     });
     var kdPlayBtn = document.getElementById("kdPlay");
     if(kdPlayBtn) kdPlayBtn.addEventListener("click", runStrokeAnim);
@@ -8981,12 +8986,73 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     if(svPlayer.playVideo) svPlayer.playVideo();
   }
+  /* NATIVE-ONLY: YouTube IFrame API lỗi 153 trên origin capacitor://, nên
+     bản native phát video qua trang cầu nối https (yt-bridge.html trên
+     githack) bằng postMessage. BridgePlayer bắt chước đúng các method của
+     YT.Player mà app dùng (play/pause/seek/getCurrentTime/getDuration/
+     getPlayerState/setPlaybackRate) nên code karaoke không đổi gì. Trên web
+     vẫn dùng YT.Player trực tiếp như cũ. */
+  var YT_BRIDGE_URL = "https://raw.githack.com/donghung94/sorakanji-app/main/www/yt-bridge.html";
+  var YT_BRIDGE_ORIGIN = "https://raw.githack.com";
+  function isNativeApp(){ return !!(window.Capacitor && window.Capacitor.Plugins); }
+  function BridgePlayer(elId, videoId, host, cbs){
+    var self = this;
+    var holder = document.getElementById(elId);
+    var iframe = document.createElement("iframe");
+    iframe.src = YT_BRIDGE_URL + "?v=" + encodeURIComponent(videoId) + "&host=" + (host === "nocookie" ? "nocookie" : "youtube");
+    iframe.setAttribute("allow", "accelerometer; autoplay; encrypted-media; picture-in-picture");
+    iframe.setAttribute("allowfullscreen", "");
+    holder.innerHTML = "";
+    holder.appendChild(iframe);
+    var ready = false, queue = [];
+    var lastT = 0, lastD = 0, lastState = -1, lastAt = 0, rate = 1;
+    function post(m){
+      if(ready) iframe.contentWindow.postMessage(m, YT_BRIDGE_ORIGIN);
+      else queue.push(m);
+    }
+    window.addEventListener("message", function(ev){
+      if(ev.origin !== YT_BRIDGE_ORIGIN || ev.source !== iframe.contentWindow) return;
+      var m = ev.data; if(!m || typeof m !== "object") return;
+      if(m.t === "ready"){
+        ready = true;
+        var q = queue; queue = [];
+        q.forEach(function(x){ iframe.contentWindow.postMessage(x, YT_BRIDGE_ORIGIN); });
+        if(cbs.onReady) cbs.onReady({target: self});
+      } else if(m.t === "state"){
+        lastState = m.s;
+        if(cbs.onStateChange) cbs.onStateChange({data: m.s});
+      } else if(m.t === "time"){
+        lastT = m.c; lastD = m.d; lastAt = Date.now();
+      }
+    });
+    this.playVideo = function(){ post({t:"play"}); };
+    this.pauseVideo = function(){ post({t:"pause"}); };
+    this.seekTo = function(s){ post({t:"seek", s:s}); lastT = s; lastAt = Date.now(); };
+    this.setPlaybackRate = function(r){ rate = r; post({t:"rate", r:r}); };
+    this.getCurrentTime = function(){
+      if(lastState === 1 && lastAt) return lastT + (Date.now() - lastAt) / 1000 * rate;
+      return lastT;
+    };
+    this.getDuration = function(){ return lastD; };
+    this.getPlayerState = function(){ return lastState; };
+  }
   function svLoadPlayer(autoplay){
     if(svPlayer){ if(autoplay && svPlayer.playVideo) svPlayer.playVideo(); return; }
     var wrap = document.getElementById("svVideoWrap");
     wrap.innerHTML = '<div id="svPlayer"></div><div class="sv-shield" id="svShield" role="button" aria-label="Phát hoặc tạm dừng video"></div>';
     document.getElementById("svShield").addEventListener("click", svTogglePlay);
     function create(){
+      if(isNativeApp()){
+        svPlayer = new BridgePlayer("svPlayer", SV_ID, "youtube", {
+          onReady: function(e){
+            svReady = true;
+            if(svPlayer.setPlaybackRate) svPlayer.setPlaybackRate(svRates[svRateIdx]);
+            if(autoplay) e.target.playVideo();
+          },
+          onStateChange: function(e){ svPlayBtn(e.data === 1); }
+        });
+        return;
+      }
       svPlayer = new YT.Player("svPlayer", {
         videoId: SV_ID,
         playerVars: {playsinline: 1, rel: 0, modestbranding: 1},
@@ -9002,7 +9068,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         }
       });
     }
-    if(window.YT && YT.Player){ create(); }
+    if(isNativeApp()){ create(); }
+    else if(window.YT && YT.Player){ create(); }
     else{
       var prev = window.onYouTubeIframeAPIReady;
       window.onYouTubeIframeAPIReady = function(){ if(prev) prev(); create(); };
@@ -9294,6 +9361,16 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     wrap.innerHTML = '<div id="sv2Player"></div><div class="sv-shield" id="sv2Shield" role="button" aria-label="Phát hoặc tạm dừng video"></div>';
     document.getElementById("sv2Shield").addEventListener("click", sv2TogglePlay);
     function create(){
+      if(isNativeApp()){
+        sv2Player = new BridgePlayer("sv2Player", SV2_ID, "nocookie", {
+          onReady: function(e){
+            sv2Ready = true;
+            if(autoplay) e.target.playVideo();
+          },
+          onStateChange: function(e){ sv2PlayBtn(e.data === 1); }
+        });
+        return;
+      }
       sv2Player = new YT.Player("sv2Player", {
         host: "https://www.youtube-nocookie.com",
         videoId: SV2_ID,
@@ -9309,7 +9386,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         }
       });
     }
-    if(window.YT && YT.Player){ create(); }
+    if(isNativeApp()){ create(); }
+    else if(window.YT && YT.Player){ create(); }
     else{
       var prev = window.onYouTubeIframeAPIReady;
       window.onYouTubeIframeAPIReady = function(){ if(prev) prev(); create(); };

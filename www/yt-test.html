@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YT bridge test</title>
+<!--
+  Manual test page for yt-bridge.html (same folder). Open this page in a
+  browser: it embeds the bridge with the N5 sample video, drives it with
+  postMessage, and logs ready/state/time/error events. If the log shows
+  ready + state 1 (playing) + advancing time, the bridge works.
+  Dev-only page; not used by the app.
+-->
+<style>
+  body { font-family: sans-serif; margin: 16px; background: #111; color: #eee; }
+  #frame { width: 480px; height: 270px; border: 1px solid #555; }
+  #frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+  button { margin: 4px 4px 4px 0; padding: 8px 12px; font-size: 15px; }
+  #log { margin-top: 12px; padding: 8px; background: #000; color: #8f8;
+         font-family: monospace; font-size: 13px; white-space: pre-wrap;
+         height: 220px; overflow: auto; }
+</style>
+</head>
+<body>
+<h2>YT bridge test</h2>
+<div id="frame"></div>
+<p>
+  <button id="bPlay">Play</button>
+  <button id="bPause">Pause</button>
+  <button id="bSeek">Seek 10s</button>
+  <button id="bRate">Rate 0.5x</button>
+  <button id="bTime">Get time</button>
+</p>
+<div id="log"></div>
+<script>
+(function () {
+  var logEl = document.getElementById("log");
+  var lastTime = -1, timeCount = 0;
+  function log(s) {
+    logEl.textContent += new Date().toLocaleTimeString() + " " + s + "\n";
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+  var f = document.createElement("iframe");
+  f.src = "yt-bridge.html?v=mKPRQF70PvA&host=youtube";
+  f.allow = "accelerometer; autoplay; encrypted-media; picture-in-picture";
+  document.getElementById("frame").appendChild(f);
+  function send(m) { f.contentWindow.postMessage(m, "*"); }
+  window.addEventListener("message", function (ev) {
+    var m = ev.data;
+    if (!m || typeof m !== "object") return;
+    if (m.t === "time") {
+      timeCount++;
+      if (m.c - lastTime >= 1 || timeCount % 20 === 0) { log("time c=" + m.c.toFixed(2) + " d=" + m.d.toFixed(1)); lastTime = m.c; }
+      return;
+    }
+    log("recv " + JSON.stringify(m));
+  });
+  document.getElementById("bPlay").onclick = function () { send({ t: "play" }); };
+  document.getElementById("bPause").onclick = function () { send({ t: "pause" }); };
+  document.getElementById("bSeek").onclick = function () { send({ t: "seek", s: 10 }); };
+  document.getElementById("bRate").onclick = function () { send({ t: "rate", r: 0.5 }); };
+  document.getElementById("bTime").onclick = function () { send({ t: "time" }); };
+  log("bridge iframe created, waiting for ready...");
+})();
+</script>
+</body>
+</html>

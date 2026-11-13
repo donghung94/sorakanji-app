@@ -60,7 +60,7 @@ jobs:
       - name: Archive (unsigned)
         run: |
           xcodebuild -project ios/App/App.xcodeproj \
-            -target App -configuration Release \
+            -scheme App -configuration Release \
             -destination 'generic/platform=iOS' \
             -archivePath build/App.xcarchive archive \
             CODE_SIGNING_ALLOWED=NO

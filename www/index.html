@@ -1289,6 +1289,16 @@
      background-clip:text nữa (làm furigana nhấp nháy trên WebKit). */
   .sv2-sub .sv-w.done{color:var(--red); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:5px;}
   .sv-line .sv-w.now, .sv2-sub .sv-w.now{color:var(--red); background:rgba(200,16,46,.12); box-shadow:0 0 0 1.5px var(--red); border-radius:6px; text-decoration:none;}
+  /* Bấm từng từ để tra từ điển: cụm từ bấm được, chạm vào phản hồi nhẹ */
+  .sv2-sub .sv-w{cursor:pointer;}
+  .sv2-sub .sv-w:active{background:rgba(200,16,46,.08); border-radius:4px;}
+  .sv2w-word{font-size:18px; font-weight:700;}
+  .sv2w-read{color:#666; font-size:13px;}
+  .sv2w-surf{color:#888; font-size:12px;}
+  .sv2w-spk{display:inline-block; margin-left:8px; font-size:16px; cursor:pointer; vertical-align:middle;}
+  .sv2w-spk:active{opacity:.55;}
+  .sv2w-mean{display:block; margin-top:4px; font-size:15px; line-height:1.55;}
+  .sv2w-hv{display:block; color:#888; font-size:13px; margin-top:2px;}
   .sv2-sub.unclear{cursor:pointer;}
   .sv2-sub .unclearnote{display:block; font-size:13px; font-style:italic; color:var(--ink-3); line-height:1.6; padding-top:2px;}
   .sv2-card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px 15px 15px;}
@@ -3541,7 +3551,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
             <button class="sv-exp-x" id="sv2ExpClose" type="button" aria-label="Đóng khung giải thích">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
             </button>
-            <b>GIẢI THÍCH · CÂU <span id="sv2ExpNum">1</span></b><p id="sv2ExpText"></p>
+            <b id="sv2ExpTitle">GIẢI THÍCH · CÂU 1</b><p id="sv2ExpText"></p>
           </div>
         </section>
 
@@ -9566,8 +9576,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         if(typeof frame.scrollTo === "function") frame.scrollTo({top: tg, behavior: rd ? "auto" : "smooth"});
         else frame.scrollTop = tg;
       }
-      /* Bong bóng giải thích đang mở thì bám theo câu đang phát (như bài 1) */
-      if(sv2ExpIdx >= 0 && idx >= 0) sv2ShowExp(idx);
+      /* Bong bóng giải thích đang mở thì bám theo câu đang phát (như bài 1) —
+         trừ khi đang hiện giải thích TỪ (bám theo câu đã bấm, không đổi) */
+      if(sv2ExpIdx >= 0 && idx >= 0 && sv2ExpMode !== "word") sv2ShowExp(idx);
     }
     sv2Karaoke(t);
   }
@@ -9611,9 +9622,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      lật lên trên câu. Đang phát mà câu hiện tại đổi thì bong bóng bám theo */
   function sv2ShowExp(i){
     if(!SV2_SUBS[i] || !SV2_SUBS[i].exp){ sv2HideExp(); return; }
-    sv2ExpIdx = i;
+    sv2ExpIdx = i; sv2ExpMode = "sent";
     var exp = document.getElementById("sv2Exp");
-    document.getElementById("sv2ExpNum").textContent = i + 1;
+    document.getElementById("sv2ExpTitle").textContent = "GIẢI THÍCH · CÂU " + (i + 1);
     document.getElementById("sv2ExpText").textContent = SV2_SUBS[i].exp;
     var box = document.getElementById("sv2Subs");
     if(exp.parentNode !== box) box.appendChild(exp);
@@ -9650,10 +9661,348 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
   }
   function sv2HideExp(){
-    sv2ExpIdx = -1;
+    sv2ExpIdx = -1; sv2ExpMode = "sent";
     var exp = document.getElementById("sv2Exp");
     if(exp) exp.classList.remove("show");
   }
+  /* ----- Bấm từng từ trong phụ đề để tra từ điển (có sẵn, không cần AI) -----
+     Từ điển dict-ja-vi.json: 10.689 từ từ dữ liệu từ vựng của app (N5–N1 +
+     chuyên ngành + số đếm + trợ từ/từ chỉ thị/tên nước bổ sung), tra cứu
+     offline sau lần tải đầu. Cụm phụ đề là cụm furigana chứ chưa phải từ
+     (vd "をしました"), nên khi bấm: quét tìm từ dài nhất trong cụm, dạng
+     chia thì quy về thể ます (từ điển dùng thể ます theo Minna: 食べます)
+     rồi mới thử dạng từ điển. */
+  var sv2ExpMode = "sent", sv2WordSpeak = "";
+  var svDictData = null, svDictPromise = null;
+  var SV_DICT_URLS = ["dict-ja-vi.json", "https://raw.githack.com/donghung94/sorakanji-app/main/www/dict-ja-vi.json"];
+  function svDictLoad(){
+    if(svDictData) return Promise.resolve(svDictData);
+    if(svDictPromise) return svDictPromise;
+    svDictPromise = (function next(i){
+      if(i >= SV_DICT_URLS.length) return Promise.reject(new Error("dict"));
+      return fetch(SV_DICT_URLS[i]).then(function(res){
+        if(!res.ok) throw new Error("http " + res.status);
+        return res.json();
+      }).then(function(d){
+        if(!d || !d.w) throw new Error("bad dict");
+        svDictData = d; return d;
+      }).catch(function(){ return next(i + 1); });
+    })(0);
+    svDictPromise.catch(function(){ svDictPromise = null; });
+    return svDictPromise;
+  }
+  function svDictGetWord(word){
+    if(!svDictData || !word) return null;
+    var e = svDictData.w[word];
+    return e ? {w: word, r: e[0] || "", m: e[1] || "", hv: e[2] || ""} : null;
+  }
+  function svDictGetReading(word){
+    /* Tra theo cách đọc: phụ đề viết kana (ともだち) mà từ điển ghi Hán
+       (友達). Chỉ dùng sau khi đã thử từ gốc + dạng chia, vì cách đọc
+       có thể trùng từ khác (くる = 来る hay 繰る). */
+    if(!svDictData || !word) return null;
+    var rw = svDictData.r[word];
+    if(rw && svDictData.w[rw]){
+      var e2 = svDictData.w[rw];
+      return {w: rw, r: e2[0] || "", m: e2[1] || "", hv: e2[2] || ""};
+    }
+    return null;
+  }
+  function svDictGet(word){
+    return svDictGetWord(word) || svDictGetReading(word);
+  }
+  /* Bảng chuyển hàng kana phục vụ tách thể chia */
+  var SV_A2I = {か:"き", が:"ぎ", さ:"し", た:"ち", な:"に", ば:"び", ま:"み", ら:"り", わ:"い"};
+  var SV_I2U = {き:"く", ぎ:"ぐ", し:"す", ち:"つ", に:"ぬ", び:"ぶ", み:"む", り:"る", い:"う"};
+  var SV_O2I = {こ:"き", ご:"ぎ", そ:"し", と:"ち", の:"に", ぼ:"び", も:"み", ろ:"り", お:"い"};
+  var SV_U2I = {う:"い", く:"き", ぐ:"ぎ", す:"し", つ:"ち", ぬ:"に", ぶ:"び", む:"み"};
+  var SV_E2I = {え:"い", け:"き", げ:"ぎ", せ:"し", て:"ち", ね:"に", べ:"び", め:"み", れ:"り"};
+  var SV_TE2I = {い:["き","ぎ"], っ:["い","ち","り"], ん:["み","び","に"]};
+  var SV_EROW = "えけげせぜてでねへべぺめれ";
+  var SV_IROW = "いきぎしじちにひびぴみり";
+  var SV_SURU = ["します","しました","しない","して","した","しよう","しません","しませんでした","しましょう"];
+  var SV_KURU_KANJI = ["来ます","来ました","来ない","来て","来た","来よう","来ません","来ませんでした","来ましょう"];
+  var SV_KURU_KANA = ["きます","きました","こない","きて","きた","こよう","きません","きませんでした","きましょう"];
+  function svMapLast(s, map){
+    if(!s) return null;
+    var last = s.charAt(s.length - 1);
+    return map[last] ? s.slice(0, -1) + map[last] : null;
+  }
+  function svTeStems(base){
+    /* Thân て → các ứng viên thân ます (giữ nguyên base cho động từ 1 nhóm) */
+    var out = [base];
+    var mapped = SV_TE2I[base.charAt(base.length - 1)];
+    if(mapped) mapped.forEach(function(x){
+      var c = base.slice(0, -1) + x;
+      if(out.indexOf(c) < 0) out.push(c);
+    });
+    return out;
+  }
+  function svMasuStems(s){
+    /* Các ứng viên thân ます (phần trước ます) của dạng chia s. */
+    var out = [];
+    function add(x){ if(x && out.indexOf(x) < 0) out.push(x); }
+    if(SV_SURU.indexOf(s) >= 0){ add("し"); return out; }
+    if(SV_KURU_KANJI.indexOf(s) >= 0 || SV_KURU_KANA.indexOf(s) >= 0){ add("来"); return out; }
+    /* Thể ý chí: 食べよう/見よう (1 nhóm: thân + よう); 行こう/書こう
+       (5 nhóm: kana hàng お + う — thân ます dài ít nhất 2 ký tự để
+       khỏi nhận nhầm thán từ như おお thành います). */
+    if(s.length > 2 && s.slice(-2) === "よう"){ add(s.slice(0, -2)); return out; }
+    if(s.length >= 3 && s.charAt(s.length - 1) === "う"){
+      var om = SV_O2I[s.charAt(s.length - 2)];
+      if(om){
+        var vs = s.slice(0, -2) + om;
+        if(vs.length >= 2) add(vs);
+        return out;
+      }
+    }
+    /* kind: masu = phần còn lại đã là thân ます; nai/reru = thân あ行;
+       te = phần còn lại là thân て;
+       teform = phần còn lại là dạng て (phải lột て/で trước). */
+    var suf = [
+      ["ていませんでした", "te"], ["ていません", "te"], ["ていました", "te"], ["ている", "te"],
+      ["てしまいます", "teform"], ["てしまった", "teform"], ["てしまう", "teform"], ["てください", "teform"],
+      ["ませんでした", "masu"], ["ません", "masu"], ["ましょう", "masu"], ["ました", "masu"], ["ます", "masu"],
+      ["なかった", "nai"], ["なくて", "nai"], ["ない", "nai"],
+      ["たかった", "tai"], ["たくない", "tai"], ["たい", "tai"],
+      ["られる", "rareru"], ["れる", "reru"],
+      ["た", "ta"], ["て", "ta"], ["だ", "da"], ["で", "da"]
+    ];
+    for(var i = 0; i < suf.length; i++){
+      var a = suf[i][0], kind = suf[i][1];
+      if(s.length > a.length && s.slice(-a.length) === a){
+        var base = s.slice(0, -a.length), m;
+        if(kind === "masu" || kind === "tai" || kind === "rareru"){ add(base); }
+        else if(kind === "nai"){
+          add(base);
+          m = svMapLast(base, SV_A2I); if(m) add(m);
+        }
+        else if(kind === "reru"){
+          add(base);
+          m = svMapLast(base, SV_A2I); if(m) add(m);
+          /* れる còn là thể khả năng của động từ 5 nhóm tận cùng る:
+             帰れる/走れる/切れる/入れる → 帰ります/走ります/切ります/入ります */
+          add(base + "り");
+        }
+        else if(kind === "te"){
+          svTeStems(base).forEach(add);
+        }
+        else if(kind === "teform"){
+          var b2 = base;
+          if(b2.charAt(b2.length - 1) === "て" || b2.charAt(b2.length - 1) === "で") b2 = b2.slice(0, -1);
+          svTeStems(b2).forEach(add);
+        }
+        else if(kind === "ta"){
+          svTeStems(base).forEach(add);
+        }
+        else if(kind === "da"){
+          add(base);
+          var last = base.charAt(base.length - 1);
+          if(last === "い") add(base.slice(0, -1) + "ぎ");
+          if(last === "ん"){ add(base.slice(0, -1) + "み"); add(base.slice(0, -1) + "び"); add(base.slice(0, -1) + "に"); }
+        }
+        return out;
+      }
+    }
+    /* Thể khả năng (5 nhóm) + động từ 1 nhóm tận cùng える/いる:
+       書ける → 書きます; つける → つけます; 分かれる → 分かれます.
+       Thử thân + ます trước (1 nhóm), rồi mới đổi hàng え → い (5 nhóm
+       khả năng) — để 分かれる không nhầm thành 分かります. */
+    if(s.length > 2 && s.charAt(s.length - 1) === "る"){
+      var e2 = s.charAt(s.length - 2);
+      add(s.slice(0, -1));
+      if(SV_E2I[e2]) add(s.slice(0, -2) + SV_E2I[e2]);
+    }
+    return out;
+  }
+  function svDictFormToMasu(s){
+    /* Dạng từ điển (hay gặp trong video nói thường) → thể ます để tra. */
+    var out = [];
+    if(s === "する"){ out.push("します"); return out; }
+    if(s === "来る" || s === "くる"){ out.push("来ます"); return out; }
+    var last = s.charAt(s.length - 1);
+    if(last === "る" && s.length >= 2){
+      var stem = s.slice(0, -1);
+      out.push(stem + "ます"); out.push(stem + "ります");
+    } else if(SV_U2I[last]){
+      out.push(s.slice(0, -1) + SV_U2I[last] + "ます");
+    }
+    return out;
+  }
+  function svDeinflect(s){
+    /* Các dạng gốc ứng viên của s (thể ます + dạng từ điển + tính từ い). */
+    var out = [];
+    function add(x){ if(x && x !== s && out.indexOf(x) < 0) out.push(x); }
+    /* Tính từ い — dạng dài trước: 高くなかった → 高い (không phải 高くない) */
+    var adj = ["くなかった", "くなくて", "くなければ", "かった", "くない", "くて", "ければ"];
+    for(var a = 0; a < adj.length; a++){
+      var suf = adj[a];
+      if(s.length > suf.length && s.slice(-suf.length) === suf){
+        add(s.slice(0, -suf.length) + "い");
+        return out;
+      }
+    }
+    var stems = svMasuStems(s);
+    stems.forEach(function(st){
+      add(st + "ます");
+      var last = st.charAt(st.length - 1);
+      if(SV_EROW.indexOf(last) >= 0) add(st + "る");
+      else if(SV_IROW.indexOf(last) >= 0){
+        add(st + "る");
+        if(SV_I2U[last]) add(st.slice(0, -1) + SV_I2U[last]);
+      }
+    });
+    /* Dạng từ điển gốc (帰る → 帰ります) — luôn thử thêm vì thân ます
+       suy ra có thể không đủ (vd 帰る chỉ cho thân 帰). */
+    svDictFormToMasu(s).forEach(add);
+    return out;
+  }
+  function svDictMatchAt(text, i){
+    /* Từ điển dài nhất bắt đầu tại vị trí i (từ đúng + dạng chia + cách đọc).
+       Thứ tự: từ đúng chính tả → dạng chia quy về gốc → cách đọc (tra cách
+       đọc cuối cùng để くる tìm ra 来ます trước khi nhầm 繰る).
+       Trả {e, len} hoặc null. */
+    var maxLen = Math.min(8, text.length - i);
+    for(var len = maxLen; len >= 1; len--){
+      var sub = text.slice(i, i + len);
+      var e = svDictGetWord(sub);
+      if(e){
+        /* Động từ dạng từ điển mà từ điển cũng có thể ます thì ưu tiên
+           thể ます (nghĩa Minna cơ bản, quen thuộc với người học hơn
+           nghĩa chuyên ngành của dạng từ điển, vd 入る “có công việc”). */
+        var mf = svDictFormToMasu(sub);
+        for(var mi = 0; mi < mf.length; mi++){
+          var me = svDictGetWord(mf[mi]);
+          if(me){ e = me; break; }
+        }
+      }
+      if(!e && len >= 2){
+        var cands = svDeinflect(sub);
+        for(var c = 0; c < cands.length; c++){
+          var de = svDictGet(cands[c]);
+          if(de){ e = de; break; }
+        }
+      }
+      if(!e && len >= 2) e = svDictGetReading(sub);
+      if(e) return {e: e, len: len};
+    }
+    return null;
+  }
+  function svDictSegment(ja){
+    /* Tách câu thành từ theo từ điển (khớp dài nhất từ trái sang phải).
+       Cụm phụ đề thường chỉ là mảnh của từ (高 + い, いで + す。), nên phải
+       tách trên cả câu rồi mới biết từ thật bấm vào là từ nào. */
+    var words = [], i = 0;
+    while(i < ja.length){
+      var m = svDictMatchAt(ja, i);
+      if(m){ words.push({start: i, len: m.len, surf: ja.slice(i, i + m.len), e: m.e}); i += m.len; }
+      else i++;
+    }
+    return words;
+  }
+  function svDictFindSpan(text){
+    /* Tìm từ điển dài nhất trong cụm (quét mọi vị trí, dài trước).
+       Trả {e, len, surf} hoặc null. */
+    var best = null;
+    for(var i = 0; i < text.length; i++){
+      var m = svDictMatchAt(text, i);
+      if(m && (!best || m.len > best.len)) best = {e: m.e, len: m.len, surf: text.slice(i, i + m.len)};
+    }
+    return best;
+  }
+  function svDictLookup(surface, reading){
+    var found = svDictFindSpan(surface);
+    if(found){
+      return {found: true, surf: surface, w: found.e.w, r: found.e.r,
+              m: found.e.m, hv: found.e.hv, reading: reading || ""};
+    }
+    return {found: false, surf: surface, reading: reading || ""};
+  }
+  function svDictLookupAt(ja, offset, spanText, spanReading){
+    /* Tra từ tại vị trí offset trong câu: ưu tiên từ chứa vị trí đó
+       (theo cách tách cả câu); không có thì tra trong cụm đã bấm. */
+    var words = svDictSegment(ja);
+    for(var i = 0; i < words.length; i++){
+      var w = words[i];
+      if(offset >= w.start && offset < w.start + w.len){
+        return {found: true, span: spanText, surf: w.surf, w: w.e.w, r: w.e.r,
+                m: w.e.m, hv: w.e.hv, reading: spanReading || ""};
+      }
+    }
+    var found = svDictFindSpan(spanText);
+    if(found){
+      return {found: true, span: spanText, surf: found.surf, w: found.e.w, r: found.e.r,
+              m: found.e.m, hv: found.e.hv, reading: spanReading || ""};
+    }
+    return {found: false, span: spanText, surf: spanText, reading: spanReading || ""};
+  }
+  function sv2ExpOpen(i){
+    var exp = document.getElementById("sv2Exp");
+    var box = document.getElementById("sv2Subs");
+    if(exp.parentNode !== box) box.appendChild(exp);
+    exp.classList.add("show");
+    sv2PlaceExp();
+    /* Cuộn khung (không cuộn trang) sao cho bong bóng lọt hẳn vào vùng nhìn */
+    if(sv2Overlay.classList.contains("open")){
+      var eTop = exp.offsetTop, eBot = eTop + exp.offsetHeight;
+      var vTop = box.scrollTop, vBot = vTop + box.clientHeight;
+      if(eTop < vTop || eBot > vBot){
+        var rd = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var tTop = eTop - 6;
+        if(tTop < 0) tTop = 0;
+        if(typeof box.scrollTo === "function") box.scrollTo({top: tTop, behavior: rd ? "auto" : "smooth"});
+        else box.scrollTop = tTop;
+      }
+    }
+  }
+  function sv2ShowWord(i, res){
+    sv2ExpIdx = i; sv2ExpMode = "word";
+    var title = document.getElementById("sv2ExpTitle");
+    var txt = document.getElementById("sv2ExpText");
+    var word = res.found ? res.w : res.span;
+    /* Đọc từ đã khớp trong câu (vd 分かりました); chưa tìm thấy thì đọc cụm đã bấm.
+       Cách đọc hiện theo từ điển (dạng gốc); chưa có từ thì hiện cách đọc của cụm. */
+    sv2WordSpeak = res.found ? res.surf : res.span;
+    title.textContent = "TỪ · " + word;
+    var reading = res.found ? res.r : res.reading;
+    var h = '<span class="sv2w-word">' + svEsc(word) + '</span>';
+    if(reading) h += ' <span class="sv2w-read">' + svEsc(reading) + '</span>';
+    if(res.found && res.surf && res.surf !== res.w)
+      h += ' <span class="sv2w-surf">(' + svEsc(res.surf) + ' ← ' + svEsc(res.w) + ')</span>';
+    h += '<span class="sv2w-spk" role="button" tabindex="0" aria-label="Nghe phát âm từ này">🔊</span>';
+    if(res.found){
+      h += '<span class="sv2w-mean">' + svEsc(res.m) + '</span>';
+      if(res.hv) h += '<span class="sv2w-hv">Hán Việt: ' + svEsc(res.hv) + '</span>';
+    } else {
+      h += '<span class="sv2w-mean">' + (res.dictFail
+        ? 'Chưa tải được từ điển — kiểm tra mạng rồi bấm lại nhé.'
+        : 'Chưa có trong từ điển của app.') + '</span>';
+    }
+    txt.innerHTML = h;
+    sv2ExpOpen(i);
+  }
+  function sv2WordTap(i, k){
+    var segs = sv2Segs[i] ? sv2Segs[i].segs : null;
+    if(!segs || !segs[k]) return;
+    var seg = segs[k];
+    /* Vị trí ký tự của cụm trong câu (các cụm ghép lại thành câu gốc) */
+    var offset = 0;
+    for(var j = 0; j < k; j++) offset += segs[j].b.length;
+    /* Bấm từ vẫn tua tới câu như bấm vào câu (không mất tính năng tua câu) */
+    sv2SegEnd = -1;
+    sv2SeekPlay(SV2_SUBS[i].t);
+    /* Hiện bong bóng ngay với trạng thái đang tra, điền kết quả khi tra xong */
+    sv2ExpIdx = i; sv2ExpMode = "word";
+    document.getElementById("sv2ExpTitle").textContent = "TỪ · " + seg.b;
+    document.getElementById("sv2ExpText").textContent = "Đang tra từ điển…";
+    sv2ExpOpen(i);
+    svDictLoad().then(function(){
+      sv2ShowWord(i, svDictLookupAt(SV2_SUBS[i].ja, offset, seg.b, seg.r));
+    }).catch(function(){
+      sv2ShowWord(i, {found: false, span: seg.b, surf: seg.b, reading: seg.r || "", dictFail: true});
+    });
+  }
+  /* ----- Hết tra từ điển ----- */
   function sv2RenderSubs(){
     var box = document.getElementById("sv2Subs");
     /* Bong bóng giải thích sống trong khung cuộn: giữ lại phần tử trước khi
@@ -9687,12 +10036,21 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     sv2CurSub = -1;
     sv2KaraKey = "";
     box.querySelectorAll("[data-sv2]").forEach(function(b){
+      var i = parseInt(b.getAttribute("data-sv2"), 10);
       b.addEventListener("click", function(){
-        var i = parseInt(b.getAttribute("data-sv2"), 10);
         sv2SegEnd = -1;
         sv2SeekPlay(SV2_SUBS[i].t);
         /* Như bài 1: bấm vào câu là hiện luôn bong bóng giải thích của câu đó */
         if(SV2_SUBS[i].exp) sv2ShowExp(i); else sv2HideExp();
+      });
+      /* Bấm vào từng từ: tua tới câu + tra từ điển (chặn bấm lan ra nút câu) */
+      var segs = sv2Segs[i] ? sv2Segs[i].segs : [];
+      b.querySelectorAll(".sv-w").forEach(function(sp, k){
+        if(k >= segs.length) return;
+        sp.addEventListener("click", function(ev){
+          ev.stopPropagation();
+          sv2WordTap(i, k);
+        });
       });
     });
     if(expEl && (expInBox || sv2ExpIdx >= 0)){
@@ -9888,6 +10246,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     sv2StartKaraLoop();
   }
   document.getElementById("sv2ExpClose").addEventListener("click", function(e){ e.stopPropagation(); sv2HideExp(); });
+  /* Nút loa trong bong bóng giải thích từ: đọc từ vừa tra (ủy quyền click
+     vì nội dung bong bóng được dựng lại mỗi lần hiện) */
+  document.getElementById("sv2Exp").addEventListener("click", function(e){
+    var t = e.target && e.target.closest ? e.target.closest(".sv2w-spk") : null;
+    if(t && sv2WordSpeak){ e.stopPropagation(); speakJP(sv2WordSpeak); }
+  });
   document.getElementById("sv2Facade").addEventListener("click", function(){ sv2LoadPlayer(true); });
   document.getElementById("sv2PlayPause").addEventListener("click", sv2TogglePlay);
   document.getElementById("sv2Seek").addEventListener("input", function(){

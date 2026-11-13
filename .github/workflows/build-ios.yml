@@ -1,0 +1,90 @@
+name: Build iOS (unsigned)
+
+# Free unsigned .ipa for AltStore sideloading (free Apple ID, no $99 Developer
+# Program, no certificates). The app fetches YouTube captions on-device via
+# CapacitorHttp, so it must run as a native app — Safari/PWA cannot do this
+# (CORS + datacenter-IP blocks). Nothing here needs signing or paid services.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write # needed to publish the .ipa as a release asset
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # The 4 asset-catalog PNGs (app icon + splash) are binary and are not
+      # stored in this repo. Generate solid-red placeholders at the exact
+      # sizes the Contents.json files expect, so actool has files to compile.
+      - name: Generate placeholder images
+        run: |
+          python3 - <<'EOF'
+          import struct, zlib
+          def png(w, h, rgb):
+              def chunk(t, data):
+                  c = struct.pack('>I', len(data)) + t + data
+                  return c + struct.pack('>I', zlib.crc32(t + data) & 0xffffffff)
+              ihdr = struct.pack('>IIBBBBB', w, h, 8, 2, 0, 0, 0)
+              raw = b''.join(b'\x00' + bytes(rgb) * w for _ in range(h))
+              return (b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', ihdr)
+                      + chunk(b'IDAT', zlib.compress(raw, 6)) + chunk(b'IEND', b''))
+          red = (192, 57, 43)
+          base = 'ios/App/App/Assets.xcassets'
+          open(f'{base}/AppIcon.appiconset/AppIcon-512@2x.png', 'wb').write(png(1024, 1024, red))
+          for n in ('splash-2732x2732.png', 'splash-2732x2732-1.png', 'splash-2732x2732-2.png'):
+              open(f'{base}/Splash.imageset/{n}', 'wb').write(png(2732, 2732, red))
+          print('placeholder PNGs written')
+          EOF
+
+      - run: npm ci
+
+      - run: npx cap sync ios
+
+      # Fail fast if the sync lost the native caption code.
+      - name: Verify native code synced
+        run: |
+          grep -c svuNativeCaptions ios/App/App/public/index.html
+          grep -c svuCapHttp ios/App/App/public/index.html
+          grep -c CapacitorHttp ios/App/App/public/index.html
+
+      - name: Archive (unsigned)
+        run: |
+          xcodebuild -project ios/App/App.xcodeproj \
+            -target App -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/App.xcarchive archive \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -r build/App.xcarchive/Products/Applications/App.app Payload/
+          zip -r App-unsigned.ipa Payload
+          ls -la App-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: App-unsigned.ipa
+          path: App-unsigned.ipa
+          if-no-files-found: error
+
+      # Publish as a release asset too, so the .ipa can be downloaded without
+      # GitHub authentication (workflow artifacts need auth).
+      - name: Publish release
+        run: |
+          TAG="build-${{ github.run_number }}"
+          gh release create "$TAG" App-unsigned.ipa \
+            --title "Unsigned build $TAG" \
+            --notes "Unsigned .ipa for AltStore sideloading (free Apple ID). Built from ${{ github.sha }}. Expires after 7 days on device; AltStore refreshes it automatically."
+        env:
+          GH_TOKEN: ${{ github.token }}

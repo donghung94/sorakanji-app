@@ -1243,7 +1243,7 @@
   .sv-line .sv-lja{display:block; font-size:17px; font-weight:600; line-height:1.95;}
   .sv-line .sv-lvi{display:block; font-size:13px; color:var(--ink-2); margin-top:1px; line-height:1.5;}
   .sv-line.active{background:var(--red-soft);}
-  .sv-line .sv-w.done, .sv-line .sv-w.now{color:var(--red); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:5px;}
+  .sv-line .sv-w.done{color:var(--red); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:5px;}
 
   /* ---------- Shadowing video bài 2 (Shorts dọc, kênh OkkeiJapanese): 4 tab
      Phụ đề / Shadowing / Chính tả / Điền từ dưới video; giữ tông SoraKanji ---------- */
@@ -1281,10 +1281,12 @@
   .sv2-sub .ja rt{font-size:.52em; font-weight:600; color:var(--ink-2);}
   .sv2-sub .vi{display:block; font-size:13px; color:var(--ink-2); margin-top:1px; line-height:1.5;}
   .sv2-sub.active{background:var(--red-soft);}
-  /* Karaoke như bài 1: cụm từ đã đọc / đang đọc trong câu đang phát tô đỏ + gạch chân */
-  .sv2-sub .sv-w.done, .sv2-sub .sv-w.now{color:var(--red); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:5px;}
-  /* Cụm đang quét mượt: màu chạy bằng gradient nên bỏ gạch chân (gạch cả cụm sẽ sai tiến độ) */
-  .sv-line .sv-w.sweep, .sv2-sub .sv-w.sweep{text-decoration:none;}
+  /* Karaoke: cụm đã đọc tô đỏ + gạch chân; cụm đang đọc bọc khung kiểu Miraa
+     (viền + nền nhạt, nhảy từng cụm theo nhịp đọc). Dùng box-shadow thay
+     border để khung không làm lệch dòng chữ; không dùng gradient +
+     background-clip:text nữa (làm furigana nhấp nháy trên WebKit). */
+  .sv2-sub .sv-w.done{color:var(--red); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:5px;}
+  .sv-line .sv-w.now, .sv2-sub .sv-w.now{color:var(--red); background:rgba(200,16,46,.12); box-shadow:0 0 0 1.5px var(--red); border-radius:6px; text-decoration:none;}
   .sv2-sub.unclear{cursor:pointer;}
   .sv2-sub .unclearnote{display:block; font-size:13px; font-style:italic; color:var(--ink-3); line-height:1.6; padding-top:2px;}
   .sv2-card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px 15px 15px;}
@@ -8823,40 +8825,35 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       if(svExpIdx >= 0) svPlaceExp();
     }
   }
-  /* Quét karaoke mượt (dùng chung cho cả 2 player video): tô đỏ từng cụm từ
-     theo tỉ lệ ký tự đã qua — màu đỏ chạy trôi liên tục trong câu như
-     karaoke thật, thay vì tô đỏ cả cụm một lúc. Dùng gradient +
-     background-clip:text trên từng span .sv-w; cụm chưa tới / đã qua thì
-     xóa style inline, chỉ giữ class .done. Thời điểm từng cụm vẫn nội suy
-     theo số ký tự (phụ đề chỉ có mốc đầu/cuối câu) nên vệt chạy mượt nhưng
-     độ khớp từng từ chỉ là ước lượng. */
+  /* Tô sáng karaoke từng cụm (dùng chung cho cả 2 player video): cụm đã đọc
+     tô đỏ (class .done), cụm đang đọc bọc khung kiểu Miraa (class .now).
+     KHÔNG quét mượt bằng gradient nữa — gradient + background-clip:text
+     làm furigana nhấp nháy trên WebKit, và vệt chạy nội suy đều theo ký tự
+     nên lệch nhịp đọc thật (bỏ theo yêu cầu user 2026-11-13). Thời điểm từng
+     cụm vẫn nội suy theo số ký tự (phụ đề chỉ có mốc đầu/cuối câu) nên khung
+     nhảy từng cụm theo ước lượng, không chạy trôi liên tục. */
   function svSweepFill(spans, info, frac){
     var target = frac * info.total;
     spans.forEach(function(wd, j){
       var s0 = j === 0 ? 0 : info.cum[j - 1];
       var s1 = info.cum[j];
       var fill = (target - s0) / Math.max(1, s1 - s0);
+      /* Dọn sạch style inline còn sót từ kiểu quét mượt cũ (phòng khi khung
+         chưa được dọn lúc đổi câu) — kiểu mới chỉ dùng class, không style inline. */
+      wd.style.backgroundImage = ""; wd.style.webkitBackgroundClip = ""; wd.style.backgroundClip = "";
+      wd.style.webkitTextFillColor = ""; wd.style.color = "";
+      wd.classList.remove("sweep");
       if(fill <= 0){
-        wd.classList.remove("done"); wd.classList.remove("now"); wd.classList.remove("sweep");
-        wd.style.backgroundImage = ""; wd.style.webkitBackgroundClip = ""; wd.style.backgroundClip = "";
-        wd.style.webkitTextFillColor = ""; wd.style.color = "";
+        wd.classList.remove("done"); wd.classList.remove("now");
       } else if(fill >= 1){
-        wd.classList.add("done"); wd.classList.remove("now"); wd.classList.remove("sweep");
-        wd.style.backgroundImage = ""; wd.style.webkitBackgroundClip = ""; wd.style.backgroundClip = "";
-        wd.style.webkitTextFillColor = ""; wd.style.color = "";
+        wd.classList.add("done"); wd.classList.remove("now");
       } else {
-        wd.classList.remove("done"); wd.classList.add("now"); wd.classList.add("sweep");
-        var pct = (fill * 100).toFixed(1);
-        wd.style.backgroundImage = "linear-gradient(to right, var(--red) " + pct + "%, var(--ink) " + pct + "%)";
-        wd.style.webkitBackgroundClip = "text";
-        wd.style.backgroundClip = "text";
-        wd.style.webkitTextFillColor = "transparent";
-        wd.style.color = "transparent";
+        wd.classList.remove("done"); wd.classList.add("now");
       }
     });
   }
   /* Xóa sạch trạng thái karaoke trong 1 khung (khi đổi câu / đóng bài) —
-     cả class lẫn style inline của vệt quét, không thì vệt đỏ còn sót lại. */
+     cả class lẫn style inline, không thì khung đỏ còn sót lại. */
   function svClearSweep(root){
     if(!root) return;
     root.querySelectorAll(".sv-w").forEach(function(wd){
@@ -8865,9 +8862,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       wd.style.webkitTextFillColor = ""; wd.style.color = "";
     });
   }
-  /* Karaoke: tỉ lệ thời gian đã qua trong câu → các cụm từ đã đọc được tô đỏ +
-     gạch chân, cụm đang đọc cũng vậy (gạch chân chạy dần như app mẫu). Thời điểm
-     từng cụm từ nội suy đều theo số ký tự vì phụ đề viết sẵn chỉ có mốc đầu/cuối câu */
+  /* Karaoke: tỉ lệ thời gian đã qua trong câu → cụm đã đọc tô đỏ + gạch chân,
+     cụm đang đọc bọc khung (class .now). Thời điểm từng cụm nội suy đều theo
+     số ký tự vì phụ đề chỉ có mốc đầu/cuối câu. */
   function svKaraoke(t){
     if(svCur < 0 || !svSegs[svCur]) return;
     var s = SV_SUBS[svCur], info = svSegs[svCur];
@@ -8877,8 +8874,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(!line) return;
     svSweepFill(line.querySelectorAll(".sv-w"), info, frac);
   }
-  /* Vòng lặp quét mượt: cập nhật vệt đỏ mỗi khung hình (~60fps) thay vì
-     120ms một lần. Tự dừng khi đóng trang; mở lại thì svOpenLesson khởi
+  /* Vòng lặp karaoke: cập nhật khung cụm đang đọc mỗi khung hình (~60fps) thay
+     vì 120ms một lần. Tự dừng khi đóng trang; mở lại thì svOpenLesson khởi
      động lại. Tick 120ms vẫn gọi svKaraoke như cũ để dự phòng. */
   var svKaraRaf = 0;
   function svKaraLoop(){
@@ -9425,10 +9422,22 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     go();
   }
+  /* Nút phát đoạn câu (tab Shadowing): đổi tam giác ↔ tạm dừng theo trạng
+     thái phát thật — trước đây nút chỉ có hình tam giác tĩnh nên bấm phát
+     rồi vẫn không biết đang phát (user báo 2026-11-13). Trạng thái lấy từ
+     sv2Tick (đang phát + còn trong đoạn câu), có cache để khỏi ghi DOM mỗi tick. */
+  var sv2SegBtnPlaying = false;
+  function sv2SegPlayBtn(playing){
+    if(playing === sv2SegBtnPlaying) return;
+    sv2SegBtnPlaying = playing;
+    var b = document.getElementById("sv2SegPlay");
+    if(b) b.innerHTML = playing ? SV_ICO_PAUSE : SV_ICO_PLAY;
+  }
   function sv2Tick(){
     if(!sv2Overlay.classList.contains("open")){
       if(sv2Player && sv2Player.pauseVideo) sv2Player.pauseVideo();
       if(sv2Timer){ clearInterval(sv2Timer); sv2Timer = null; }
+      sv2SegPlayBtn(false);
       return;
     }
     if(!sv2Player || !sv2Ready || !sv2Player.getCurrentTime) return;
@@ -9456,6 +9465,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       sv2SegEnd = -1;
       if(sv2Player.pauseVideo) sv2Player.pauseVideo();
     }
+    /* Nút phát đoạn câu (tab Shadowing): hiện tạm dừng khi đang phát trong
+       đoạn câu, về tam giác khi dừng hoặc hết đoạn. */
+    sv2SegPlayBtn(sv2SegEnd > 0 && sv2Player.getPlayerState && sv2Player.getPlayerState() === 1);
     /* Tô sáng câu đang nói trong tab Phụ đề + tự cuộn khung phụ đề theo câu
        đó. Câu đang nói lấy theo khung SV2_WIN (mỗi câu một khoảng riêng, kể
        cả câu trùng mốc giây) nên không câu nào bị bỏ qua. Khung cuộn có
@@ -9499,7 +9511,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     });
   }
   /* ----- Tab Phụ đề ----- */
-  /* Karaoke như bài 1: vệt đỏ quét trôi liên tục trong câu đang phát
+  /* Karaoke như bài 1: cụm đã đọc tô đỏ, cụm đang đọc bọc khung
      (xem svSweepFill) — tỉ lệ thời gian đã qua trong khung của câu. */
   function sv2Karaoke(t){
     if(sv2CurSub < 0 || !sv2Segs[sv2CurSub]) return;
@@ -9511,7 +9523,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(!row) return;
     svSweepFill(row.querySelectorAll(".sv-w"), info, frac);
   }
-  /* Vòng lặp quét mượt cho player 2 (như svKaraLoop của bài 1). */
+  /* Vòng lặp karaoke cho player 2 (như svKaraLoop của bài 1). */
   var sv2KaraRaf = 0;
   function sv2KaraLoop(){
     sv2KaraRaf = 0;
@@ -9830,6 +9842,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("sv2TabFill").addEventListener("click", function(){ sv2SetTab("fill"); });
   document.getElementById("sv2SegPlay").addEventListener("click", function(){
     sv2StopRecIfAny();
+    /* Đang phát đoạn này thì bấm để tạm dừng (nút đổi về tam giác qua sv2Tick);
+       chưa phát thì phát đoạn từ đầu câu. */
+    if(sv2SegBtnPlaying && sv2Player && sv2Player.pauseVideo){ sv2Player.pauseVideo(); return; }
     sv2PlaySeg(SV2_PRACTICE[sv2ShIdx]);
   });
   document.getElementById("sv2Speed").addEventListener("click", function(){

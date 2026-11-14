@@ -8878,6 +8878,26 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      name: "Bussin' - AK-69", level: "", lines: 76, dur: "3:20",
      thumb: "https://i.ytimg.com/vi/5di-PZtIRSI/mqdefault.jpg",
      alt: "Ảnh xem trước video bài hát Bussin' của AK-69"},
+    {id: "JuHCDbwEot8", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
+     name: "Lost Love Song II - Hilcrhyme", level: "", lines: 52, dur: "3:25",
+     thumb: "https://i.ytimg.com/vi/JuHCDbwEot8/mqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát Lost Love Song II của Hilcrhyme"},
+    {id: "tjCkvTze1Uk", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
+     name: "See you again × 愛唄 (Mashup)", level: "", lines: 38, dur: "4:08",
+     thumb: "https://i.ytimg.com/vi/tjCkvTze1Uk/mqdefault.jpg",
+     alt: "Ảnh xem trước video mashup See you again và 愛唄"},
+    {id: "dUT5rVcuT8Q", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
+     name: "ルージュ", level: "", lines: 26, dur: "3:52",
+     thumb: "https://i.ytimg.com/vi/dUT5rVcuT8Q/mqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát ルージュ"},
+    {id: "iUfQ8IHcl00", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
+     name: "涙の物語 - YURI CHIKA", level: "", lines: 19, dur: "3:12",
+     thumb: "https://i.ytimg.com/vi/iUfQ8IHcl00/mqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát 涙の物語 của YURI CHIKA"},
+    {id: "El4hZYbHLtc", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
+     name: "みかんのハート - C&K", level: "", lines: 38, dur: "5:11",
+     thumb: "https://i.ytimg.com/vi/El4hZYbHLtc/mqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát みかんのハート của C&K"},
     {id: "mKPRQF70PvA", cat: "podcast", series: "Easy N5 Japanese Podcast", channel: "OkkeiJapanese",
      name: "Easy N5 Japanese Podcast: đi Thụy Sĩ", level: "N5", lines: 23, dur: "1:02",
      thumb: "https://i.ytimg.com/vi/mKPRQF70PvA/mqdefault.jpg",
@@ -11544,6 +11564,302 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     facadeImg: "https://i.ytimg.com/vi/5di-PZtIRSI/mqdefault.jpg",
     facadeAlt: "Ảnh xem trước video bài hát Bussin' (feat. ¥ellow Bucks) - AK-69",
     facadeLabel: "Phát video bài hát Bussin' — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* Lost Love Song II (Hilcrhyme) — bài hát làm tay, 52 câu.
+     Video THƯỜNG 16:9 (không phải Shorts), ID JuHCDbwEot8, 3:25, nhúng trực tiếp
+     video gốc vietsub+romaji của kênh Em Bé (không đăng lại; quyết định 2026-11-14).
+     LƯU Ý: video Em Bé đặt tên "lost love song" nhưng audio thực tế là Lost Love
+     Song II (xác minh bằng khung hình 20s + Whisper: わからないの自分がどうしても).
+     52 câu lấy ĐÚNG từ lostlove-19-lesson.json đã soát tay (lời theo bản đã xuất bản
+     Oricon Lost love song【II】, khớp 50/50 dòng; mốc giờ căn theo Whisper base +
+     word timestamps; âm thanh là bản studio, không ad-lib). Mở bằng chính player sv2*
+     qua svuActivate (wide: khung video nằm ngang 16:9). */
+  var SV15_ID = "JuHCDbwEot8";
+  var SV15_DUR = 205;
+  var SV15_SUBS = [
+    {t:2.3, e:6.36, ja:"行かないで ねぇ一人は嫌だよ", fj:"行か[いか]ないで ねぇ一人[ひとり]は嫌[いや]だよ", furi:"いかないで ねぇひとりはいやだよ", romaji:"ikanai de nee hitori wa iya da yo", vi:"Đừng đi mà, em ghét phải ở một mình lắm.", blank:["一人","ひとり"], exp:"行かないで (いかないで): đừng đi (thể ない + で, yêu cầu phủ định); ねぇ: này, ê (gọi); 一人 (ひとり): một mình; 嫌だ (いやだ): ghét, không thích"},
+    {t:6.74, e:8.92, ja:"遊びで構わないの", fj:"遊び[あそび]で構わ[かまわ]ないの", furi:"あそびでかまわないの", romaji:"asobi de kamawanai no", vi:"Dù chỉ là chơi bời em cũng cam lòng.", blank:["遊び","あそび"], exp:"遊び (あそび): chơi bời, đùa giỡn; 構わない (かまわない): không sao, chấp nhận được; の: trợ từ cuối câu nhấn mạnh cảm xúc"},
+    {t:8.92, e:13.24, ja:"何故こんなにもひどいあなたを", fj:"何故[なぜ]こんなにもひどいあなたを", furi:"なぜこんなにもひどいあなたを", romaji:"naze konnanimo hidoi anata wo", vi:"Sao em lại yêu một người tàn nhẫn như anh đến thế", blank:["何故","なぜ"], exp:"何故 (なぜ): tại sao; こんなにも: đến mức này; ひどい: tàn nhẫn, tệ bạc; あなたを: tân ngữ của câu sau (好きでたまらないの)"},
+    {t:13.24, e:15.84, ja:"好きでたまらないの", fj:"好き[すき]でたまらないの", furi:"すきでたまらないの", romaji:"suki de tamaranai no", vi:"…yêu đến mức không chịu nổi.", blank:["好き","すき"], exp:"好きでたまらない (すきでたまらない): yêu đến mức không chịu nổi; たまらない: không chịu nổi, không kìm được"},
+    {t:16.54, e:20.1, ja:"わからないの自分がどうしても", fj:"わからないの自分[じぶん]がどうしても", furi:"わからないのじぶんがどうしても", romaji:"wakaranai no jibun ga doushitemo", vi:"Em chẳng hiểu nổi chính mình, dù thế nào đi nữa.", blank:["自分","じぶん"], exp:"わからない: không hiểu; 自分 (じぶん): bản thân mình; どうしても: dù thế nào, bằng mọi giá"},
+    {t:20.1, e:22.78, ja:"貴方なしじゃ保てない", fj:"貴方[あなた]なしじゃ保て[たもて]ない", furi:"あなたなしじゃたもてない", romaji:"anata nashi ja tamotenai", vi:"Không có anh, em không thể giữ nổi mình.", blank:["保てない","たもてない"], exp:"貴方 (あなた): anh (cách gọi lãng mạn của あなた); なしじゃ: nếu không có thì; 保つ (たもつ): giữ gìn, duy trì"},
+    {t:22.78, e:27.04, ja:"お願い 私の居場所を残してよ", fj:"お願い[おねがい] 私[わたし]の居場所[いばしょ]を残し[のこし]てよ", furi:"おねがい わたしのいばしょをのこしてよ", romaji:"onegai watashi no ibasho wo nokoshite yo", vi:"Xin anh, hãy để lại cho em một chỗ đứng.", blank:["居場所","いばしょ"], exp:"お願い (おねがい): xin, cầu xin; 居場所 (いばしょ): chỗ đứng, nơi thuộc về mình; 残す (のこす): để lại, giữ lại"},
+    {t:27.04, e:29.62, ja:"どこで泣けばいいの", fj:"どこで泣け[なけ]ばいいの", furi:"どこでなけばいいの", romaji:"doko de nakeba ii no", vi:"Em biết khóc ở đâu bây giờ.", blank:["泣けば","なけば"], exp:"泣く (なく): khóc; ～ばいい: nên làm gì; どこで: ở đâu"},
+    {t:44.54, e:47.48, ja:"顔も性格も理想的", fj:"顔[かお]も性格[せいかく]も理想[りそう]的[てき]", furi:"かおもせいかくもりそうてき", romaji:"kao mo seikaku mo risouteki", vi:"Khuôn mặt lẫn tính cách đều lý tưởng.", blank:["性格","せいかく"], exp:"顔 (かお): khuôn mặt; 性格 (せいかく): tính cách; 理想的 (りそうてき): lý tưởng"},
+    {t:47.9, e:51.2, ja:"でも治せないあなたの奇行癖", fj:"でも治せ[なおせ]ないあなたの奇行[きこう]癖[へき]", furi:"でもなおせないあなたのきこうへき", romaji:"demo naosenai anata no kikouheki", vi:"Nhưng thói quen kỳ quặc của anh thì chẳng sửa được.", blank:["奇行癖","きこうへき"], exp:"治す (なおす): chữa, sửa; 奇行癖 (きこうへき): tật hành động kỳ quặc (奇行: hành vi lạ + 癖: tật); でも: nhưng"},
+    {t:51.2, e:54.68, ja:"何故私がいるのに他の子を", fj:"何故[なぜ]私[わたし]がいるのに他[ほか]の子[こ]を", furi:"なぜわたしがいるのにほかのこを", romaji:"naze watashi ga iru noni hoka no ko wo", vi:"Sao anh vẫn nhìn cô gái khác dù có em ở đây", blank:["他の子","ほかのこ"], exp:"何故 (なぜ): tại sao; いるのに: dù đang ở đây mà; 他の子 (ほかのこ): cô gái khác"},
+    {t:54.84, e:57.92, ja:"必死になって 話逸らそうと", fj:"必死[ひっし]になって 話[はなし]逸らそ[そらそ]うと", furi:"ひっしになって はなしそらそうと", romaji:"hisshi ni natte hanashi sorasou to", vi:"…anh vội vàng lảng sang chuyện khác.", blank:["必死","ひっし"], exp:"必死になって (ひっしになって): liều mạng, vội vã; 話を逸らす (はなしをそらす): lảng chuyện, đánh trống lảng; ～そうと: định làm gì"},
+    {t:57.92, e:61.46, ja:"それで隠してるつもりなの", fj:"それで隠し[かくし]てるつもりなの", furi:"それでかくしてるつもりなの", romaji:"sore de kakushiteru tsumori na no", vi:"Anh tưởng làm vậy là giấu được sao.", blank:["隠してる","かくしてる"], exp:"隠す (かくす): giấu giếm; ～つもり: định, tưởng là; なの: phải không (hỏi lại, trách móc)"},
+    {t:61.46, e:65, ja:"いつからか一緒に居ても曇り顔", fj:"いつからか一緒[いっしょ]に居[い]ても曇り[くもり]顔[がお]", furi:"いつからかいっしょにいてもくもりがお", romaji:"itsukaraka issho ni ite mo kumorigao", vi:"Từ lúc nào, ở bên nhau mà mặt anh vẫn u ám.", blank:["曇り顔","くもりがお"], exp:"いつからか: từ lúc nào không hay; 一緒に居ても (いっしょにいても): dù ở bên nhau; 曇り顔 (くもりがお): vẻ mặt u ám"},
+    {t:65, e:68.38, ja:"光ってる携帯 サイレントモード", fj:"光っ[ひかっ]てる携帯[けいたい] サイレントモード", furi:"ひかってるけいたい サイレントモード", romaji:"hikatteru keitai sairento moodo", vi:"Điện thoại sáng màn hình, đang để chế độ im lặng.", blank:["携帯","けいたい"], exp:"光る (ひかる): sáng lên; 携帯 (けいたい): điện thoại di động; サイレントモード: chế độ im lặng"},
+    {t:68.68, e:70.06, ja:"気づかないと思ってる？", fj:"気づか[きづか]ないと思っ[おもっ]てる？", furi:"きづかないとおもってる？", romaji:"kizukanai to omotteru?", vi:"Anh tưởng em không nhận ra sao?", blank:["気づかない","きづかない"], exp:"気づく (きづく): nhận ra, để ý; ～と思ってる: tưởng là"},
+    {t:70.06, e:72.18, ja:"何してんのもう", fj:"何[なに]してんのもう", furi:"なにしてんのもう", romaji:"nani shiten no mou", vi:"Anh đang làm cái gì vậy chứ.", blank:["何してんの","なにしてんの"], exp:"何してんの (なにしてんの): đang làm gì vậy (何しているの, khẩu ngữ); もう: thật là (thán từ bực bội)"},
+    {t:72.18, e:75.38, ja:"怪しい怪しい 疑いっぱなし", fj:"怪しい[あやしい]怪しい[あやしい] 疑い[うたがい]っぱなし", furi:"あやしいあやしい うたがいっぱなし", romaji:"ayashi ayashii utagaippanashi", vi:"Đáng ngờ, đáng ngờ quá, em cứ nghi ngờ mãi.", blank:["怪しい","あやしい"], exp:"怪しい (あやしい): đáng ngờ; 疑いっぱなし (うたがいいっぱなし): cứ nghi ngờ mãi (～っぱなし: cứ để nguyên trạng thái)"},
+    {t:75.68, e:79.2, ja:"嫌なの 何故こんな自分ばかり", fj:"嫌[いや]なの 何故[なぜ]こんな自分[じぶん]ばかり", furi:"いやなの なぜこんなじぶんばかり", romaji:"iya na no naze konna jibun bakari", vi:"Em ghét lắm, sao em cứ mãi là con người thế này.", blank:["嫌なの","いやなの"], exp:"嫌なの (いやなの): ghét lắm, khó chịu lắm; 何故 (なぜ): tại sao; こんな自分 (こんなじぶん): con người thế này của em; ばかり: cứ mãi"},
+    {t:79.2, e:82.12, ja:"見えてもフリをする見てないと", fj:"見え[みえ]てもフリをする見[み]てないと", furi:"みえてもフリをするみてないと", romaji:"miete mo furi wo suru mitenai to", vi:"Dù thấy rõ, em vẫn giả vờ như không thấy.", blank:["フリ","ふり"], exp:"フリをする: giả vờ; 見てないと: như thể không nhìn thấy; 見える (みえる): nhìn thấy được"},
+    {t:82.6, e:85.76, ja:"だって怒られちゃ何も言えないの", fj:"だって怒ら[おこら]れちゃ何[なに]も言え[いえ]ないの", furi:"だっておこられちゃなにもいえないの", romaji:"datte okorarecha nani mo ienai no", vi:"Vì nếu bị anh mắng, em chẳng nói được gì.", blank:["怒られちゃ","おこられちゃ"], exp:"だって: vì, bởi vì; 怒られる (おこられる): bị mắng; ～ちゃ: ～てしまう rút gọn; 何も言えない (なにもいえない): chẳng nói được gì"},
+    {t:86.82, e:90.94, ja:"行かないで ねぇ一人は嫌だよ", fj:"行か[いか]ないで ねぇ一人[ひとり]は嫌[いや]だよ", furi:"いかないで ねぇひとりはいやだよ", romaji:"ikanai de nee hitori wa iya da yo", vi:"Đừng đi mà, em ghét phải ở một mình lắm.", blank:["一人","ひとり"], exp:"行かないで (いかないで): đừng đi (thể ない + で, yêu cầu phủ định); ねぇ: này, ê (gọi); 一人 (ひとり): một mình; 嫌だ (いやだ): ghét, không thích"},
+    {t:91.34, e:93.56, ja:"遊びで構わないの", fj:"遊び[あそび]で構わ[かまわ]ないの", furi:"あそびでかまわないの", romaji:"asobi de kamawanai no", vi:"Dù chỉ là chơi bời em cũng cam lòng.", blank:["遊び","あそび"], exp:"遊び (あそび): chơi bời, đùa giỡn; 構わない (かまわない): không sao, chấp nhận được; の: trợ từ cuối câu nhấn mạnh cảm xúc"},
+    {t:94.08, e:97.86, ja:"何故こんなにもひどいあなたを", fj:"何故[なぜ]こんなにもひどいあなたを", furi:"なぜこんなにもひどいあなたを", romaji:"naze konnanimo hidoi anata wo", vi:"Sao em lại yêu một người tàn nhẫn như anh đến thế", blank:["何故","なぜ"], exp:"何故 (なぜ): tại sao; こんなにも: đến mức này; ひどい: tàn nhẫn, tệ bạc; あなたを: tân ngữ của câu sau (好きでたまらないの)"},
+    {t:97.86, e:100.46, ja:"好きでたまらないの", fj:"好き[すき]でたまらないの", furi:"すきでたまらないの", romaji:"suki de tamaranai no", vi:"…yêu đến mức không chịu nổi.", blank:["好き","すき"], exp:"好きでたまらない (すきでたまらない): yêu đến mức không chịu nổi; たまらない: không chịu nổi, không kìm được"},
+    {t:101.02, e:104.72, ja:"わからないの自分がどうしても", fj:"わからないの自分[じぶん]がどうしても", furi:"わからないのじぶんがどうしても", romaji:"wakaranai no jibun ga doushitemo", vi:"Em chẳng hiểu nổi chính mình, dù thế nào đi nữa.", blank:["自分","じぶん"], exp:"わからない: không hiểu; 自分 (じぶん): bản thân mình; どうしても: dù thế nào, bằng mọi giá"},
+    {t:104.72, e:107.34, ja:"貴方なしじゃ保てない", fj:"貴方[あなた]なしじゃ保て[たもて]ない", furi:"あなたなしじゃたもてない", romaji:"anata nashi ja tamotenai", vi:"Không có anh, em không thể giữ nổi mình.", blank:["保てない","たもてない"], exp:"貴方 (あなた): anh (cách gọi lãng mạn của あなた); なしじゃ: nếu không có thì; 保つ (たもつ): giữ gìn, duy trì"},
+    {t:108.18, e:111.62, ja:"お願い 私の居場所を残してよ", fj:"お願い[おねがい] 私[わたし]の居場所[いばしょ]を残し[のこし]てよ", furi:"おねがい わたしのいばしょをのこしてよ", romaji:"onegai watashi no ibasho wo nokoshite yo", vi:"Xin anh, hãy để lại cho em một chỗ đứng.", blank:["居場所","いばしょ"], exp:"お願い (おねがい): xin, cầu xin; 居場所 (いばしょ): chỗ đứng, nơi thuộc về mình; 残す (のこす): để lại, giữ lại"},
+    {t:111.62, e:114.26, ja:"どこで泣けばいいの", fj:"どこで泣け[なけ]ばいいの", furi:"どこでなけばいいの", romaji:"doko de nakeba ii no", vi:"Em biết khóc ở đâu bây giờ.", blank:["泣けば","なけば"], exp:"泣く (なく): khóc; ～ばいい: nên làm gì; どこで: ở đâu"},
+    {t:115.4, e:118.3, ja:"あなたは私の全て", fj:"あなたは私[わたし]の全て[すべて]", furi:"あなたはわたしのすべて", romaji:"anata wa watashi no subete", vi:"Anh là tất cả của em.", blank:["全て","すべて"], exp:"全て (すべて): tất cả, toàn bộ; 私の全て: tất cả của em"},
+    {t:118.44, e:121.58, ja:"笑顔見れば何もかも忘れて", fj:"笑顔[えがお]見れ[みれ]ば何もかも[なにもかも]忘れ[わすれ]て", furi:"えがおみればなにもかもわすれて", romaji:"egao mireba nani mo kamo wasurete", vi:"Chỉ cần thấy nụ cười của anh, em quên hết mọi thứ.", blank:["笑顔","えがお"], exp:"笑顔 (えがお): nụ cười; ～ば: nếu; 何もかも (なにもかも): tất cả mọi thứ; 忘れる (わすれる): quên"},
+    {t:121.58, e:124.12, ja:"抱かれてはまた信じる", fj:"抱か[だか]れてはまた信じる[しんじる]", furi:"だかれてはまたしんじる", romaji:"dakarete wa mata shinjiru", vi:"Được anh ôm, em lại tin anh lần nữa.", blank:["抱かれて","だかれて"], exp:"抱かれる (だかれる): được ôm (bị động của 抱く); また: lại; 信じる (しんじる): tin tưởng"},
+    {t:124.12, e:125.48, ja:"バカみたいに", fj:"バカみたいに", furi:"バカみたいに", romaji:"baka mitai ni", vi:"Như một đứa ngốc.", blank:["バカ","ばか"], exp:"バカ: ngốc, khờ; ～みたいに: như thể là"},
+    {t:125.78, e:128.82, ja:"夢見てる 来るはずのない未来に", fj:"夢見[ゆめみ]てる 来る[くる]はずのない未来[みらい]に", furi:"ゆめみてる くるはずのないみらいに", romaji:"yumemiteru kuru hazu no nai mirai ni", vi:"Em vẫn mơ về một tương lai chẳng bao giờ đến.", blank:["夢見てる","ゆめみてる"], exp:"夢見る (ゆめみる): mơ; 来るはずのない (くるはずのない): chẳng bao giờ đến (はずがない: không thể nào); 未来 (みらい): tương lai"},
+    {t:128.82, e:132.1, ja:"聞き飽きたセリフ「お前だけ」", fj:"聞き[きき]飽き[あき]たセリフ「お前[おまえ]だけ」", furi:"ききあきたセリフ「おまえだけ」", romaji:"kikiakita serifu \"omae dake\"", vi:"Câu “chỉ có mình em thôi” nghe đến chán rồi.", blank:["聞き飽きた","ききあきた"], exp:"聞き飽きる (ききあきる): nghe đến chán; セリフ: lời thoại, câu nói; お前だけ (おまえだけ): chỉ có mình em (お前: cách gọi thân mật/thô)"},
+    {t:132.1, e:135.64, ja:"それじゃあ誰なのこれ？って答えられず", fj:"それじゃあ誰[だれ]なのこれ？って答え[こたえ]られず", furi:"それじゃあだれなのこれ？ってこたえられず", romaji:"sore jaa dare na no kore? tte kotaerarezu", vi:"“Vậy đây là ai?” — anh chẳng trả lời được.", blank:["答えられず","こたえられず"], exp:"それじゃあ: vậy thì; 誰なのこれ (だれなのこれ): đây là ai vậy; 答えられず (こたえられず): không trả lời được (～ず: không, dạng phủ định cổ điển)"},
+    {t:135.64, e:139.32, ja:"「もういいよ」とあなたが言いかけた", fj:"「もういいよ」とあなたが言い[いい]かけた", furi:"「もういいよ」とあなたがいいかけた", romaji:"\"mou ii yo\" to anata ga iikaketa", vi:"Anh vừa định nói “thôi đủ rồi”.", blank:["言いかけた","いいかけた"], exp:"もういいよ: thôi đủ rồi, chán rồi; 言いかける (いいかける): vừa định nói"},
+    {t:139.6, e:142.72, ja:"画面のように関係もひび割れた", fj:"画面[がめん]のように関係[かんけい]もひび割れ[ひびわれ]た", furi:"がめんのようにかんけいもひびわれた", romaji:"gamen no you ni kankei mo hibiwareta", vi:"Mối quan hệ của chúng ta cũng rạn nứt như màn hình điện thoại.", blank:["ひび割れた","ひびわれた"], exp:"画面 (がめん): màn hình; 関係 (かんけい): mối quan hệ; ひび割れる: rạn nứt"},
+    {t:142.72, e:146.18, ja:"こっちのセリフよ私からバイバイ", fj:"こっちのセリフよ私[わたし]からバイバイ", furi:"こっちのセリフよわたしからバイバイ", romaji:"kotchi no serifu yo watashi kara baibai", vi:"Câu đó phải để em nói mới đúng — em sẽ là người nói tạm biệt trước.", blank:["セリフ","せりふ"], exp:"こっちのセリフ: câu đó phải để tôi nói; 私から (わたしから): từ phía em, em chủ động; バイバイ: tạm biệt"},
+    {t:146.26, e:147.84, ja:"言えりゃどんな楽か", fj:"言えりゃ[いえりゃ]どんな楽[らく]か", furi:"いえりゃどんならくか", romaji:"ierya donna raku ka", vi:"Nói được ra thì nhẹ nhõm biết bao.", blank:["言えりゃ","いえりゃ"], exp:"言えりゃ (いえりゃ): nếu nói được (言えれば, khẩu ngữ); 楽 (らく): nhẹ nhõm, thoải mái; どんな～か: biết bao"},
+    {t:147.84, e:149.6, ja:"自分がもうわかんない", fj:"自分[じぶん]がもうわかんない", furi:"じぶんがもうわかんない", romaji:"jibun ga mou wakannai", vi:"Em chẳng còn hiểu nổi chính mình nữa.", blank:["わかんない","わかんない"], exp:"自分 (じぶん): bản thân; もう: nữa, rồi; わかんない: không hiểu (わからない, khẩu ngữ)"},
+    {t:149.6, e:152.6, ja:"一番にはなれないの？", fj:"一番[いちばん]にはなれないの？", furi:"いちばんにはなれないの？", romaji:"ichiban ni wa narenai no?", vi:"Em không thể là người số một của anh sao?", blank:["一番","いちばん"], exp:"一番 (いちばん): số một, quan trọng nhất; ～にはなれない: không thể trở thành"},
+    {t:152.92, e:154.78, ja:"心が壊れても", fj:"心[こころ]が壊れ[こわれ]ても", furi:"こころがこわれても", romaji:"kokoro ga kowarete mo", vi:"Dù trái tim có tan vỡ.", blank:["壊れても","こわれても"], exp:"心 (こころ): trái tim; 壊れる (こわれる): vỡ, tan vỡ; ～ても: dù"},
+    {t:154.78, e:156.72, ja:"離れられないの", fj:"離れ[はなれ]られないの", furi:"はなれられないの", romaji:"hanarerarenai no", vi:"Em vẫn không thể rời xa anh.", blank:["離れられない","はなれられない"], exp:"離れる (はなれる): rời xa; ～られない: không thể (khả năng phủ định)"},
+    {t:157.6, e:161.72, ja:"行かないで ねぇ一人は嫌だよ", fj:"行か[いか]ないで ねぇ一人[ひとり]は嫌[いや]だよ", furi:"いかないで ねぇひとりはいやだよ", romaji:"ikanai de nee hitori wa iya da yo", vi:"Đừng đi mà, em ghét phải ở một mình lắm.", blank:["一人","ひとり"], exp:"行かないで (いかないで): đừng đi (thể ない + で, yêu cầu phủ định); ねぇ: này, ê (gọi); 一人 (ひとり): một mình; 嫌だ (いやだ): ghét, không thích"},
+    {t:162.06, e:164.3, ja:"遊びで構わないの", fj:"遊び[あそび]で構わ[かまわ]ないの", furi:"あそびでかまわないの", romaji:"asobi de kamawanai no", vi:"Dù chỉ là chơi bời em cũng cam lòng.", blank:["遊び","あそび"], exp:"遊び (あそび): chơi bời, đùa giỡn; 構わない (かまわない): không sao, chấp nhận được; の: trợ từ cuối câu nhấn mạnh cảm xúc"},
+    {t:164.3, e:168.64, ja:"何故こんなにもひどいあなたを", fj:"何故[なぜ]こんなにもひどいあなたを", furi:"なぜこんなにもひどいあなたを", romaji:"naze konnanimo hidoi anata wo", vi:"Sao em lại yêu một người tàn nhẫn như anh đến thế", blank:["何故","なぜ"], exp:"何故 (なぜ): tại sao; こんなにも: đến mức này; ひどい: tàn nhẫn, tệ bạc; あなたを: tân ngữ của câu sau (好きでたまらないの)"},
+    {t:168.64, e:171.22, ja:"好きでたまらないの", fj:"好き[すき]でたまらないの", furi:"すきでたまらないの", romaji:"suki de tamaranai no", vi:"…yêu đến mức không chịu nổi.", blank:["好き","すき"], exp:"好きでたまらない (すきでたまらない): yêu đến mức không chịu nổi; たまらない: không chịu nổi, không kìm được"},
+    {t:171.78, e:175.5, ja:"わからないの自分がどうしても", fj:"わからないの自分[じぶん]がどうしても", furi:"わからないのじぶんがどうしても", romaji:"wakaranai no jibun ga doushitemo", vi:"Em chẳng hiểu nổi chính mình, dù thế nào đi nữa.", blank:["自分","じぶん"], exp:"わからない: không hiểu; 自分 (じぶん): bản thân mình; どうしても: dù thế nào, bằng mọi giá"},
+    {t:175.5, e:178.22, ja:"貴方なしじゃ保てない", fj:"貴方[あなた]なしじゃ保て[たもて]ない", furi:"あなたなしじゃたもてない", romaji:"anata nashi ja tamotenai", vi:"Không có anh, em không thể giữ nổi mình.", blank:["保てない","たもてない"], exp:"貴方 (あなた): anh (cách gọi lãng mạn của あなた); なしじゃ: nếu không có thì; 保つ (たもつ): giữ gìn, duy trì"},
+    {t:178.22, e:182.06, ja:"お願い 私の居場所を残してよ", fj:"お願い[おねがい] 私[わたし]の居場所[いばしょ]を残し[のこし]てよ", furi:"おねがい わたしのいばしょをのこしてよ", romaji:"onegai watashi no ibasho wo nokoshite yo", vi:"Xin anh, hãy để lại cho em một chỗ đứng.", blank:["居場所","いばしょ"], exp:"お願い (おねがい): xin, cầu xin; 居場所 (いばしょ): chỗ đứng, nơi thuộc về mình; 残す (のこす): để lại, giữ lại"},
+    {t:182.06, e:185.02, ja:"どこで泣けばいいの", fj:"どこで泣け[なけ]ばいいの", furi:"どこでなけばいいの", romaji:"doko de nakeba ii no", vi:"Em biết khóc ở đâu bây giờ.", blank:["泣けば","なけば"], exp:"泣く (なく): khóc; ～ばいい: nên làm gì; どこで: ở đâu"}
+  ];
+  var SV15_WIN = SV15_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV15_ID] = {
+    id: SV15_ID, dur: SV15_DUR, subs: SV15_SUBS, win: SV15_WIN,
+    practice: SV15_SUBS.slice(),
+    fill: SV15_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "Lost Love Song II - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/JuHCDbwEot8/mqdefault.jpg",
+    facadeAlt: "Ảnh xem trước video bài hát Lost Love Song II - Hilcrhyme",
+    facadeLabel: "Phát video bài hát Lost Love Song II — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* Mashup See you again (Wiz Khalifa ft. Charlie Puth) × 愛唄 (GReeeeN) — bài hát làm tay, 38 câu.
+     Video THƯỜNG 16:9 (không phải Shorts), ID tjCkvTze1Uk, 4:08, nhúng trực tiếp
+     video gốc vietsub+romaji của kênh Em Bé (không đăng lại; quyết định 2026-11-14).
+     38 câu lấy ĐÚNG từ mashup-20-lesson.json đã soát tay: 14 câu tiếng Anh (điệp khúc +
+     đoạn refrain của See you again) xen 24 câu tiếng Nhật (愛唄, lời theo bản đã xuất bản
+     Oricon, chính tả theo phụ đề cháy sẵn của video); mốc giờ căn theo Whisper ja base +
+     Whisper en (base/small) trên clip + đối chiếu frame phụ đề. Mashup chỉ dùng 1 phần
+     mỗi bài: 愛唄 bỏ L1–L4, L10–L11, L19–L25; See you again chỉ điệp khúc + refrain.
+     Mở bằng chính player sv2* qua svuActivate (wide: khung video nằm ngang 16:9). */
+  var SV16_ID = "tjCkvTze1Uk";
+  var SV16_DUR = 248;
+  var SV16_SUBS = [
+    {t:11.1, e:18, ja:"It's been a long day without you, my friend", fj:"It's been a long day without you, my friend", furi:"It's been a long day without you, my friend", romaji:"It's been a long day without you, my friend", vi:"Một ngày thật dài khi không có cậu ở đây, bạn của tôi", blank:["friend","フレンド"], exp:"It's been a long day: một ngày dài đằng đẵng (đã trôi qua); without you: không có cậu; my friend: bạn của tôi"},
+    {t:18, e:23.66, ja:"And I'll tell you all about it when I see you again", fj:"And I'll tell you all about it when I see you again", furi:"And I'll tell you all about it when I see you again", romaji:"And I'll tell you all about it when I see you again", vi:"Và tôi sẽ kể cho cậu nghe tất cả khi chúng ta gặp lại nhau", blank:["again","アゲイン"], exp:"I'll tell you: tôi sẽ kể cho cậu; all about it: tất cả mọi chuyện; when I see you again: khi gặp lại cậu"},
+    {t:23.66, e:29.78, ja:"We've come a long way from where we began", fj:"We've come a long way from where we began", furi:"We've come a long way from where we began", romaji:"We've come a long way from where we began", vi:"Chúng ta đã đi một chặng đường dài kể từ nơi bắt đầu", blank:["began","ビガン"], exp:"We've come a long way: chúng ta đã đi được một chặng đường dài; from where we began: kể từ nơi chúng ta bắt đầu; begin-began-begun: bắt đầu"},
+    {t:29.78, e:35.9, ja:"Oh, I'll tell you all about it when I see you again", fj:"Oh, I'll tell you all about it when I see you again", furi:"Oh, I'll tell you all about it when I see you again", romaji:"Oh, I'll tell you all about it when I see you again", vi:"Ôi, tôi sẽ kể cho cậu nghe tất cả khi chúng ta gặp lại nhau", blank:["tell","テル"], exp:"Oh: ôi, chao ôi (cảm thán); I'll tell you: tôi sẽ kể cho cậu; when I see you again: khi gặp lại cậu"},
+    {t:35.9, e:42.12, ja:"君の選んだ人生は僕で", fj:"君[きみ]の選ん[えらん]だ人生[みち]は僕[ここ]で", furi:"きみのえらんだみちはここで", romaji:"kimi no eranda michi wa koko de", vi:"Con đường mà em đã chọn, có anh ở đó", blank:["選んだ","えらんだ"], exp:"君 (きみ): em, cậu; 選んだ (えらんだ): đã chọn (選ぶ: chọn); 人生: cuộc đời — hát là みち (con đường); 僕: anh — hát là ここ (nơi này, ở đây)"},
+    {t:42.12, e:51.64, ja:"良かったのかなんて分からないけど", fj:"良かっ[よかっ]たのかなんて分から[わから]ないけど", furi:"よかったのかなんてわからないけど", romaji:"yokatta noka nante wakaranai kedo", vi:"Liệu có tốt không, anh cũng chẳng biết nữa, nhưng…", blank:["分からない","わからない"], exp:"良かった (よかった): đã tốt, tốt rồi; ～のかなんて: liệu có… không (nghi vấn); 分からない (わからない): không biết; けど: nhưng"},
+    {t:51.64, e:57.78, ja:"ただ泣いて笑って過ごす日々に", fj:"ただ泣い[ない]て笑っ[わらっ]て過ごす[すごす]日々[ひび]に", furi:"ただないてわらってすごすひびに", romaji:"tada naite waratte sugosu hibi ni", vi:"Trong những ngày tháng chỉ biết khóc rồi lại cười mà trôi qua", blank:["過ごす","すごす"], exp:"ただ: chỉ, chỉ là; 泣いて (ないて): khóc; 笑って (わらって): cười; 過ごす (すごす): trải qua, sống qua; 日々 (ひび): ngày tháng, từng ngày"},
+    {t:57.78, e:63.2, ja:"隣に立って居れることで", fj:"隣[となり]に立っ[たっ]て居[い]れることで", furi:"となりにたっていれることで", romaji:"tonari ni tatte ireru koto de", vi:"Chỉ cần được đứng bên cạnh em như thế", blank:["隣","となり"], exp:"隣 (となり): bên cạnh; 立って (たって): đứng (立つ); 居れる (いれる): có thể ở (居る: ở, có mặt); ことで: bằng việc, nhờ việc"},
+    {t:63.2, e:69.18, ja:"僕が生きる意味になって", fj:"僕[ぼく]が生きる[いきる]意味[いみ]になって", furi:"ぼくがいきるいみになって", romaji:"boku ga ikiru imi ni natte", vi:"Em đã trở thành ý nghĩa để anh sống", blank:["意味","いみ"], exp:"僕 (ぼく): anh, tôi (nam tự xưng); 生きる (いきる): sống; 意味 (いみ): ý nghĩa; ～になって: trở thành"},
+    {t:69.18, e:74.9, ja:"君に捧ぐこの愛の唄", fj:"君[きみ]に捧ぐ[ささぐ]この愛[あい]の唄[うた]", furi:"きみにささぐこのあいのうた", romaji:"kimi ni sasagu kono ai no uta", vi:"Bài tình ca này, anh xin dâng tặng em", blank:["捧ぐ","ささぐ"], exp:"君に (きみに): cho em, tặng em; 捧ぐ (ささぐ): dâng tặng; 愛の唄 (あいのうた): bài hát tình yêu, tình ca"},
+    {t:77.46, e:81.88, ja:"How could we not talk about family when family's all that we got?", fj:"How could we not talk about family when family's all that we got?", furi:"How could we not talk about family when family's all that we got?", romaji:"How could we not talk about family when family's all that we got?", vi:"Làm sao chúng ta có thể không nói về gia đình, khi gia đình là tất cả những gì ta có?", blank:["family","ファミリー"], exp:"How could we not...?: làm sao chúng ta có thể không…?; talk about: nói về; family: gia đình; all that we got: tất cả những gì chúng ta có (got = have)"},
+    {t:81.88, e:84.96, ja:"Everything I went through, you were standing there by my side", fj:"Everything I went through, you were standing there by my side", furi:"Everything I went through, you were standing there by my side", romaji:"Everything I went through, you were standing there by my side", vi:"Mọi khó khăn tôi đã trải qua, cậu vẫn luôn đứng đó, bên cạnh tôi", blank:["side","サイド"], exp:"Everything I went through: mọi chuyện tôi đã trải qua (go through: trải qua); standing there: đứng ở đó; by my side: bên cạnh tôi"},
+    {t:84.96, e:87.52, ja:"And now you gonna be with me for the last ride", fj:"And now you gonna be with me for the last ride", furi:"And now you gonna be with me for the last ride", romaji:"And now you gonna be with me for the last ride", vi:"Và giờ đây, cậu sẽ ở bên tôi trên chặng đường cuối cùng", blank:["ride","ライド"], exp:"gonna = going to: sẽ; be with me: ở bên tôi; the last ride: chuyến đi cuối cùng, chặng đường cuối (ride: chuyến đi, hành trình)"},
+    {t:87.52, e:92.98, ja:"It's been a long day without you, my friend", fj:"It's been a long day without you, my friend", furi:"It's been a long day without you, my friend", romaji:"It's been a long day without you, my friend", vi:"Một ngày thật dài khi không có cậu ở đây, bạn của tôi", blank:["long","ロング"], exp:"It's been a long day: một ngày dài đằng đẵng (đã trôi qua); without you: không có cậu; my friend: bạn của tôi"},
+    {t:93.88, e:98.72, ja:"And I'll tell you all about it when I see you again", fj:"And I'll tell you all about it when I see you again", furi:"And I'll tell you all about it when I see you again", romaji:"And I'll tell you all about it when I see you again", vi:"Và tôi sẽ kể cho cậu nghe tất cả khi chúng ta gặp lại nhau", blank:["see","シー"], exp:"I'll tell you: tôi sẽ kể cho cậu; all about it: tất cả mọi chuyện; when I see you again: khi gặp lại cậu"},
+    {t:99.68, e:104.82, ja:"あれから色々あって時には喧嘩もして", fj:"あれから色々[いろいろ]あって時には[ときには]喧嘩[けんか]もして", furi:"あれからいろいろあってときにはけんかもして", romaji:"arekara iroiro atte toki ni wa kenka mo shite", vi:"Từ ngày ấy, đã có biết bao chuyện xảy ra, đôi lúc chúng mình còn cãi nhau nữa", blank:["喧嘩","けんか"], exp:"あれから: từ ngày đó, từ khi ấy; 色々 (いろいろ): đủ thứ, nhiều chuyện; あって: đã xảy ra, đã có; 時には (ときには): đôi khi; 喧嘩 (けんか): cãi nhau"},
+    {t:105.68, e:110.66, ja:"分かり合うための時過ごしたね", fj:"分かり[わかり]合う[あう]ための時[とき]過ごし[すごし]たね", furi:"わかりあうためのときすごしたね", romaji:"wakariau tame no toki sugoshita ne", vi:"Chúng mình đã cùng nhau trải qua thời gian để hiểu nhau hơn, phải không", blank:["分かり合う","わかりあう"], exp:"分かり合う (わかりあう): hiểu nhau, thấu hiểu lẫn nhau; ための: để, nhằm; 時 (とき): thời gian; 過ごした (すごした): đã trải qua; ね: nhỉ, phải không (xác nhận)"},
+    {t:110.66, e:117.82, ja:"この広い僕ら空の下", fj:"この広い[ひろい]僕ら[ぼくら]空[そら]の下[した]", furi:"このひろいぼくらそらのした", romaji:"kono hiroi bokura sora no shita", vi:"Dưới bầu trời bao la rộng lớn của chúng mình", blank:["広い","ひろい"], exp:"この: này; 広い (ひろい): rộng lớn; 僕ら (ぼくら): chúng tôi, chúng mình; 空 (そら): bầu trời; 下 (した): dưới"},
+    {t:117.82, e:121.46, ja:"出会って恋をして", fj:"出会っ[であっ]て恋[こい]をして", furi:"であってこいをして", romaji:"deatte koi wo shite", vi:"Chúng mình gặp nhau rồi yêu nhau", blank:["出会って","であって"], exp:"出会って (であって): gặp gỡ (出会う: gặp nhau, tình cờ gặp); 恋をして (こいをして): yêu, phải lòng (恋: tình yêu)"},
+    {t:123.44, e:126.66, ja:"いつまでも", fj:"いつまでも", furi:"いつまでも", romaji:"itsu made mo", vi:"Mãi mãi", blank:["いつまでも","いつまでも"], exp:"いつまでも: mãi mãi, lúc nào cũng, cho đến bao giờ"},
+    {t:126.66, e:132.62, ja:"ただ泣いて笑って過ごす日々に", fj:"ただ泣い[ない]て笑っ[わらっ]て過ごす[すごす]日々[ひび]に", furi:"ただないてわらってすごすひびに", romaji:"tada naite waratte sugosu hibi ni", vi:"Trong những ngày tháng chỉ biết khóc rồi lại cười mà trôi qua", blank:["泣いて","ないて"], exp:"ただ: chỉ, chỉ là; 泣いて (ないて): khóc; 笑って (わらって): cười; 過ごす (すごす): trải qua, sống qua; 日々 (ひび): ngày tháng, từng ngày"},
+    {t:132.62, e:138.14, ja:"隣に立って居れることで", fj:"隣[となり]に立っ[たっ]て居[い]れることで", furi:"となりにたっていれることで", romaji:"tonari ni tatte ireru koto de", vi:"Chỉ cần được đứng bên cạnh em như thế", blank:["居れる","いれる"], exp:"隣 (となり): bên cạnh; 立って (たって): đứng (立つ); 居れる (いれる): có thể ở (居る: ở, có mặt); ことで: bằng việc, nhờ việc"},
+    {t:138.66, e:144.18, ja:"君と生きる意味になって", fj:"君[きみ]と生きる[いきる]意味[いみ]になって", furi:"きみといきるいみになって", romaji:"kimi to ikiru imi ni natte", vi:"Trở thành ý nghĩa để anh được sống cùng em", blank:["生きる","いきる"], exp:"君と (きみと): cùng em; 生きる (いきる): sống; 意味 (いみ): ý nghĩa; ～になって: trở thành"},
+    {t:144.18, e:149.94, ja:"君に捧ぐこの愛の唄", fj:"君[きみ]に捧ぐ[ささぐ]この愛[あい]の唄[うた]", furi:"きみにささぐこのあいのうた", romaji:"kimi ni sasagu kono ai no uta", vi:"Bài tình ca này, anh xin dâng tặng em", blank:["愛","あい"], exp:"君に (きみに): cho em, tặng em; 捧ぐ (ささぐ): dâng tặng; 愛の唄 (あいのうた): bài hát tình yêu, tình ca"},
+    {t:152.78, e:156.8, ja:"How could we not talk about family when family's all that we got?", fj:"How could we not talk about family when family's all that we got?", furi:"How could we not talk about family when family's all that we got?", romaji:"How could we not talk about family when family's all that we got?", vi:"Làm sao chúng ta có thể không nói về gia đình, khi gia đình là tất cả những gì ta có?", blank:["talk","トーク"], exp:"How could we not...?: làm sao chúng ta có thể không…?; talk about: nói về; family: gia đình; all that we got: tất cả những gì chúng ta có (got = have)"},
+    {t:157.08, e:159.98, ja:"Everything I went through, you were standing there by my side", fj:"Everything I went through, you were standing there by my side", furi:"Everything I went through, you were standing there by my side", romaji:"Everything I went through, you were standing there by my side", vi:"Mọi khó khăn tôi đã trải qua, cậu vẫn luôn đứng đó, bên cạnh tôi", blank:["through","スルー"], exp:"Everything I went through: mọi chuyện tôi đã trải qua (go through: trải qua); standing there: đứng ở đó; by my side: bên cạnh tôi"},
+    {t:159.98, e:162.62, ja:"And now you gonna be with me for the last ride", fj:"And now you gonna be with me for the last ride", furi:"And now you gonna be with me for the last ride", romaji:"And now you gonna be with me for the last ride", vi:"Và giờ đây, cậu sẽ ở bên tôi trên chặng đường cuối cùng", blank:["last","ラスト"], exp:"gonna = going to: sẽ; be with me: ở bên tôi; the last ride: chuyến đi cuối cùng, chặng đường cuối (ride: chuyến đi, hành trình)"},
+    {t:162.62, e:168.62, ja:"僕の声が続く限り", fj:"僕[ぼく]の声[こえ]が続く[つづく]限り[かぎり]", furi:"ぼくのこえがつづくかぎり", romaji:"boku no koe ga tsuzuku kagiri", vi:"Chừng nào giọng anh còn cất lên được", blank:["続く","つづく"], exp:"僕の声 (ぼくのこえ): giọng nói, giọng hát của anh; 続く (つづく): tiếp tục, kéo dài; 限り (かぎり): chừng nào, trong giới hạn"},
+    {t:168.62, e:174.92, ja:"隣でずっと愛を唄うよ", fj:"隣[となり]でずっと愛[あい]を唄う[うたう]よ", furi:"となりでずっとあいをうたうよ", romaji:"tonari de zutto ai wo utau yo", vi:"Anh sẽ mãi hát bài tình ca bên cạnh em", blank:["唄う","うたう"], exp:"隣で (となりで): bên cạnh; ずっと: mãi, luôn; 愛 (あい): tình yêu; 唄う (うたう): hát (唄: bài hát)"},
+    {t:174.92, e:181.96, ja:"歳をとって声が枯れてきたら", fj:"歳[とし]をとって声[こえ]が枯れ[かれ]てきたら", furi:"としをとってこえがかれてきたら", romaji:"toshi wo totte koe ga karete kitara", vi:"Khi tuổi già đến, giọng anh khản đi", blank:["枯れて","かれて"], exp:"歳をとって (としをとって): già đi, có tuổi (歳をとる: già đi); 声 (こえ): giọng; 枯れて (かれて): khản đi, khan đi (枯れる: héo, khản giọng); ～たら: nếu, khi"},
+    {t:181.96, e:186.26, ja:"ずっと手を握るよ", fj:"ずっと手[て]を握る[にぎる]よ", furi:"ずっとてをにぎるよ", romaji:"zutto te wo nigiru yo", vi:"Anh vẫn sẽ nắm chặt tay em mãi", blank:["握る","にぎる"], exp:"ずっと: mãi, luôn; 手 (て): tay; 握る (にぎる): nắm, nắm chặt; よ: đấy, nhé (nhấn mạnh)"},
+    {t:186.78, e:192.24, ja:"ただアリガトウじゃ伝えきれない", fj:"ただアリガトウじゃ伝え[つたえ]きれない", furi:"ただアリガトウじゃつたえきれない", romaji:"tada arigatou ja tsutaekirenai", vi:"Chỉ một câu 'cảm ơn' thôi thì chẳng thể nói hết được", blank:["伝えきれない","つたえきれない"], exp:"ただ: chỉ; アリガトウ: cảm ơn (ありがとう); じゃ: thì (chỉ điều kiện); 伝える (つたえる): truyền đạt, nói; ～きれない: không thể… hết được"},
+    {t:192.94, e:195.96, ja:"泣き笑い悲しみ喜びを", fj:"泣き笑い[なきわらい]悲しみ[かなしみ]喜び[よろこび]を", furi:"なきわらいかなしみよろこびを", romaji:"nakiwarai kanashimi yorokobi wo", vi:"Những giọt nước mắt, nụ cười, nỗi buồn và niềm vui", blank:["悲しみ","かなしみ"], exp:"泣き笑い (なきわらい): vừa khóc vừa cười; 悲しみ (かなしみ): nỗi buồn; 喜び (よろこび): niềm vui; ※ lời xuất bản Oricon ghi 泣き笑いと悲しみ喜びを (có と) nhưng video hát không có と — giữ đúng như hát"},
+    {t:195.96, e:199.12, ja:"共に分かち合い生きて行こう", fj:"共に[ともに]分かち[わかち]合い[あい]生き[いき]て行こ[いこ]う", furi:"ともにわかちあいいきていこう", romaji:"tomo ni wakachiai ikite ikou", vi:"Hãy cùng nhau sẻ chia và sống tiếp nhé", blank:["分かち合い","わかちあい"], exp:"共に (ともに): cùng nhau; 分かち合い (わかちあい): sẻ chia, chia sẻ cùng nhau (分かち合う); 生きて行こう (いきていこう): hãy cùng sống tiếp (～行こう: hãy cùng…)"},
+    {t:199.12, e:203.9, ja:"いくつもの夜を超えて", fj:"いくつもの夜[よる]を超え[こえ]て", furi:"いくつものよるをこえて", romaji:"ikutsu mo no yoru wo koete", vi:"Vượt qua bao đêm dài", blank:["超えて","こえて"], exp:"いくつもの: bao nhiêu, nhiều (いくつ: bao nhiêu); 夜 (よる): đêm; 超えて (こえて): vượt qua (超える)"},
+    {t:203.9, e:213.42, ja:"僕は君と愛を唄おう", fj:"僕[ぼく]は君[きみ]と愛[あい]を唄お[うたお]う", furi:"ぼくはきみとあいをうたおう", romaji:"boku wa kimi to ai wo utaou", vi:"Anh sẽ cùng em hát bài tình ca này", blank:["唄おう","うたおう"], exp:"僕は (ぼくは): anh (thì); 君と (きみと): cùng em; 愛 (あい): tình yêu; 唄おう (うたおう): hãy hát (thể ý chí của 唄う)"},
+    {t:216.4, e:223.3, ja:"And I'll tell you all about it when I see you again", fj:"And I'll tell you all about it when I see you again", furi:"And I'll tell you all about it when I see you again", romaji:"And I'll tell you all about it when I see you again", vi:"Và tôi sẽ kể cho cậu nghe tất cả khi chúng ta gặp lại nhau", blank:["about","アバウト"], exp:"I'll tell you: tôi sẽ kể cho cậu; all about it: tất cả mọi chuyện; when I see you again: khi gặp lại cậu"},
+    {t:227.9, e:233.74, ja:"Oh, I'll tell you all about it when I see you again", fj:"Oh, I'll tell you all about it when I see you again", furi:"Oh, I'll tell you all about it when I see you again", romaji:"Oh, I'll tell you all about it when I see you again", vi:"Ôi, tôi sẽ kể cho cậu nghe tất cả khi chúng ta gặp lại nhau", blank:["when","ウェン"], exp:"Oh: ôi, chao ôi (cảm thán); I'll tell you: tôi sẽ kể cho cậu; all about it: tất cả mọi chuyện; when I see you again: khi gặp lại cậu"}
+  ];
+  var SV16_WIN = SV16_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV16_ID] = {
+    id: SV16_ID, dur: SV16_DUR, subs: SV16_SUBS, win: SV16_WIN,
+    practice: SV16_SUBS.slice(),
+    fill: SV16_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "See you again × 愛唄 (Mashup) - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/tjCkvTze1Uk/mqdefault.jpg",
+    facadeAlt: "Ảnh xem trước video mashup See you again × 愛唄 - GReeeeN",
+    facadeLabel: "Phát video mashup See you again × 愛唄 — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* ルージュ (bản gốc ちあきなおみ 1977, 作詞/作曲 中島みゆき; ca sĩ bản audio
+     trong video Em Bé chưa xác định — khung tiêu đề + mô tả không ghi tên) —
+     bài hát làm tay, 26 câu.
+     Video THƯỜNG 16:9 (không phải Shorts), ID dUT5rVcuT8Q, 3:52, nhúng trực tiếp
+     video gốc vietsub+romaji của kênh Em Bé (không đăng lại; quyết định 2026-11-14).
+     26 câu lấy ĐÚNG từ rouge-21-lesson.json đã soát tay (lời theo bản đã xuất bản,
+     đối chiếu phụ đề cháy sẵn 24 màn hình + Whisper base + Whisper small 3 clip;
+     âm thanh là bản studio). Phụ đề cháy sẵn chỉ có tới 154s; đoạn cuối 154–201s
+     căn theo Whisper small. Mở bằng chính player sv2* qua svuActivate
+     (wide: khung video nằm ngang 16:9). */
+  var SV17_ID = "dUT5rVcuT8Q";
+  var SV17_DUR = 232;
+  var SV17_SUBS = [
+    {t:1.6, e:7.42, ja:"口をきくのがうまくなりました", fj:"口[くち]をきくのがうまくなりました", furi:"くちをきくのがうまくなりました", romaji:"kuchi wo kiku no ga umaku narimashita", vi:"Giờ em đã khéo ăn khéo nói hơn rồi.", blank:["口をきく","くちをきく"], exp:"口をきく (くちをきく): nói chuyện, mở miệng nói; うまくなる: trở nên giỏi, khéo; ～ました: đã (quá khứ lịch sự)"},
+    {t:8.06, e:13.8, ja:"どんな酔いしれた人にでも", fj:"どんな酔いしれ[よいしれ]た人[ひと]にでも", furi:"どんなよいしれたひとにでも", romaji:"donna yoishireta hito ni demo", vi:"Dù với người say xỉn đến đâu đi nữa.", blank:["酔いしれた","よいしれた"], exp:"酔いしれる (よいしれる): say xỉn; どんな～にでも: dù là… đến đâu; 人 (ひと): người"},
+    {t:14.6, e:20.1, ja:"口をきくのがうまくなりました", fj:"口[くち]をきくのがうまくなりました", furi:"くちをきくのがうまくなりました", romaji:"kuchi wo kiku no ga umaku narimashita", vi:"Giờ em đã khéo ăn khéo nói hơn rồi.", blank:["口をきく","くちをきく"], exp:"口をきく (くちをきく): nói chuyện, mở miệng nói; うまくなる: trở nên giỏi, khéo; ～ました: đã (quá khứ lịch sự)"},
+    {t:21.34, e:26.52, ja:"ルージュひくたびにわかります", fj:"ルージュひくたびにわかります", furi:"ルージュひくたびにわかります", romaji:"ruuju hiku tabi ni wakarimasu", vi:"Mỗi lần tô son, em lại nhận ra điều đó.", blank:["ルージュ","るーじゅ"], exp:"ルージュ: son môi; ひく: tô, kẻ (son); ～たびに: mỗi khi; わかる: nhận ra, hiểu"},
+    {t:26.52, e:33.18, ja:"あの人追いかけてこの町へ着いた頃は", fj:"あの人[ひと]追いかけ[おいかけ]てこの町[まち]へ着い[つい]た頃[ころ]は", furi:"あのひとおいかけてこのまちへついたころは", romaji:"ano hito oikakete kono machi e tsuita koro wa", vi:"Hồi em theo người ấy đến thành phố này.", blank:["追いかけて","おいかけて"], exp:"追いかける (おいかける): đuổi theo; この町 (このまち): thành phố này; 着いた頃 (ついたころ): hồi mới đến"},
+    {t:33.18, e:39.38, ja:"まだルージュはただひとつ うす桜", fj:"まだルージュはただひとつ うす桜[さくら]", furi:"まだルージュはただひとつ うすさくら", romaji:"mada ruuju wa tada hitotsu usu sakura", vi:"Em chỉ có duy nhất một thỏi son màu hoa anh đào nhạt.", blank:["うす桜","うすざくら"], exp:"まだ: vẫn, chỉ; ただひとつ: chỉ duy nhất một; うす桜 (うすざくら): màu hoa anh đào nhạt"},
+    {t:39.66, e:45.66, ja:"あの人追いかけてくり返す人違い", fj:"あの人[ひと]追いかけ[おいかけ]てくり返す[かえす]人違い[ひとちがい]", furi:"あのひとおいかけてくりかえすひとちがい", romaji:"ano hito oikakete kurikaesu hitochigai", vi:"Cứ đuổi theo người ấy, em lại nhận nhầm người hết lần này đến lần khác.", blank:["人違い","ひとちがい"], exp:"くり返す (くりかえす): lặp lại; 人違い (ひとちがい): nhận nhầm người"},
+    {t:45.66, e:51.54, ja:"いつか泣き慣れて", fj:"いつか泣き[なき]慣れ[なれ]て", furi:"いつかなきなれて", romaji:"itsuka nakinarete", vi:"Chẳng biết từ lúc nào, em đã quen với việc khóc.", blank:["泣き慣れて","なきなれて"], exp:"いつか: lúc nào đó, chẳng biết từ khi nào; 泣き慣れる (なきなれる): quen với việc khóc"},
+    {t:52.54, e:58.06, ja:"口をきくのがうまくなりました", fj:"口[くち]をきくのがうまくなりました", furi:"くちをきくのがうまくなりました", romaji:"kuchi wo kiku no ga umaku narimashita", vi:"Giờ em đã khéo ăn khéo nói hơn rồi.", blank:["口をきく","くちをきく"], exp:"口をきく (くちをきく): nói chuyện, mở miệng nói; うまくなる: trở nên giỏi, khéo; ～ました: đã (quá khứ lịch sự)"},
+    {t:59.4, e:64.42, ja:"ルージュひくたびにわかります", fj:"ルージュひくたびにわかります", furi:"ルージュひくたびにわかります", romaji:"ruuju hiku tabi ni wakarimasu", vi:"Mỗi lần tô son, em lại nhận ra điều đó.", blank:["ルージュ","るーじゅ"], exp:"ルージュ: son môi; ひく: tô, kẻ (son); ～たびに: mỗi khi; わかる: nhận ra, hiểu"},
+    {t:90.26, e:96.46, ja:"つくり笑いがうまくなりました", fj:"つくり笑い[つくりわらい]がうまくなりました", furi:"つくりわらいがうまくなりました", romaji:"tsukuriwarai ga umaku narimashita", vi:"Giờ em đã giỏi cười gượng hơn rồi.", blank:["つくり笑い","つくりわらい"], exp:"つくり笑い (つくりわらい): nụ cười gượng, cười giả tạo; うまくなる: trở nên giỏi"},
+    {t:97.26, e:102.78, ja:"心馴染めない人にでも", fj:"心[こころ]馴染め[なじめ]ない人[ひと]にでも", furi:"こころなじめないひとにでも", romaji:"kokoro najimenai hito ni demo", vi:"Dù với người mà lòng em chẳng thể gần gũi.", blank:["馴染めない","なじめない"], exp:"心 (こころ): lòng, trái tim; 馴染む (なじむ): thân quen, gần gũi; ～にでも: dù với… đi nữa"},
+    {t:103.54, e:109.18, ja:"つくり笑いがうまくなりました", fj:"つくり笑い[つくりわらい]がうまくなりました", furi:"つくりわらいがうまくなりました", romaji:"tsukuriwarai ga umaku narimashita", vi:"Giờ em đã giỏi cười gượng hơn rồi.", blank:["つくり笑い","つくりわらい"], exp:"つくり笑い (つくりわらい): nụ cười gượng, cười giả tạo; うまくなる: trở nên giỏi"},
+    {t:110, e:115.6, ja:"ルージュひくたびにわかります", fj:"ルージュひくたびにわかります", furi:"ルージュひくたびにわかります", romaji:"ruuju hiku tabi ni wakarimasu", vi:"Mỗi lần tô son, em lại nhận ra điều đó.", blank:["ルージュ","るーじゅ"], exp:"ルージュ: son môi; ひく: tô, kẻ (son); ～たびに: mỗi khi; わかる: nhận ra, hiểu"},
+    {t:115.98, e:122.44, ja:"生まれた時から渡り鳥も渡る気で", fj:"生まれ[うまれ]た時[とき]から渡り鳥[わたりどり]も渡る[わたる]気[き]で", furi:"うまれたときからわたりどりもわたるきで", romaji:"umareta toki kara wataridori mo wataru ki de", vi:"Ngay cả loài chim di cư, sinh ra đã mang ý định bay xa.", blank:["渡り鳥","わたりどり"], exp:"生まれた時から (うまれたときから): từ khi sinh ra; 渡り鳥 (わたりどり): chim di cư; 渡る気 (わたるき): ý định bay xa, di cư; ※ phụ đề video ghi わかる気で là nghe nhầm, lời xuất bản + audio đều là 渡る気で"},
+    {t:122.54, e:128.96, ja:"翼をつくろうことも知るまいに", fj:"翼[つばさ]をつくろうことも知る[しる]まいに", furi:"つばさをつくろうこともしるまいに", romaji:"tsubasa wo tsukurou koto mo shiru mai ni", vi:"Mà cũng chẳng biết cách chải chuốt đôi cánh của mình.", blank:["翼","つばさ"], exp:"翼 (つばさ): cánh; つくろう (繕う): chải chuốt, sửa sang; ～まいに: chắc là không (phủ định suy đoán)"},
+    {t:128.98, e:134.54, ja:"気がつきゃ鏡も忘れかけた うす桜", fj:"気がつきゃ[きがつきゃ]鏡[かがみ]も忘れかけ[わすれかけ]た うす桜[さくら]", furi:"きがつきゃかがみもわすれかけた うすさくら", romaji:"kigatsukya kagami mo wasurekaketa usu sakura", vi:"Đến khi nhận ra, tấm gương cũng đã sắp quên mất màu son anh đào nhạt.", blank:["気がつきゃ","きがつきゃ"], exp:"気がつきゃ (きがつきゃ): đến khi nhận ra (気がついたら, khẩu ngữ); 鏡 (かがみ): gương; 忘れかける (わすれかける): sắp quên; うす桜 (うすざくら): màu hoa anh đào nhạt"},
+    {t:134.54, e:140.46, ja:"おかしな色と笑う", fj:"おかしな色[いろ]と笑う[わらう]", furi:"おかしないろとわらう", romaji:"okashina iro to warau", vi:"Em cười trước màu son kỳ lạ ấy.", blank:["色","いろ"], exp:"おかしな: kỳ lạ; 色 (いろ): màu sắc; 笑う (わらう): cười"},
+    {t:141.32, e:147.22, ja:"つくり笑いがうまくなりました", fj:"つくり笑い[つくりわらい]がうまくなりました", furi:"つくりわらいがうまくなりました", romaji:"tsukuriwarai ga umaku narimashita", vi:"Giờ em đã giỏi cười gượng hơn rồi.", blank:["つくり笑い","つくりわらい"], exp:"つくり笑い (つくりわらい): nụ cười gượng, cười giả tạo; うまくなる: trở nên giỏi"},
+    {t:148.22, e:153.4, ja:"ルージュひくたびにわかります", fj:"ルージュひくたびにわかります", furi:"ルージュひくたびにわかります", romaji:"ruuju hiku tabi ni wakarimasu", vi:"Mỗi lần tô son, em lại nhận ra điều đó.", blank:["ルージュ","るーじゅ"], exp:"ルージュ: son môi; ひく: tô, kẻ (son); ～たびに: mỗi khi; わかる: nhận ra, hiểu"},
+    {t:163.32, e:169.9, ja:"生まれた時から渡り鳥も渡る気で", fj:"生まれ[うまれ]た時[とき]から渡り鳥[わたりどり]も渡る[わたる]気[き]で", furi:"うまれたときからわたりどりもわたるきで", romaji:"umareta toki kara wataridori mo wataru ki de", vi:"Ngay cả loài chim di cư, sinh ra đã mang ý định bay xa.", blank:["渡り鳥","わたりどり"], exp:"生まれた時から (うまれたときから): từ khi sinh ra; 渡り鳥 (わたりどり): chim di cư; 渡る気 (わたるき): ý định bay xa, di cư; ※ phụ đề video ghi わかる気で là nghe nhầm, lời xuất bản + audio đều là 渡る気で"},
+    {t:170.1, e:176.28, ja:"翼をつくろうことも知るまいに", fj:"翼[つばさ]をつくろうことも知る[しる]まいに", furi:"つばさをつくろうこともしるまいに", romaji:"tsubasa wo tsukurou koto mo shiru mai ni", vi:"Mà cũng chẳng biết cách chải chuốt đôi cánh của mình.", blank:["翼","つばさ"], exp:"翼 (つばさ): cánh; つくろう (繕う): chải chuốt, sửa sang; ～まいに: chắc là không (phủ định suy đoán)"},
+    {t:176.28, e:182.46, ja:"気がつきゃ鏡も忘れかけた うす桜", fj:"気がつきゃ[きがつきゃ]鏡[かがみ]も忘れかけ[わすれかけ]た うす桜[さくら]", furi:"きがつきゃかがみもわすれかけた うすさくら", romaji:"kigatsukya kagami mo wasurekaketa usu sakura", vi:"Đến khi nhận ra, tấm gương cũng đã sắp quên mất màu son anh đào nhạt.", blank:["気がつきゃ","きがつきゃ"], exp:"気がつきゃ (きがつきゃ): đến khi nhận ra (気がついたら, khẩu ngữ); 鏡 (かがみ): gương; 忘れかける (わすれかける): sắp quên; うす桜 (うすざくら): màu hoa anh đào nhạt"},
+    {t:182.52, e:188.08, ja:"おかしな色と笑う", fj:"おかしな色[いろ]と笑う[わらう]", furi:"おかしないろとわらう", romaji:"okashina iro to warau", vi:"Em cười trước màu son kỳ lạ ấy.", blank:["色","いろ"], exp:"おかしな: kỳ lạ; 色 (いろ): màu sắc; 笑う (わらう): cười"},
+    {t:189.34, e:194.94, ja:"口をきくのがうまくなりました", fj:"口[くち]をきくのがうまくなりました", furi:"くちをきくのがうまくなりました", romaji:"kuchi wo kiku no ga umaku narimashita", vi:"Giờ em đã khéo ăn khéo nói hơn rồi.", blank:["口をきく","くちをきく"], exp:"口をきく (くちをきく): nói chuyện, mở miệng nói; うまくなる: trở nên giỏi, khéo; ※ bản audio hát 口をきくのがうまくなりました ở đây (lời xuất bản bản 中島みゆき ghi つくり笑いがうまくなりました) — bài học giữ đúng audio"},
+    {t:196.1, e:201.2, ja:"ルージュひくたびにわかります", fj:"ルージュひくたびにわかります", furi:"ルージュひくたびにわかります", romaji:"ruuju hiku tabi ni wakarimasu", vi:"Mỗi lần tô son, em lại nhận ra điều đó.", blank:["ルージュ","るーじゅ"], exp:"ルージュ: son môi; ひく: tô, kẻ (son); ～たびに: mỗi khi; わかる: nhận ra, hiểu"}
+  ];
+  var SV17_WIN = SV17_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV17_ID] = {
+    id: SV17_ID, dur: SV17_DUR, subs: SV17_SUBS, win: SV17_WIN,
+    practice: SV17_SUBS.slice(),
+    fill: SV17_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "ルージュ - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/dUT5rVcuT8Q/mqdefault.jpg",
+    facadeAlt: "Ảnh xem trước video bài hát ルージュ",
+    facadeLabel: "Phát video bài hát ルージュ — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* 涙の物語 (Namida no Monogatari) — YURI CHIKA — bài hát làm tay, 19 câu.
+     Video THƯỜNG 16:9 (không phải Shorts), ID iUfQ8IHcl00, 3:12, nhúng trực tiếp
+     video gốc vietsub+romaji của kênh Em Bé (không đăng lại; quyết định 2026-11-14).
+     19 câu lấy ĐÚNG từ namida-22-lesson.json đã soát tay: 8 câu tiếng Anh + 11 câu
+     tiếng Nhật xen kẽ; KHÔNG có lời xuất bản — ground truth là phụ đề cháy sẵn đọc
+     từ frame + Whisper ja base và Whisper en (base/small) trên 3 clip; mốc giờ căn
+     theo Whisper + đối chiếu frame phụ đề. Bài hát: verse mở đầu tiếng Anh, điệp khúc
+     lặp 2 lần, interlude nhạc 104–125s, outro nhạc 166–192s. Âm thanh là bản studio.
+     Mở bằng chính player sv2* qua svuActivate (wide: khung video nằm ngang 16:9). */
+  var SV18_ID = "iUfQ8IHcl00";
+  var SV18_DUR = 192;
+  var SV18_SUBS = [
+    {t:21.16, e:27.6, ja:"How did I fall in love with you?", fj:"How did I fall in love with you?", furi:"How did I fall in love with you?", romaji:"How did I fall in love with you?", vi:"Làm thế nào mà tớ lại yêu cậu?", blank:["love","ラブ"], exp:"How did I...?: làm thế nào mà tớ lại…?; fall in love with you: phải lòng cậu, yêu cậu (fall in love: yêu, phải lòng)"},
+    {t:28.26, e:32.7, ja:"What can I do to make you smile?", fj:"What can I do to make you smile?", furi:"What can I do to make you smile?", romaji:"What can I do to make you smile?", vi:"Tớ phải làm gì để cậu nở nụ cười đây?", blank:["smile","スマイル"], exp:"What can I do: tớ có thể làm gì; make you smile: khiến cậu mỉm cười (make + người + động từ: khiến ai làm gì); smile: nụ cười, mỉm cười"},
+    {t:33.54, e:37.86, ja:"I'm always here if you're thinking of", fj:"I'm always here if you're thinking of", furi:"I'm always here if you're thinking of", romaji:"I'm always here if you're thinking of", vi:"Tớ vẫn luôn ở đây, nếu cậu đang nghĩ tới…", blank:["thinking","シンキング"], exp:"I'm always here: tớ vẫn luôn ở đây; if: nếu; you're thinking of: cậu đang nghĩ tới (think of: nghĩ về, nghĩ tới); câu chưa hoàn chỉnh — nối sang câu sau"},
+    {t:37.86, e:41.98, ja:"The story of the tears from your eyes", fj:"The story of the tears from your eyes", furi:"The story of the tears from your eyes", romaji:"The story of the tears from your eyes", vi:"Câu chuyện về giọt lệ nơi khóe mắt cậu", blank:["tears","ティアーズ"], exp:"The story of...: câu chuyện về…; tears: nước mắt, giọt lệ; from your eyes: từ đôi mắt cậu"},
+    {t:42.42, e:53.16, ja:"もしも願い事が一つ叶うなら", fj:"もしも願い事[ねがいごと]が一つ[ひとつ]叶う[かなう]なら", furi:"もしもねがいごとがひとつかなうなら", romaji:"moshimo negaigoto ga hitotsu kanau nara", vi:"Giá như có một điều ước trở thành hiện thực", blank:["叶う","かなう"], exp:"もしも: giá như, nếu như; 願い事 (ねがいごと): điều ước; 一つ (ひとつ): một (điều); 叶う (かなう): trở thành hiện thực; ～なら: nếu"},
+    {t:53.16, e:58.5, ja:"幸せくれた君に", fj:"幸せ[しあわせ]くれた君[きみ]に", furi:"しあわせくれたきみに", romaji:"shiawase kureta kimi ni", vi:"Với cậu — người đã mang lại hạnh phúc cho tớ", blank:["幸せ","しあわせ"], exp:"幸せ (しあわせ): hạnh phúc; くれた: đã cho, đã mang lại (くれる: cho, mang lại); 君に (きみに): cho cậu, với cậu"},
+    {t:58.74, e:62.88, ja:"もう一度会いたい", fj:"もう一度[もういちど]会い[あい]たい", furi:"もういちどあいたい", romaji:"mou ichido aitai", vi:"Tớ muốn gặp lại thêm một lần nữa", blank:["会いたい","あいたい"], exp:"もう一度 (もういちど): thêm một lần nữa; 会いたい (あいたい): muốn gặp (会う + ～たい: muốn…)"},
+    {t:62.88, e:71.4, ja:"Can't you hear the voices of my heart?", fj:"Can't you hear the voices of my heart?", furi:"Can't you hear the voices of my heart?", romaji:"Can't you hear the voices of my heart?", vi:"Cậu có nghe thấy tiếng nói từ con tim tớ không?", blank:["voices","ヴォイス"], exp:"Can't you hear...?: cậu không nghe thấy… sao?; voices: những tiếng nói, giọng nói; my heart: trái tim tớ"},
+    {t:73.8, e:83.92, ja:"I was staying here just wanna see your happiness", fj:"I was staying here just wanna see your happiness", furi:"I was staying here just wanna see your happiness", romaji:"I was staying here just wanna see your happiness", vi:"Tớ đã ở đây chỉ vì muốn thấy cậu được hạnh phúc", blank:["happiness","ハピネス"], exp:"I was staying here: tớ đã ở đây (stay: ở lại); just: chỉ; wanna = want to: muốn; see your happiness: thấy cậu hạnh phúc (happiness: hạnh phúc)"},
+    {t:84.68, e:89.38, ja:"思い出も秘密も", fj:"思い出[おもいで]も秘密[ひみつ]も", furi:"おもいでもひみつも", romaji:"omoide mo himitsu mo", vi:"Cả kỷ niệm lẫn bí mật", blank:["思い出","おもいで"], exp:"思い出 (おもいで): kỷ niệm; 秘密 (ひみつ): bí mật; ～も～も: cả… lẫn…"},
+    {t:89.38, e:94.82, ja:"心にしまうよ", fj:"心[こころ]にしまうよ", furi:"こころにしまうよ", romaji:"kokoro ni shimau yo", vi:"Tớ sẽ cất giấu vào trong tim mình", blank:["しまう","しまう"], exp:"心 (こころ): trái tim; に: vào (trong); しまう: cất đi, giấu đi; よ: đấy, nhé (nhấn mạnh)"},
+    {t:94.9, e:99.84, ja:"いつの日にか君と", fj:"いつの日[ひ]にか君[きみ]と", furi:"いつのひにかきみと", romaji:"itsu no hi ni ka kimi to", vi:"Một ngày nào đó, cùng với cậu", blank:["いつ","いつ"], exp:"いつの日にか: một ngày nào đó (いつ: khi nào; 日: ngày; ～か: nào đó); 君と (きみと): cùng với cậu"},
+    {t:99.96, e:103.68, ja:"また巡り会いたい", fj:"また巡り会い[めぐりあい]たい", furi:"まためぐりあいたい", romaji:"mata meguriaitai", vi:"Tớ mong được gặp lại cậu một cách tình cờ", blank:["巡り会いたい","めぐりあいたい"], exp:"また: lại, một lần nữa; 巡り会う (めぐりあう): tình cờ gặp lại, gặp gỡ (do duyên); ～たい: muốn…; ※ Whisper nghe thành まだ nhưng phụ đề JP + romaji đều ghi また — giữ また"},
+    {t:125.34, e:133.5, ja:"Can't you hear the voices of my heart?", fj:"Can't you hear the voices of my heart?", furi:"Can't you hear the voices of my heart?", romaji:"Can't you hear the voices of my heart?", vi:"Cậu có nghe thấy tiếng nói từ con tim tớ không?", blank:["heart","ハート"], exp:"Can't you hear...?: cậu không nghe thấy… sao?; voices: những tiếng nói, giọng nói; my heart: trái tim tớ"},
+    {t:135.74, e:145.86, ja:"I was staying here just wanna see your happiness", fj:"I was staying here just wanna see your happiness", furi:"I was staying here just wanna see your happiness", romaji:"I was staying here just wanna see your happiness", vi:"Tớ đã ở đây chỉ vì muốn thấy cậu được hạnh phúc", blank:["staying","ステイイング"], exp:"I was staying here: tớ đã ở đây (stay: ở lại); just: chỉ; wanna = want to: muốn; see your happiness: thấy cậu hạnh phúc (happiness: hạnh phúc)"},
+    {t:145.86, e:151.52, ja:"思い出も秘密も", fj:"思い出[おもいで]も秘密[ひみつ]も", furi:"おもいでもひみつも", romaji:"omoide mo himitsu mo", vi:"Cả kỷ niệm lẫn bí mật", blank:["秘密","ひみつ"], exp:"思い出 (おもいで): kỷ niệm; 秘密 (ひみつ): bí mật; ～も～も: cả… lẫn…"},
+    {t:151.52, e:156.78, ja:"心にしまうよ", fj:"心[こころ]にしまうよ", furi:"こころにしまうよ", romaji:"kokoro ni shimau yo", vi:"Tớ sẽ cất giấu vào trong tim mình", blank:["心","こころ"], exp:"心 (こころ): trái tim; に: vào (trong); しまう: cất đi, giấu đi; よ: đấy, nhé (nhấn mạnh)"},
+    {t:156.78, e:161.78, ja:"いつの日にか君と", fj:"いつの日[ひ]にか君[きみ]と", furi:"いつのひにかきみと", romaji:"itsu no hi ni ka kimi to", vi:"Một ngày nào đó, cùng với cậu", blank:["君","きみ"], exp:"いつの日にか: một ngày nào đó (いつ: khi nào; 日: ngày; ～か: nào đó); 君と (きみと): cùng với cậu"},
+    {t:161.78, e:165.86, ja:"また巡り会いたい", fj:"また巡り会い[めぐりあい]たい", furi:"まためぐりあいたい", romaji:"mata meguriaitai", vi:"Tớ mong được gặp lại cậu một cách tình cờ", blank:["また","また"], exp:"また: lại, một lần nữa; 巡り会う (めぐりあう): tình cờ gặp lại, gặp gỡ (do duyên); ～たい: muốn…; ※ Whisper nghe thành まだ nhưng phụ đề JP + romaji đều ghi また — giữ また"}
+  ];
+  var SV18_WIN = SV18_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV18_ID] = {
+    id: SV18_ID, dur: SV18_DUR, subs: SV18_SUBS, win: SV18_WIN,
+    practice: SV18_SUBS.slice(),
+    fill: SV18_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "涙の物語 - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/iUfQ8IHcl00/mqdefault.jpg",
+    facadeAlt: "Ảnh xem trước video bài hát 涙の物語 - YURI CHIKA",
+    facadeLabel: "Phát video bài hát 涙の物語 — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* SV19 #23 みかんのハート (C&K) — 38 câu, bản studio, không có lời xuất bản (ground truth = phụ đề cháy sẵn đọc từ 41 màn hình frame + romaji + Whisper); L32 決まってあなたの夢をみる mốc giờ ƯỚC LƯỢNG (Whisper base/small/medium đều không đọc được đoạn hát nhỏ 240–252s, đã căn theo năng lượng âm thanh + karaoke fill + màn hình phụ đề); L26 言葉にはできない phát hiện từ Whisper (phụ đề đổi màn hình trong lúc bố cục VI/romaji bị đảo, detector bỏ sót). */
+  var SV19_ID = "El4hZYbHLtc";
+  var SV19_DUR = 311;
+  var SV19_SUBS = [
+    {t:3.62, e:11.52, ja:"人を好きになる怖さと幸せを知って", fj:"人[ひと]を好き[すき]になる怖[こわ]さと幸せ[しあわせ]を知っ[しっ]て", furi:"ひとをすきになるこわさとしあわせをしって", romaji:"hito wo suki ni naru kowasa to shiawase wo shitte", vi:"Anh đã biết cảm giác sợ hãi và hạnh phúc khi thích một người", blank:["怖さ","こわさ"], exp:"人を好きになる: thích một người; 怖さ (こわさ): nỗi sợ, sự đáng sợ; 幸せ (しあわせ): hạnh phúc; 知って: biết được (thể て của 知る)"},
+    {t:12.06, e:18.18, ja:"見た事のない自分と初めて出会った", fj:"見[み]た事[こと]のない自分[じぶん]と初めて[はじめて]出会っ[であっ]た", furi:"みたことのないじぶんとはじめてであった", romaji:"mita koto no nai jibun to hajimete deatta", vi:"Anh đã gặp lần đầu tiên một bản thân mà anh chưa từng thấy", blank:["初めて","はじめて"], exp:"見た事のない: chưa từng thấy bao giờ; 自分 (じぶん): bản thân, chính mình; 初めて (はじめて): lần đầu tiên; 出会った: đã gặp (thể た của 出会う)"},
+    {t:19.04, e:23.36, ja:"私を笑わせるのがあなたなのならば", fj:"私[わたし]を笑わせる[わらわせる]のがあなたなのならば", furi:"わたしをわらわせるのがあなたなのならば", romaji:"watashi wo warawaseru no ga anata na no naraba", vi:"Nếu em là người làm cho anh cười", blank:["笑わせる","わらわせる"], exp:"私 (わたし): tôi, anh; 笑わせる: làm cho cười (thể sai khiến của 笑う); のならば: nếu như... thì"},
+    {t:23.92, e:29.68, ja:"私を傷付けるのもすべてがあなたで", fj:"私[わたし]を傷付ける[きずつける]のもすべてがあなたで", furi:"わたしをきずつけるのもすべてがあなたで", romaji:"watashi wo kizutsukeru no mo subete ga anata de", vi:"Người làm anh tổn thương cũng đều là em", blank:["傷付ける","きずつける"], exp:"傷付ける (きずつける): làm tổn thương; すべて: tất cả; あなた: em, anh (ngôi thứ hai)"},
+    {t:29.68, e:33.14, ja:"今日も陽が落ちてくのでした", fj:"今日[きょう]も陽[ひ]が落ち[おち]てくのでした", furi:"きょうもひがおちてくのでした", romaji:"kyou mo hi ga ochiteku no deshita", vi:"Hôm nay mặt trời cũng lại lặn xuống", blank:["陽","ひ"], exp:"今日 (きょう): hôm nay; 陽 (ひ): mặt trời, ánh nắng; 落ちてく: lặn xuống, rơi xuống (落ちていく rút gọn); のでした: thì ra là, vậy là"},
+    {t:36.2, e:40.02, ja:"あぁ愛しの人の", fj:"あぁ愛し[いとし]の人[ひと]の", furi:"あぁいとしのひとの", romaji:"aa itoshi no hito no", vi:"À, người anh yêu dấu ơi", blank:["愛しい","いとしい"], exp:"あぁ: à, ôi (thán từ); 愛しの (いとしの): yêu dấu, đáng yêu (từ 愛しい); 人 (ひと): người"},
+    {t:40.02, e:45.58, ja:"いつも隣には違う誰かがいて", fj:"いつも隣[となり]には違う[ちがう]誰か[だれか]がいて", furi:"いつもとなりにはちがうだれかがいて", romaji:"itsumo tonari ni wa chigau dare ka ga ite", vi:"Lúc nào bên cạnh em cũng có một người khác", blank:["隣","となり"], exp:"いつも: lúc nào, luôn luôn; 隣 (となり): bên cạnh; 違う (ちがう): khác; 誰か (だれか): ai đó, người nào đó"},
+    {t:48.42, e:55.6, ja:"あの日あの時に出会わなければ", fj:"あの日[ひ]あの時[とき]に出会わ[であわ]なければ", furi:"あのひあのときにであわなければ", romaji:"ano hi ano toki ni deawanakereba", vi:"Nếu hôm đó, lúc đó anh không gặp em", blank:["出会う","であう"], exp:"あの日あの時: ngày hôm đó, lúc đó; 出会わなければ: nếu không gặp (thể điều kiện phủ định của 出会う)"},
+    {t:55.6, e:61.52, ja:"こんなに苦しむ事もなく", fj:"こんなに苦しむ[くるしむ]事[こと]もなく", furi:"こんなにくるしむこともなく", romaji:"konnani kurushimu koto mo naku", vi:"Thì anh đã không phải đau khổ đến thế này", blank:["苦しむ","くるしむ"], exp:"こんなに: đến thế này, đến mức này; 苦しむ (くるしむ): đau khổ, khổ sở; 事もなく: cũng không có chuyện..."},
+    {t:62.52, e:70.22, ja:"泣いて泣いても泣き叫んでも", fj:"泣い[ない]て泣い[ない]ても泣き叫ん[なきさけん]でも", furi:"ないてないてもなきさけんでも", romaji:"naite naite mo nakisaken demo", vi:"Dù anh có khóc, có gào thét đi nữa", blank:["泣き叫ぶ","なきさけぶ"], exp:"泣いて (ないて): khóc; ～ても: dù... đi nữa; 泣き叫ぶ (なきさけぶ): gào khóc, khóc thét"},
+    {t:70.94, e:76.9, ja:"叶うはずのない恋だから", fj:"叶う[かなう]はずのない恋[こい]だから", furi:"かなうはずのないこいだから", romaji:"kanau hazu no nai koi dakara", vi:"Vì đây là một tình yêu chẳng thể nào thành hiện thực", blank:["叶う","かなう"], exp:"叶う (かなう): thành hiện thực, thành sự thật; はずのない: không có chuyện...; 恋 (こい): tình yêu; だから: vì, bởi vì"},
+    {t:76.9, e:85.3, ja:"何度も「やめよう」言い聞かせても", fj:"何[なん]度[ど]も「やめよう」言い聞かせ[いいきかせ]ても", furi:"なんども「やめよう」いいきかせても", romaji:"nando mo 「yameyou」 iikikasetemo", vi:"Dù bao lần anh tự nhủ với mình rằng 'hãy từ bỏ đi'", blank:["言い聞かせる","いいきかせる"], exp:"何度も (なんども): bao nhiêu lần, nhiều lần; やめよう: hãy dừng lại, hãy từ bỏ (thể ý chí của やめる); 言い聞かせる (いいきかせる): khuyên nhủ, tự nhủ"},
+    {t:86.68, e:92.28, ja:"想いは増すばかり", fj:"想い[おもい]は増す[ます]ばかり", furi:"おもいはますばかり", romaji:"omoi wa masu bakari", vi:"Tình cảm chỉ càng ngày càng lớn thêm", blank:["増す","ます"], exp:"想い (おもい): tình cảm, nỗi lòng; 増す (ます): tăng lên, lớn thêm; ばかり: chỉ, toàn là"},
+    {t:109.3, e:112.88, ja:"誰か好きになり", fj:"誰[だれ]か好き[すき]になり", furi:"だれかすきになり", romaji:"dare ka suki ni nari", vi:"Anh đã thích một ai đó", blank:["誰か","だれか"], exp:"誰か (だれか): ai đó; 好きになり: đã thích (thể て nối của 好きになる)"},
+    {t:113.48, e:116.9, ja:"気持ち隠して身を引いて", fj:"気持ち[きもち]隠し[かくし]て身[み]を引い[ひい]て", furi:"きもちかくしてみをひいて", romaji:"kimochi kakushite mi wo hiite", vi:"Anh giấu đi cảm xúc của mình và lùi bước", blank:["隠す","かくす"], exp:"気持ち (きもち): cảm xúc, tâm trạng; 隠して (かくして): giấu đi; 身を引く (みをひく): rút lui, lùi bước"},
+    {t:117.66, e:124.36, ja:"忘れようとしたけど、やっぱ、ダメだった", fj:"忘れよ[わすれよ]うとしたけど、やっぱ、ダメだった", furi:"わすれようとしたけど、やっぱ、ダメだった", romaji:"wasureyou toshita kedo, yappa, dame datta", vi:"Anh đã cố quên đi, nhưng quả nhiên là không được", blank:["忘れる","わすれる"], exp:"忘れようとした: đã định quên, đã cố quên; けど: nhưng; やっぱ: quả nhiên, đúng như dự đoán; ダメだった: đã không được, đã thất bại"},
+    {t:124.36, e:132.64, ja:"あなたの言葉に踊らされて喜ぶ自分が馬鹿みたいで", fj:"あなたの言葉[ことば]に踊ら[おどら]されて喜ぶ[よろこぶ]自分[じぶん]が馬鹿[ばか]みたいで", furi:"あなたのことばにおどらされてよろこぶじぶんがばかみたいで", romaji:"anata no kotoba ni odorasarete yorokobu jibun ga baka mitaide", vi:"Anh như một thằng ngốc, cứ nhảy múa vui mừng vì vài lời nói của em", blank:["踊らされる","おどらされる"], exp:"言葉 (ことば): lời nói; 踊らされる (おどらされる): bị xoay như chong chóng, bị dắt mũi (thể bị động của 踊らせる); 喜ぶ (よろこぶ): vui mừng; 馬鹿みたい (ばかみたい): như một thằng ngốc"},
+    {t:132.64, e:139.22, ja:"本当の自分を徐々に失ってくのでした", fj:"本当[ほんとう]の自分[じぶん]を徐々に[じょじょに]失っ[うしなっ]てくのでした", furi:"ほんとうのじぶんをじょじょにうしなってくのでした", romaji:"hontou no jibun wo jojoni ushinatteku no deshita", vi:"Anh dần dần đánh mất chính bản thân thật của mình", blank:["徐々に","じょじょに"], exp:"本当の (ほんとうの): thật sự, đích thực; 徐々に (じょじょに): dần dần, từng chút một; 失ってく (うしなってく): đánh mất dần"},
+    {t:140.58, e:145.86, ja:"あぁいつもどこかに", fj:"あぁいつもどこかに", furi:"あぁいつもどこかに", romaji:"aa itsumo dokoka ni", vi:"À, lúc nào anh cũng ở một nơi nào đó", blank:["どこか","どこか"], exp:"あぁ: à, ôi; いつも: lúc nào; どこかに: ở một nơi nào đó"},
+    {t:146.66, e:151.8, ja:"あなたの姿や影を探している", fj:"あなたの姿[すがた]や影[かげ]を探し[さがし]ている", furi:"あなたのすがたやかげをさがしている", romaji:"anata no sugata ya kage wo sagashite iru", vi:"Anh vẫn luôn tìm kiếm bóng dáng của em", blank:["探す","さがす"], exp:"姿 (すがた): dáng vẻ, bóng dáng; 影 (かげ): cái bóng; 探している (さがしている): đang tìm kiếm"},
+    {t:154.5, e:161.46, ja:"あの日あの時に打ち明けてれば", fj:"あの日[ひ]あの時[とき]に打ち明け[うちあけ]てれば", furi:"あのひあのときにうちあけてれば", romaji:"ano hi ano toki ni uchiaketereba", vi:"Nếu hôm đó, lúc đó anh nói ra lòng mình", blank:["打ち明ける","うちあける"], exp:"打ち明ける (うちあける): thổ lộ, nói ra lòng mình; ～てれば: nếu như... thì (thể điều kiện)"},
+    {t:161.46, e:167.54, ja:"こんなに苦しむ事もなく", fj:"こんなに苦しむ[くるしむ]事[こと]もなく", furi:"こんなにくるしむこともなく", romaji:"konnani kurushimu koto mo naku", vi:"Thì anh đã không phải đau khổ đến thế này", blank:["苦しむ","くるしむ"], exp:"こんなに: đến thế này, đến mức này; 苦しむ (くるしむ): đau khổ, khổ sở; 事もなく: cũng không có chuyện..."},
+    {t:168.7, e:176.3, ja:"泣いて泣いても泣き叫んでも", fj:"泣い[ない]て泣い[ない]ても泣き叫ん[なきさけん]でも", furi:"ないてないてもなきさけんでも", romaji:"naite naite mo nakisaken demo", vi:"Dù anh có khóc, có gào thét đi nữa", blank:["泣き叫ぶ","なきさけぶ"], exp:"泣いて (ないて): khóc; ～ても: dù... đi nữa; 泣き叫ぶ (なきさけぶ): gào khóc, khóc thét"},
+    {t:176.76, e:183.2, ja:"叶うはずのない恋だけど", fj:"叶う[かなう]はずのない恋[こい]だけど", furi:"かなうはずのないこいだけど", romaji:"kanau hazu no nai koi dakedo", vi:"Dù đây là một tình yêu chẳng thể nào thành hiện thực", blank:["叶う","かなう"], exp:"叶う (かなう): thành hiện thực; はずのない: không có chuyện...; 恋 (こい): tình yêu; だけど: nhưng, tuy vậy"},
+    {t:184.38, e:191.3, ja:"今度は「告げよう」言い聞かせても", fj:"今度[こんど]は「告げよ[つげよ]う」言い聞かせ[いいきかせ]ても", furi:"こんどは「つげよう」いいきかせても", romaji:"kondo wa 「tsugeyou」 iikikasetemo", vi:"Dù lần này anh tự nhủ với mình rằng 'hãy tỏ tình đi'", blank:["告げる","つげる"], exp:"今度は (こんどは): lần này thì; 告げよう (つげよう): hãy tỏ tình, hãy nói ra (thể ý chí của 告げる); 言い聞かせる (いいきかせる): tự nhủ, khuyên nhủ"},
+    {t:192.96, e:198.06, ja:"言葉にはできない", fj:"言葉[ことば]にはできない", furi:"ことばにはできない", romaji:"kotoba ni wa dekinai", vi:"Anh vẫn không thể nói thành lời", blank:["言葉","ことば"], exp:"言葉 (ことば): lời nói; にはできない: không thể... được"},
+    {t:200.84, e:207.42, ja:"僅かな望みをかき集めて", fj:"僅か[わずか]な望み[のぞみ]をかき集め[かきあつめ]て", furi:"わずかなのぞみをかきあつめて", romaji:"wazuka na nozomi wo kakiatsumete", vi:"Anh gom góp chút hy vọng mong manh còn lại", blank:["僅か","わずか"], exp:"僅かな (わずかな): chút ít, mong manh; 望み (のぞみ): hy vọng, mong muốn; かき集める (かきあつめる): gom góp, thu thập"},
+    {t:209.32, e:215.38, ja:"ありふれた言葉でごまかし続けた", fj:"ありふれた言葉[ことば]でごまかし続け[つづけ]た", furi:"ありふれたことばでごまかしつづけた", romaji:"arifureta kotoba de gomakashitsuzuketa", vi:"Anh cứ tiếp tục lấp liếm bằng những lời nói sáo rỗng", blank:["ごまかす","ごまかす"], exp:"ありふれた: tầm thường, sáo rỗng, đâu đâu cũng có; 言葉 (ことば): lời nói; ごまかす: lấp liếm, đánh trống lảng; 続けた (つづけた): đã tiếp tục"},
+    {t:216.27, e:222.98, ja:"どうすればあなたに届くのだろう", fj:"どうすればあなたに届く[とどく]のだろう", furi:"どうすればあなたにとどくのだろう", romaji:"dou sureba anata ni todoku no darou", vi:"Làm thế nào để tình cảm này đến được với em đây", blank:["届く","とどく"], exp:"どうすれば: làm thế nào thì; 届く (とどく): đến được, chạm tới; のだろう: nhỉ, không biết... (diễn tả băn khoăn)"},
+    {t:222.98, e:231.14, ja:"こんなにあなたを好きになるとは", fj:"こんなにあなたを好き[すき]になるとは", furi:"こんなにあなたをすきになるとは", romaji:"konnani anata wo suki ni naru towa", vi:"Anh không ngờ mình lại yêu em đến thế này", blank:["好きになる","すきになる"], exp:"こんなに: đến thế này; 好きになるとは: không ngờ lại thích đến mức... (～とは diễn tả ngạc nhiên)"},
+    {t:232.29, e:238.98, ja:"泣いて泣いて泣き疲れたら", fj:"泣い[ない]て泣い[ない]て泣き[なき]疲れ[つかれ]たら", furi:"ないてないてなきつかれたら", romaji:"naite naite nakitsukaretara", vi:"Khi anh khóc đến mệt nhoài", blank:["泣き疲れる","なきつかれる"], exp:"泣いて (ないて): khóc; 泣き疲れる (なきつかれる): khóc đến mệt; ～たら: khi..., nếu..."},
+    {t:242.5, e:250.5, ja:"決まってあなたの夢をみる", fj:"決まっ[きまっ]てあなたの夢[ゆめ]をみる", furi:"きまってあなたのゆめをみる", romaji:"kimatte anata no yume wo miru", vi:"Thế nào anh cũng mơ thấy em", blank:["決まって","きまって"], exp:"決まって (きまって): thế nào cũng, lần nào cũng; 夢をみる (ゆめをみる): mơ thấy; ※mốc giờ ước lượng: máy nghe 3 lượt (base/small/medium) đều không đọc được đoạn này (hát nhỏ), đã căn theo năng lượng âm thanh + karaoke fill + màn hình phụ đề"},
+    {t:253.92, e:261.76, ja:"泣いて泣いても泣き叫んでも", fj:"泣い[ない]て泣い[ない]ても泣き叫ん[なきさけん]でも", furi:"ないてないてもなきさけんでも", romaji:"naite naite mo nakisaken demo", vi:"Dù anh có khóc, có gào thét đi nữa", blank:["泣き叫ぶ","なきさけぶ"], exp:"泣いて (ないて): khóc; ～ても: dù... đi nữa; 泣き叫ぶ (なきさけぶ): gào khóc, khóc thét"},
+    {t:262.56, e:268.9, ja:"叶えたいほどの恋だから", fj:"叶え[かなえ]たいほどの恋[こい]だから", furi:"かなえたいほどのこいだから", romaji:"kanaetai hodo no koi dakara", vi:"Vì đây là một tình yêu mà anh muốn biến thành hiện thực đến vậy", blank:["叶える","かなえる"], exp:"叶えたい (かなえたい): muốn biến thành hiện thực (thể mong muốn của 叶える); ほど: đến mức; 恋 (こい): tình yêu; だから: vì"},
+    {t:270, e:276.82, ja:"何度も「やめよう」言い聞かせても", fj:"何[なん]度[ど]も「やめよう」言い聞かせ[いいきかせ]ても", furi:"なんども「やめよう」いいきかせても", romaji:"nando mo 「yameyou」 iikikasetemo", vi:"Dù bao lần anh tự nhủ với mình rằng 'hãy từ bỏ đi'", blank:["言い聞かせる","いいきかせる"], exp:"何度も (なんども): bao nhiêu lần, nhiều lần; やめよう: hãy dừng lại, hãy từ bỏ (thể ý chí của やめる); 言い聞かせる (いいきかせる): khuyên nhủ, tự nhủ"},
+    {t:278.26, e:284.52, ja:"想いは増すばかり", fj:"想い[おもい]は増す[ます]ばかり", furi:"おもいはますばかり", romaji:"omoi wa masu bakari", vi:"Tình cảm chỉ càng ngày càng lớn thêm", blank:["増す","ます"], exp:"想い (おもい): tình cảm, nỗi lòng; 増す (ます): tăng lên, lớn thêm; ばかり: chỉ, toàn là"},
+    {t:285.98, e:293.32, ja:"いつかいつの日にか届くまで", fj:"いつかいつの日[ひ]にか届く[とどく]まで", furi:"いつかいつのひにかとどくまで", romaji:"itsuka itsu no hi ni ka todoku made", vi:"Cho đến một lúc nào đó, một ngày nào đó tình cảm này đến được với em", blank:["届く","とどく"], exp:"いつか: một lúc nào đó; いつの日にか: vào một ngày nào đó; 届くまで (とどくまで): cho đến khi đến được"},
+    {t:293.32, e:301.36, ja:"あなたを待つばかり", fj:"あなたを待つ[まつ]ばかり", furi:"あなたをまつばかり", romaji:"anata wo matsu bakari", vi:"Anh chỉ biết chờ đợi em mà thôi", blank:["待つ","まつ"], exp:"待つ (まつ): chờ đợi; ばかり: chỉ, toàn là"}
+  ];
+  var SV19_WIN = SV19_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV19_ID] = {
+    id: SV19_ID, dur: SV19_DUR, subs: SV19_SUBS, win: SV19_WIN,
+    practice: SV19_SUBS.slice(),
+    fill: SV19_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "みかんのハート - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/El4hZYbHLtc/mqdefault.jpg",
+    facadeAlt: "みかんのハート - C&K",
+    facadeLabel: "みかんのハート - C&K",
     wide: true
   };
   /* Khung thời gian riêng từng câu — cùng thuật toán SV2_WIN của bài 2: các câu

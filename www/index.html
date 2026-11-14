@@ -3387,12 +3387,14 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
             <button class="sv-cattab" type="button" role="tab" data-cat="anime" aria-selected="false">Anime</button>
             <button class="sv-cattab" type="button" role="tab" data-cat="daily" aria-selected="false">Đời thường</button>
             <button class="sv-cattab" type="button" role="tab" data-cat="jlpt" aria-selected="false">JLPT</button>
+            <button class="sv-cattab" type="button" role="tab" data-cat="karaoke" aria-selected="false">Karaoke</button>
           </div>
           <div id="svCatPanels">
             <div class="sv-catpanel" id="svCat-podcast"></div>
             <div class="sv-catpanel" id="svCat-anime" hidden></div>
             <div class="sv-catpanel" id="svCat-daily" hidden></div>
             <div class="sv-catpanel" id="svCat-jlpt" hidden></div>
+            <div class="sv-catpanel" id="svCat-karaoke" hidden></div>
           </div>
           <div class="wv-endpad" aria-hidden="true"></div>
         </div>
@@ -8798,10 +8800,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      phụ đề thật (bài 2 có 24 dòng SV2_SUBS nhưng 1 dòng trống nên tính 23 câu).
      Thumb Marigold dùng ảnh YouTube vì ảnh bìa local chưa có trên repo. */
   var SV_VIDEOS = [
-    {id: "PFvoDVgrroA", cat: "daily", series: "Bài hát tiếng Nhật", channel: "Tiếng Nhật Thực Chiến",
+    {id: "PFvoDVgrroA", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Tiếng Nhật Thực Chiến",
      name: "マリーゴールド (Marigold)", level: "", lines: 50, dur: "5:22",
      thumb: "https://i.ytimg.com/vi/PFvoDVgrroA/hqdefault.jpg",
      alt: "Ảnh xem trước video bài hát Marigold"},
+    {id: "K2I36uuDJVY", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Tiếng Nhật Thực Chiến",
+     name: "春夏秋冬 (Shunkashuutou) - Hilcrhyme", level: "", lines: 51, dur: "4:59",
+     thumb: "https://i.ytimg.com/vi/K2I36uuDJVY/hqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát Xuân Hạ Thu Đông của Hilcrhyme"},
     {id: "mKPRQF70PvA", cat: "podcast", series: "Easy N5 Japanese Podcast", channel: "OkkeiJapanese",
      name: "Easy N5 Japanese Podcast: đi Thụy Sĩ", level: "N5", lines: 23, dur: "1:02",
      thumb: "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/sv-thumb-swiss-podcast.jpg",
@@ -8831,8 +8837,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      số câu lấy từ dữ liệu bài thật, không bịa. Video user tự tạo lưu danh sách
      (chỉ videoId + thông tin hiển thị) ở localStorage "sk_sv_mine"; nội dung
      bài nằm trong cache server theo videoId nên mở lại không cần tạo lại. */
-  var SV_CATS = ["podcast", "anime", "daily", "jlpt"];
-  var SV_CAT_LABEL = {podcast: "Podcast", anime: "Anime", daily: "Đời thường", jlpt: "JLPT"};
+  var SV_CATS = ["podcast", "anime", "daily", "jlpt", "karaoke"];
+  var SV_CAT_LABEL = {podcast: "Podcast", anime: "Anime", daily: "Đời thường", jlpt: "JLPT", karaoke: "Karaoke"};
   var svTopTab = "ready";
   var svCat = "podcast";
   function svPlaysLoad(){ try{ var p = JSON.parse(window.localStorage.getItem("sk_sv_plays") || "{}"); return (p && typeof p === "object") ? p : {}; }catch(_){ return {}; } }
@@ -10661,6 +10667,85 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     facadeImg: "https://i.ytimg.com/vi/PFvoDVgrroA/hqdefault.jpg",
     facadeAlt: "Ảnh xem trước video bài hát Marigold: bông cúc vạn thọ đỏ trên mặt nước",
     facadeLabel: "Phát video bài hát Marigold — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* 春夏秋冬 (Hilcrhyme) — bài hát làm tay số 2 (sau Marigold), 51 câu.
+     Video THƯỜNG 16:9 (không phải Shorts), ID K2I36uuDJVY, 4:59, đăng Ẩn trên kênh
+     Tiếng Nhật Thực Chiến (gốc: video vietsub+romaji của kênh Em Bé [SeZCeyrMnlY]).
+     51 câu lấy ĐÚNG từ shunka-lesson.json đã soát tay (start/end chính xác tới
+     phần thập phân, jp/reading/romaji/vi/notes/tokens); fj dựng từ tokens bằng
+     đúng luật svuFjFromTokens. LƯU Ý: âm thanh là bản LIVE (Content ID ghi
+     "Shunkashuutou (Live From Tokyo / 2018)") — điệp khúc 4 (243-271s) hát nhỏ
+     dần nên mốc giờ là ước lượng theo nhịp điệp khúc + đỉnh âm lượng; đoạn cuối
+     271-288s chuyển sang アフターストーリー (2 câu outro, đã đối chiếu lời đã
+     xuất bản). Mở bằng chính player sv2* qua svuActivate (wide: khung video
+     nằm ngang 16:9). */
+  var SV4_ID = "K2I36uuDJVY";
+  var SV4_DUR = 299;
+  var SV4_SUBS = [
+    {t:14.2, e:21.2, ja:"鮮やかな色 四季おりおりの景色求め二人で It's going going on", fj:"鮮やか[あざやか]な色[いろ] 四季[しき]おりおりの景色[けしき]求め[もとめ]二人[ふたり]で It's going going on", furi:"あざやかないろ しきおりおりのけしきもとめふたりで It's going going on", romaji:"azayaka na iro shiki ori ori no keshiki motome futari de It-'-s going going on", vi:"Với những sắc màu rực rỡ, hai đứa cùng đi tìm cảnh đẹp bốn mùa thay đổi — It's going going on", blank:["鮮やか","あざやか"], exp:"鮮やかな (あざやかな): rực rỡ, tươi sáng; 四季おりおり (しきおりおり): bốn mùa, mỗi mùa một vẻ; 景色 (けしき): phong cảnh; 求める (もとめる): tìm kiếm; 二人で (ふたりで): hai người cùng nhau"},
+    {t:21.5, e:27.8, ja:"車、電車、船もしくは飛行機 計画を練る週末の日曜日", fj:"車[くるま]、電車[でんしゃ]、船[ふね]もしくは飛行機[ひこうき] 計画[けいかく]を練る[ねる]週末[しゅうまつ]の日曜日[にちようび]", furi:"くるま、でんしゃ、ふねもしくはひこうき けいかくをねるしゅうまつのにちようび", romaji:"kuruma, densha, fune moshikuha hikouki keikaku wo neru shuumatsu no nichiyoubi", vi:"Ô tô, tàu điện, tàu thủy hay máy bay — Chủ nhật cuối tuần cùng nhau lên kế hoạch", blank:["計画","けいかく"], exp:"車 (くるま): ô tô; 電車 (でんしゃ): tàu điện; 船 (ふね): tàu thủy; もしくは: hay là, hoặc là; 飛行機 (ひこうき): máy bay; 計画を練る (けいかくをねる): lên kế hoạch kỹ lưỡng; 週末 (しゅうまつ): cuối tuần; 日曜日 (にちようび): Chủ nhật"},
+    {t:28.1, e:35.1, ja:"春は花見 満開の桜の下乾杯 頭上広がる桃色は Like a ファンタジー", fj:"春[はる]は花見[はなみ] 満開[まんかい]の桜[さくら]の下[した]乾杯[かんぱい] 頭上[ずじょう]広がる[ひろがる]桃色[ももいろ]は Like a ファンタジー", furi:"はるははなみ まんかいのさくらのしたかんぱい ずじょうひろがるももいろは Like a ファンタジー", romaji:"haru wa hanami mankai no sakura no shita kanpai zujou hirogaru momoiro wa Like a fantajii", vi:"Mùa xuân ngắm hoa, cạn ly dưới gốc anh đào nở rộ, sắc hồng trải khắp trên đầu như một giấc mơ", blank:["満開","まんかい"], exp:"花見 (はなみ): ngắm hoa (anh đào); 満開 (まんかい): nở rộ; 桜 (さくら): hoa anh đào; 乾杯 (かんぱい): cạn ly; 頭上 (ずじょう): trên đầu; 広がる (ひろがる): lan rộng; 桃色 (ももいろ): màu hồng đào; Like a ファンタジー: như một giấc mơ"},
+    {t:35.3, e:41.5, ja:"夏は照りつける陽の下でバーベキュー 夜になればどこかで花火が上がってる", fj:"夏[なつ]は照りつける[てりつける]陽[ひ]の下[した]でバーベキュー 夜[よる]になればどこかで花火[はなび]が上がっ[あがっ]てる", furi:"なつはてりつけるひのしたでバーベキュー よるになればどこかではなびがあがってる", romaji:"natsu wa teritsukeru hi no shita de baabekyuu yoru ni nare ba doko ka de hanabi ga agatteru", vi:"Mùa hè nướng thịt dưới ánh nắng chói chang, đêm đến đâu đó pháo hoa lại bay lên", blank:["花火","はなび"], exp:"照りつける (てりつける): chiếu gay gắt, chói chang; 陽 (ひ): ánh nắng; バーベキュー: nướng thịt ngoài trời (BBQ); 夜になれば: khi đêm xuống; 花火 (はなび): pháo hoa; 上がる (あがる): bay lên"},
+    {t:41.6, e:48.4, ja:"秋は紅葉の山に目が止まる 冬にはそれが雪で白く染まる", fj:"秋[あき]は紅葉[こうよう]の山[やま]に目[め]が止まる[とまる] 冬[ふゆ]にはそれが雪[ゆき]で白く[しろく]染まる[そまる]", furi:"あきはこうようのやまにめがとまる ふゆにはそれがゆきでしろくそまる", romaji:"aki wa kouyou no yama ni me ga tomaru fuyu ni wa sore ga yuki de shiroku somaru", vi:"Mùa thu ngắm nhìn núi lá đỏ, đến mùa đông nó lại nhuộm trắng trong tuyết", blank:["紅葉","こうよう"], exp:"紅葉 (こうよう): lá đỏ (mùa thu); 目が止まる (めがとまる): dừng mắt lại, bị thu hút; 冬 (ふゆ): mùa đông; 雪 (ゆき): tuyết; 白く染まる (しろくそまる): nhuộm trắng"},
+    {t:48.6, e:52.9, ja:"全ての季節 お前とずっと居たいよ", fj:"全て[すべて]の季節[きせつ] お前[おまえ]とずっと居[い]たいよ", furi:"すべてのきせつ おまえとずっといたいよ", romaji:"subete no kisetsu omae to zutto itai yo", vi:"Mọi mùa trong năm, anh muốn mãi ở bên em", blank:["季節","きせつ"], exp:"全ての季節 (すべてのきせつ): mọi mùa; お前 (おまえ): em, cậu (cách gọi thân mật, hơi suồng sã); ずっと: mãi, luôn; 居たい (いたい): muốn ở bên"},
+    {t:52.9, e:54.3, ja:"春夏秋冬", fj:"春夏秋冬[しゅんかしゅうとう]", furi:"しゅんかしゅうとう", romaji:"shunkashuutou", vi:"Xuân hạ thu đông", blank:["春夏秋冬","しゅんかしゅうとう"], exp:"春夏秋冬 (しゅんかしゅうとう): bốn mùa xuân hạ thu đông"},
+    {t:55.26, e:58.8, ja:"今年の春はどこに行こうか?", fj:"今年[ことし]の春[はる]はどこに行こ[いこ]うか?", furi:"ことしのはるはどこにいこうか?", romaji:"kotoshi no haru wa doko ni ikou ka ?", vi:"Mùa xuân năm nay mình đi đâu nhỉ?", blank:["春","はる"], exp:"今年 (ことし): năm nay; 春 (はる): mùa xuân; どこに行こうか: đi đâu nhỉ? (đề nghị cùng đi)"},
+    {t:59.3, e:62.1, ja:"今年の夏はどこに行こうか?", fj:"今年[ことし]の夏[なつ]はどこに行こ[いこ]うか?", furi:"ことしのなつはどこにいこうか?", romaji:"kotoshi no natsu wa doko ni ikou ka ?", vi:"Mùa hè năm nay mình đi đâu nhỉ?", blank:["夏","なつ"], exp:"夏 (なつ): mùa hè"},
+    {t:62.3, e:68.9, ja:"春の桜も夏の海も あなたと見たい あなたと居たい", fj:"春[はる]の桜[さくら]も夏[なつ]の海[うみ]も あなたと見[み]たい あなたと居[い]たい", furi:"はるのさくらもなつのうみも あなたとみたい あなたといたい", romaji:"haru no sakura mo natsu no umi mo anata to mitai anata to itai", vi:"Hoa anh đào mùa xuân hay biển mùa hè, anh đều muốn cùng em ngắm, cùng em ở bên", blank:["桜","さくら"], exp:"桜 (さくら): hoa anh đào; 海 (うみ): biển; あなた: em, anh (cách gọi người yêu); 見たい (みたい): muốn xem, muốn ngắm; 居たい (いたい): muốn ở bên"},
+    {t:69, e:72.7, ja:"今年の秋はどこに行こうか?", fj:"今年[ことし]の秋[あき]はどこに行こ[いこ]うか?", furi:"ことしのあきはどこにいこうか?", romaji:"kotoshi no aki wa doko ni ikou ka ?", vi:"Mùa thu năm nay mình đi đâu nhỉ?", blank:["秋","あき"], exp:"秋 (あき): mùa thu"},
+    {t:73, e:75.6, ja:"今年の冬はどこに行こうか?", fj:"今年[ことし]の冬[ふゆ]はどこに行こ[いこ]うか?", furi:"ことしのふゆはどこにいこうか?", romaji:"kotoshi no fuyu wa doko ni ikou ka ?", vi:"Mùa đông năm nay mình đi đâu nhỉ?", blank:["冬","ふゆ"], exp:"冬 (ふゆ): mùa đông"},
+    {t:75.7, e:82.5, ja:"秋の紅葉も冬の雪も あなたと見たい あなたと居たい", fj:"秋[あき]の紅葉[もみじ]も冬[ふゆ]の雪[ゆき]も あなたと見[み]たい あなたと居[い]たい", furi:"あきのもみじもふゆのゆきも あなたとみたい あなたといたい", romaji:"aki no momiji mo fuyu no yuki mo anata to mitai anata to itai", vi:"Lá đỏ mùa thu hay tuyết mùa đông, anh đều muốn cùng em ngắm, cùng em ở bên", blank:["紅葉","もみじ"], exp:"紅葉 (もみじ): lá đỏ; 雪 (ゆき): tuyết"},
+    {t:89.44, e:96.6, ja:"また沢山の思い出 紐解いて ふと思い出す 窓の外見て", fj:"また沢山[たくさん]の思い出[おもいで] 紐解い[ひもとい]て ふと思い出す[おもいだす] 窓[まど]の外[そと]見[み]て", furi:"またたくさんのおもいで ひもといて ふとおもいだす まどのそとみて", romaji:"mata takusan no omoide himotoite futo omoidasu mado no soto mite", vi:"Lại mở ra bao nhiêu kỷ niệm, chợt nhớ về khi nhìn ra ngoài cửa sổ", blank:["思い出","おもいで"], exp:"沢山の (たくさんの): nhiều; 思い出 (おもいで): kỷ niệm; 紐解く (ひもとく): mở ra, giở lại (ký ức); ふと: chợt, bỗng nhiên; 思い出す (おもいだす): nhớ lại; 窓の外 (まどのそと): ngoài cửa sổ"},
+    {t:96.6, e:103.28, ja:"喧嘩もした傷の数すらも欠かせない ピースの1つ ジグソーパズル", fj:"喧嘩[けんか]もした傷[きず]の数[かず]すらも欠か[かか]せない ピースの1つ ジグソーパズル", furi:"けんかもしたきずのかずすらもかかせない ピースのひとつ ジグソーパズル", romaji:"kenka mo shita kizu no kazu sura mo kakasenai piisu no hitotsu jigusoopazuru", vi:"Cả những lần cãi nhau, bao vết thương cũng đều là mảnh ghép không thể thiếu của bức tranh ghép", blank:["喧嘩","けんか"], exp:"喧嘩 (けんか): cãi nhau; 傷 (きず): vết thương; 数 (かず): số lượng; すらも: ngay cả; 欠かせない (かかせない): không thể thiếu; ピース: mảnh ghép; ジグソーパズル: trò chơi xếp hình (jigsaw puzzle)"},
+    {t:103.28, e:106.8, ja:"月日経つごとに日々増す思い", fj:"月日[つきひ]経つ[たつ]ごとに日々[ひび]増す[ます]思い[おもい]", furi:"つきひたつごとにひびますおもい", romaji:"tsukihi tatsu goto ni hibi masu omoi", vi:"Tháng ngày trôi qua, tình cảm mỗi ngày một lớn dần", blank:["月日","つきひ"], exp:"月日 (つきひ): tháng ngày, thời gian; 経つ (たつ): trôi qua; ごとに: mỗi khi; 日々 (ひび): mỗi ngày; 増す (ます): tăng lên; 思い (おもい): tình cảm, nỗi lòng"},
+    {t:107, e:110, ja:"「永遠に居てくれ俺の横に」", fj:"「永遠[とわ]に居[い]てくれ俺[おれ]の横[よこ]に」", furi:"「とわにいてくれおれのよこに」", romaji:"「towa ni ite kure ore no yoko ni」", vi:"“Hãy mãi ở bên cạnh anh nhé”", blank:["永遠","とわ"], exp:"永遠に (とわに): mãi mãi; 居てくれ (いてくれ): hãy ở bên (anh) nhé; 俺 (おれ): anh, tôi (nam giới); 横 (よこ): bên cạnh"},
+    {t:110.3, e:117, ja:"今、二人は誓うここに忘れない 思い出すまた蝉の鳴く頃に", fj:"今[いま]、二人[ふたり]は誓う[ちかう]ここに忘れ[わすれ]ない 思い出す[おもいだす]また蝉[せみ]の鳴く[なく]頃[ころ]に", furi:"いま、ふたりはちかうここにわすれない おもいだすまたせみのなくころに", romaji:"ima, futari wa chikau koko ni wasurenai omoidasu mata semi no naku koro ni", vi:"Giờ đây, hai đứa thề nguyện tại nơi này, không bao giờ quên, rồi sẽ lại nhớ về khi ve kêu", blank:["蝉","せみ"], exp:"二人 (ふたり): hai người; 誓う (ちかう): thề nguyện; 忘れない (わすれない): không quên; 思い出す (おもいだす): nhớ lại; 蝉 (せみ): con ve; 鳴く (なく): kêu; 頃 (ころ): khoảng thời gian"},
+    {t:117.2, e:120.8, ja:"苦労ばっかかけたな てかいっぱい泣かせたな", fj:"苦労[くろう]ばっかかけたな てかいっぱい泣かせ[なかせ]たな", furi:"くろうばっかかけたな てかいっぱいなかせたな", romaji:"kurou bakka kaketa na teka ippai nakaseta na", vi:"Anh đã làm em vất vả nhiều, thật ra còn làm em khóc bao nhiêu lần", blank:["苦労","くろう"], exp:"苦労 (くろう): vất vả, khổ cực; ばっか: toàn là, chỉ toàn; かける: gây ra, làm cho (ai vất vả); てか: thật ra, nói thật thì; いっぱい: nhiều; 泣かせる (なかせる): làm cho khóc"},
+    {t:120.9, e:124.2, ja:"ごめんな どれだけの月日たったあれから", fj:"ごめんな どれだけの月日[つきひ]たったあれから", furi:"ごめんな どれだけのつきひたったあれから", romaji:"gomen na dore dake no tsukihi tatta are kara", vi:"Xin lỗi em, đã bao tháng ngày trôi qua kể từ đó", blank:["月日","つきひ"], exp:"ごめんな: xin lỗi (thân mật); どれだけ: bao nhiêu; 月日 (つきひ): tháng ngày; たつ: trôi qua; あれから: kể từ đó"},
+    {t:124.4, e:131, ja:"目腫らして泣きあったね明け方 包み込むように教会の鐘が鳴るよ", fj:"目[め]腫らし[はらし]て泣き[なき]あったね明け方[あけがた] 包み込む[つつみこむ]ように教会[きょうかい]の鐘[かね]が鳴る[なる]よ", furi:"めはらしてなきあったねあけがた つつみこむようにきょうかいのかねがなるよ", romaji:"me harashite naki atta ne akegata tsutsumikomu you ni kyoukai no kane ga naru yo", vi:"Cả hai đã cùng khóc đến sưng mắt lúc rạng sáng, tiếng chuông nhà thờ vang lên như ôm lấy hai đứa", blank:["教会","きょうかい"], exp:"目腫らして (めはらして): sưng mắt; 泣きあう (なきあう): cùng nhau khóc; 明け方 (あけがた): lúc rạng sáng; 包み込む (つつみこむ): ôm lấy, bao bọc; 教会 (きょうかい): nhà thờ; 鐘 (かね): chuông; 鳴る (なる): vang lên"},
+    {t:131.2, e:138, ja:"重ねあえる喜び 分かち合える悲しみ 共に誓う心に さぁ行こうか探しに", fj:"重ね[かさね]あえる喜び[よろこび] 分かち[わかち]合える[あえる]悲しみ[かなしみ] 共に[ともに]誓う[ちかう]心[こころ]に さぁ行こ[いこ]うか探し[さがし]に", furi:"かさねあえるよろこび わかちあえるかなしみ ともにちかうこころに さぁいこうかさがしに", romaji:"kasane aeru yorokobi wakachi aeru kanashimi tomoni chikau kokoro ni saa ikou ka sagashi ni", vi:"Niềm vui có thể nhân đôi, nỗi buồn có thể sẻ chia, với trái tim cùng thề nguyện — nào, cùng đi tìm nhé", blank:["喜び","よろこび"], exp:"重ねあえる (かさねあえる): có thể chồng chất, nhân lên; 喜び (よろこび): niềm vui; 分かち合える (わかちあえる): có thể sẻ chia; 悲しみ (かなしみ): nỗi buồn; 共に (ともに): cùng nhau; 誓う (ちかう): thề nguyện; 心 (こころ): trái tim; さぁ: nào; 探しに (さがしに): đi tìm"},
+    {t:138, e:142, ja:"新しい景色を見つけに行こう二人だけの", fj:"新しい[あたらしい]景色[けしき]を見つけ[みつけ]に行こ[いこ]う二人[ふたり]だけの", furi:"あたらしいけしきをみつけにいこうふたりだけの", romaji:"atarashii keshiki wo mitsuke ni ikou futari dake no", vi:"Cùng đi tìm khung cảnh mới, chỉ của riêng hai đứa", blank:["景色","けしき"], exp:"新しい (あたらしい): mới; 景色 (けしき): phong cảnh; 見つける (みつける): tìm thấy; 二人だけの (ふたりだけの): chỉ của hai người"},
+    {t:142.1, e:144.2, ja:"春夏秋冬", fj:"春夏秋冬[しゅんかしゅうとう]", furi:"しゅんかしゅうとう", romaji:"shunkashuutou", vi:"Xuân hạ thu đông", blank:["春夏秋冬","しゅんかしゅうとう"], exp:"春夏秋冬 (しゅんかしゅうとう): bốn mùa xuân hạ thu đông"},
+    {t:144.5, e:148, ja:"今年の春はどこに行こうか?", fj:"今年[ことし]の春[はる]はどこに行こ[いこ]うか?", furi:"ことしのはるはどこにいこうか?", romaji:"kotoshi no haru wa doko ni ikou ka ?", vi:"Mùa xuân năm nay mình đi đâu nhỉ?", blank:["春","はる"], exp:"今年 (ことし): năm nay; 春 (はる): mùa xuân; どこに行こうか: đi đâu nhỉ? (đề nghị cùng đi)"},
+    {t:148.2, e:151.5, ja:"今年の夏はどこに行こうか?", fj:"今年[ことし]の夏[なつ]はどこに行こ[いこ]うか?", furi:"ことしのなつはどこにいこうか?", romaji:"kotoshi no natsu wa doko ni ikou ka ?", vi:"Mùa hè năm nay mình đi đâu nhỉ?", blank:["夏","なつ"], exp:"夏 (なつ): mùa hè"},
+    {t:151.8, e:158.1, ja:"春の桜も夏の海も あなたと見たい あなたと居たい", fj:"春[はる]の桜[さくら]も夏[なつ]の海[うみ]も あなたと見[み]たい あなたと居[い]たい", furi:"はるのさくらもなつのうみも あなたとみたい あなたといたい", romaji:"haru no sakura mo natsu no umi mo anata to mitai anata to itai", vi:"Hoa anh đào mùa xuân hay biển mùa hè, anh đều muốn cùng em ngắm, cùng em ở bên", blank:["桜","さくら"], exp:"桜 (さくら): hoa anh đào; 海 (うみ): biển; あなた: em, anh (cách gọi người yêu); 見たい (みたい): muốn xem, muốn ngắm; 居たい (いたい): muốn ở bên"},
+    {t:158.1, e:161.5, ja:"今年の秋はどこに行こうか?", fj:"今年[ことし]の秋[あき]はどこに行こ[いこ]うか?", furi:"ことしのあきはどこにいこうか?", romaji:"kotoshi no aki wa doko ni ikou ka ?", vi:"Mùa thu năm nay mình đi đâu nhỉ?", blank:["秋","あき"], exp:"秋 (あき): mùa thu"},
+    {t:161.7, e:165.3, ja:"今年の冬はどこに行こうか?", fj:"今年[ことし]の冬[ふゆ]はどこに行こ[いこ]うか?", furi:"ことしのふゆはどこにいこうか?", romaji:"kotoshi no fuyu wa doko ni ikou ka ?", vi:"Mùa đông năm nay mình đi đâu nhỉ?", blank:["冬","ふゆ"], exp:"冬 (ふゆ): mùa đông"},
+    {t:165.5, e:171.56, ja:"秋の紅葉も冬の雪も あなたと見たい あなたと居たい", fj:"秋[あき]の紅葉[もみじ]も冬[ふゆ]の雪[ゆき]も あなたと見[み]たい あなたと居[い]たい", furi:"あきのもみじもふゆのゆきも あなたとみたい あなたといたい", romaji:"aki no momiji mo fuyu no yuki mo anata to mitai anata to itai", vi:"Lá đỏ mùa thu hay tuyết mùa đông, anh đều muốn cùng em ngắm, cùng em ở bên", blank:["紅葉","もみじ"], exp:"紅葉 (もみじ): lá đỏ; 雪 (ゆき): tuyết"},
+    {t:171.9, e:178.4, ja:"たまにゃやっぱり 家でまったり 二人毛布に包まったり", fj:"たまにゃやっぱり 家[いえ]でまったり 二人[ふたり]毛布[もうふ]に包[つつみ]まったり", furi:"たまにゃやっぱり いえでまったり ふたりもうふにつつみまったり", romaji:"tama nya yappari ie de mattari futari-moufu ni tsutsumi mattari", vi:"Thỉnh thoảng vẫn thích ở nhà thảnh thơi, hai đứa quấn chung một chiếc chăn", blank:["毛布","もうふ"], exp:"たまにゃ: thỉnh thoảng (たまには); やっぱり: quả nhiên, vẫn là; 家で (いえで): ở nhà; まったり: thảnh thơi, thư giãn; 毛布 (もうふ): chăn; 包まる (くるまる): quấn, cuộn mình trong"},
+    {t:178.48, e:182, ja:"じゃれ合いながら過ごす気の済むまで", fj:"じゃれ合い[あい]ながら過ごす[すごす]気[き]の済む[すむ]まで", furi:"じゃれあいながらすごすきのすむまで", romaji:"jareainagara sugosu ki no sumu made", vi:"Vừa đùa giỡn với nhau vừa trải qua cho đến khi thỏa lòng", blank:["じゃれ合い","じゃれあい"], exp:"じゃれ合う (じゃれあう): đùa giỡn với nhau; 過ごす (すごす): trải qua; 気の済むまで (きのすむまで): cho đến khi thỏa lòng"},
+    {t:182.1, e:185.5, ja:"飽きたらまた探すのさ 行く宛", fj:"飽き[あき]たらまた探す[さがす]のさ 行く[いく]宛[あて]", furi:"あきたらまたさがすのさ いくあて", romaji:"akitara mata sagasu no sa iku ate", vi:"Chán rồi thì lại đi tìm nơi khác để đến", blank:["行く宛","ゆくあて"], exp:"飽きる (あきる): chán; また: lại; 探す (さがす): tìm kiếm; 行く宛 (ゆくあて): nơi đến, điểm đến"},
+    {t:185.8, e:192.4, ja:"さぁ 今日はどこ行こうか? ほら あの丘の向こう側まで続く青空", fj:"さぁ 今日[きょう]はどこ行こ[いこ]うか? ほら あの丘[おか]の向こう[むこう]側[がわ]まで続く[つづく]青空[あおぞら]", furi:"さぁ きょうはどこいこうか? ほら あのおかのむこうがわまでつづくあおぞら", romaji:"saa kyou wa doko ikou ka ? hora ano oka no mukou-gawa made tsuzuku aozora", vi:"Nào, hôm nay đi đâu nhỉ? Này, bầu trời xanh trải dài đến tận bên kia đồi", blank:["丘","おか"], exp:"さぁ: nào; 今日 (きょう): hôm nay; ほら: này, nhìn kìa; 丘 (おか): đồi; 向こう側 (むこうがわ): phía bên kia; 続く (つづく): tiếp nối, trải dài; 青空 (あおぞら): bầu trời xanh"},
+    {t:192.6, e:198.3, ja:"買ったナビきっかけにどこでも行ったね 色んな所を知ったね", fj:"買っ[かっ]たナビきっかけにどこでも行っ[いっ]たね 色んな[いろんな]所[ところ]を知っ[しっ]たね", furi:"かったナビきっかけにどこでもいったね いろんなところをしったね", romaji:"katta nabi-kikkake ni doko demo itta ne ironna tokoro wo shitta ne", vi:"Từ khi mua chiếc máy dẫn đường, hai đứa đã đi khắp nơi, biết thêm bao nhiêu chỗ", blank:["所","ところ"], exp:"買った (かった): đã mua; ナビ: máy dẫn đường (navigation); きっかけに: nhân dịp, từ khi; どこでも: đâu cũng; 行った (いった): đã đi; 色んな (いろんな): đủ loại, nhiều; 所 (ところ): nơi, chỗ; 知った (しった): đã biết"},
+    {t:198.4, e:206.5, ja:"いつかもし子供が生まれたなら教えようこの場所だけは伝えなきゃな", fj:"いつかもし子供[こども]が生まれ[うまれ]たなら教えよ[おしえよ]うこの場所[ばしょ]だけは伝え[つたえ]なきゃな", furi:"いつかもしこどもがうまれたならおしえようこのばしょだけはつたえなきゃな", romaji:"itsuka moshi kodomo ga umareta nara oshieyou kono basho dake wa tsutaenakya na", vi:"Nếu một ngày con chúng ta ra đời, anh sẽ dạy con, chỉ riêng nơi này nhất định phải kể lại", blank:["子供","こども"], exp:"いつか: một ngày nào đó; もし: nếu; 子供 (こども): con, đứa trẻ; 生まれる (うまれる): ra đời; 教える (おしえる): dạy; 場所 (ばしょ): nơi chốn; 伝える (つたえる): truyền lại, kể lại; ～なきゃな: nhất định phải…"},
+    {t:206.7, e:213.6, ja:"約束交わし誓ったあの 夏の終わり二人愛を祝った場所", fj:"約束[やくそく]交わし[かわし]誓っ[ちかっ]たあの 夏[なつ]の終わり[おわり]二人[ふたり]愛[あい]を祝っ[いわっ]た場所[ばしょ]", furi:"やくそくかわしちかったあの なつのおわりふたりあいをいわったばしょ", romaji:"yakusoku kawashi chikatta ano natsu no owari futari-ai wo iwatta basho", vi:"Nơi hai đứa đã trao lời hứa và thề nguyện, nơi cuối hè đã cùng chúc mừng tình yêu", blank:["約束","やくそく"], exp:"約束 (やくそく): lời hứa; 交わす (かわす): trao đổi; 誓う (ちかう): thề nguyện; 夏の終わり (なつのおわり): cuối hè; 愛 (あい): tình yêu; 祝う (いわう): chúc mừng; 場所 (ばしょ): nơi chốn"},
+    {t:216.54, e:220, ja:"今年の春はどこに行こうか?", fj:"今年[ことし]の春[はる]はどこに行こ[いこ]うか?", furi:"ことしのはるはどこにいこうか?", romaji:"kotoshi no haru wa doko ni ikou ka ?", vi:"Mùa xuân năm nay mình đi đâu nhỉ?", blank:["春","はる"], exp:"今年 (ことし): năm nay; 春 (はる): mùa xuân; どこに行こうか: đi đâu nhỉ? (đề nghị cùng đi)"},
+    {t:220.3, e:223.4, ja:"今年の夏はどこに行こうか?", fj:"今年[ことし]の夏[なつ]はどこに行こ[いこ]うか?", furi:"ことしのなつはどこにいこうか?", romaji:"kotoshi no natsu wa doko ni ikou ka ?", vi:"Mùa hè năm nay mình đi đâu nhỉ?", blank:["夏","なつ"], exp:"夏 (なつ): mùa hè"},
+    {t:223.5, e:230.2, ja:"春の桜も夏の海も あなたと見たい あなたと居たい", fj:"春[はる]の桜[さくら]も夏[なつ]の海[うみ]も あなたと見[み]たい あなたと居[い]たい", furi:"はるのさくらもなつのうみも あなたとみたい あなたといたい", romaji:"haru no sakura mo natsu no umi mo anata to mitai anata to itai", vi:"Hoa anh đào mùa xuân hay biển mùa hè, anh đều muốn cùng em ngắm, cùng em ở bên", blank:["桜","さくら"], exp:"桜 (さくら): hoa anh đào; 海 (うみ): biển; あなた: em, anh (cách gọi người yêu); 見たい (みたい): muốn xem, muốn ngắm; 居たい (いたい): muốn ở bên"},
+    {t:230.2, e:233.5, ja:"今年の秋はどこに行こうか?", fj:"今年[ことし]の秋[あき]はどこに行こ[いこ]うか?", furi:"ことしのあきはどこにいこうか?", romaji:"kotoshi no aki wa doko ni ikou ka ?", vi:"Mùa thu năm nay mình đi đâu nhỉ?", blank:["秋","あき"], exp:"秋 (あき): mùa thu"},
+    {t:233.7, e:237.1, ja:"今年の冬はどこに行こうか?", fj:"今年[ことし]の冬[ふゆ]はどこに行こ[いこ]うか?", furi:"ことしのふゆはどこにいこうか?", romaji:"kotoshi no fuyu wa doko ni ikou ka ?", vi:"Mùa đông năm nay mình đi đâu nhỉ?", blank:["冬","ふゆ"], exp:"冬 (ふゆ): mùa đông"},
+    {t:237.3, e:243.8, ja:"秋の紅葉も冬の雪も あなたと見たい あなたと居たい", fj:"秋[あき]の紅葉[もみじ]も冬[ふゆ]の雪[ゆき]も あなたと見[み]たい あなたと居[い]たい", furi:"あきのもみじもふゆのゆきも あなたとみたい あなたといたい", romaji:"aki no momiji mo fuyu no yuki mo anata to mitai anata to itai", vi:"Lá đỏ mùa thu hay tuyết mùa đông, anh đều muốn cùng em ngắm, cùng em ở bên", blank:["紅葉","もみじ"], exp:"紅葉 (もみじ): lá đỏ; 雪 (ゆき): tuyết"},
+    {t:243.86, e:247.5, ja:"今年の春はどこに行こうか?", fj:"今年[ことし]の春[はる]はどこに行こ[いこ]うか?", furi:"ことしのはるはどこにいこうか?", romaji:"kotoshi no haru wa doko ni ikou ka ?", vi:"Mùa xuân năm nay mình đi đâu nhỉ?", blank:["春","はる"], exp:"今年 (ことし): năm nay; 春 (はる): mùa xuân; どこに行こうか: đi đâu nhỉ? (đề nghị cùng đi)"},
+    {t:247.5, e:250.5, ja:"今年の夏はどこに行こうか?", fj:"今年[ことし]の夏[なつ]はどこに行こ[いこ]うか?", furi:"ことしのなつはどこにいこうか?", romaji:"kotoshi no natsu wa doko ni ikou ka ?", vi:"Mùa hè năm nay mình đi đâu nhỉ?", blank:["夏","なつ"], exp:"夏 (なつ): mùa hè"},
+    {t:250.5, e:258, ja:"春の桜も夏の海も あなたと見たい あなたと居たい", fj:"春[はる]の桜[さくら]も夏[なつ]の海[うみ]も あなたと見[み]たい あなたと居[い]たい", furi:"はるのさくらもなつのうみも あなたとみたい あなたといたい", romaji:"haru no sakura mo natsu no umi mo anata to mitai anata to itai", vi:"Hoa anh đào mùa xuân hay biển mùa hè, anh đều muốn cùng em ngắm, cùng em ở bên", blank:["桜","さくら"], exp:"桜 (さくら): hoa anh đào; 海 (うみ): biển; あなた: em, anh (cách gọi người yêu); 見たい (みたい): muốn xem, muốn ngắm; 居たい (いたい): muốn ở bên"},
+    {t:258, e:261, ja:"今年の秋はどこに行こうか?", fj:"今年[ことし]の秋[あき]はどこに行こ[いこ]うか?", furi:"ことしのあきはどこにいこうか?", romaji:"kotoshi no aki wa doko ni ikou ka ?", vi:"Mùa thu năm nay mình đi đâu nhỉ?", blank:["秋","あき"], exp:"秋 (あき): mùa thu"},
+    {t:261, e:264.5, ja:"今年の冬はどこに行こうか?", fj:"今年[ことし]の冬[ふゆ]はどこに行こ[いこ]うか?", furi:"ことしのふゆはどこにいこうか?", romaji:"kotoshi no fuyu wa doko ni ikou ka ?", vi:"Mùa đông năm nay mình đi đâu nhỉ?", blank:["冬","ふゆ"], exp:"冬 (ふゆ): mùa đông"},
+    {t:264.5, e:271, ja:"秋の紅葉も冬の雪も あなたと見たい あなたと居たい", fj:"秋[あき]の紅葉[もみじ]も冬[ふゆ]の雪[ゆき]も あなたと見[み]たい あなたと居[い]たい", furi:"あきのもみじもふゆのゆきも あなたとみたい あなたといたい", romaji:"aki no momiji mo fuyu no yuki mo anata to mitai anata to itai", vi:"Lá đỏ mùa thu hay tuyết mùa đông, anh đều muốn cùng em ngắm, cùng em ở bên", blank:["紅葉","もみじ"], exp:"紅葉 (もみじ): lá đỏ; 雪 (ゆき): tuyết"},
+    {t:271, e:278.1, ja:"今年もずっと一緒にいようね 来年もずっと一緒にいようね", fj:"今年[ことし]もずっと一緒[いっしょ]にいようね 来年[らいねん]もずっと一緒[いっしょ]にいようね", furi:"ことしもずっといっしょにいようね らいねんもずっといっしょにいようね", romaji:"kotoshi mo zutto issho ni iyou ne rainen mo zutto issho ni iyou ne", vi:"Năm nay cũng mãi ở bên nhau nhé, năm sau cũng mãi ở bên nhau nhé", blank:["来年","らいねん"], exp:"今年 (ことし): năm nay; ずっと: mãi; 一緒に (いっしょに): cùng nhau; いようね: cùng… nhé (đề nghị); 来年 (らいねん): năm sau"},
+    {t:278.1, e:287.62, ja:"病める時も健やかなる時も あなたといたい", fj:"病める[やめる]時[とき]も健やか[すこやか]なる時[とき]も あなたといたい", furi:"やめるときもすこやかなるときも あなたといたい", romaji:"yameru toki mo sukoyakanaru toki mo anata to itai", vi:"Dù lúc ốm đau hay lúc khỏe mạnh, anh vẫn muốn ở bên em", blank:["健やか","すこやか"], exp:"病める時 (やめるとき): lúc ốm đau; 健やかなる時 (すこやかなる時): lúc khỏe mạnh (cách nói trong lời thề hôn nhân); あなた: em; いたい: muốn ở bên"}
+  ];
+  var SV4_WIN = SV4_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV4_ID] = {
+    id: SV4_ID, dur: SV4_DUR, subs: SV4_SUBS, win: SV4_WIN,
+    practice: SV4_SUBS.slice(),
+    fill: SV4_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "春夏秋冬 - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video đăng ẩn trên kênh Tiếng Nhật Thực Chiến.",
+    facadeImg: "https://i.ytimg.com/vi/K2I36uuDJVY/hqdefault.jpg",
+    facadeAlt: "Ảnh xem trước video bài hát 春夏秋冬 - Hilcrhyme",
+    facadeLabel: "Phát video bài hát 春夏秋冬 — học tiếng Nhật qua bài hát",
     wide: true
   };
   /* Khung thời gian riêng từng câu — cùng thuật toán SV2_WIN của bài 2: các câu

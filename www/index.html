@@ -8838,6 +8838,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      name: "春夏秋冬 - Hilcrhyme", level: "", lines: 51, dur: "4:59",
      thumb: "https://i.ytimg.com/vi/SeZCeyrMnlY/mqdefault.jpg",
      alt: "Ảnh xem trước video bài hát Xuân Hạ Thu Đông của Hilcrhyme"},
+    {id: "YjpACa-7f-o", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
+     name: "DARLING - 西野カナ", level: "", lines: 41, dur: "4:02",
+     thumb: "https://i.ytimg.com/vi/YjpACa-7f-o/mqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát DARLING của 西野カナ"},
     {id: "mKPRQF70PvA", cat: "podcast", series: "Easy N5 Japanese Podcast", channel: "OkkeiJapanese",
      name: "Easy N5 Japanese Podcast: đi Thụy Sĩ", level: "N5", lines: 23, dur: "1:02",
      thumb: "https://i.ytimg.com/vi/mKPRQF70PvA/mqdefault.jpg",
@@ -10776,6 +10780,71 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     facadeImg: "https://i.ytimg.com/vi/SeZCeyrMnlY/mqdefault.jpg",
     facadeAlt: "Ảnh xem trước video bài hát 春夏秋冬 - Hilcrhyme",
     facadeLabel: "Phát video bài hát 春夏秋冬 — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* DARLING (西野カナ) — bài hát làm tay số 3 (sau Marigold + 春夏秋冬), 41 câu.
+     Video THƯỜNG 16:9 (không phải Shorts), ID YjpACa-7f-o, 4:02, nhúng trực tiếp
+     video gốc vietsub+romaji của kênh Em Bé (không đăng lại; quyết định 2026-11-14).
+     41 câu lấy ĐÚNG từ darling-lesson.json đã soát tay (lời theo bản đã xuất bản
+     Oricon, mốc giờ căn theo Whisper base + word timestamps; âm thanh là bản studio,
+     toàn bộ lời đã xuất bản đều có mặt đúng thứ tự). Mở bằng chính player sv2*
+     qua svuActivate (wide: khung video nằm ngang 16:9). */
+  var SV5_ID = "YjpACa-7f-o";
+  var SV5_DUR = 242;
+  var SV5_SUBS = [
+    {t:6.02, e:9.34, ja:"ねぇ Darling ねぇ Darling", fj:"ねぇ Darling ねぇ Darling", furi:"ねぇ Darling ねぇ Darling", romaji:"nee Darling nee Darling", vi:"Này anh yêu, này anh yêu", blank:["Darling","ダーリン"], exp:"ねぇ: này, này anh (gọi thân mật); Darling (ダーリン): anh yêu, em yêu — cách gọi người yêu"},
+    {t:9.34, e:12.16, ja:"またテレビつけたままで", fj:"またテレビつけたままで", furi:"またテレビつけたままで", romaji:"mata terebi tsuketa mama de", vi:"Lại để tivi bật suốt thế này", blank:["テレビ","テレビ"], exp:"また: lại; テレビ: tivi; つけたまま: để bật nguyên như thế (まま: giữ nguyên trạng thái)"},
+    {t:12.66, e:16.54, ja:"スヤスヤ どんな夢見てるの?", fj:"スヤスヤ どんな夢見[ゆめみ]てるの?", furi:"スヤスヤ どんなゆめみてるの?", romaji:"suyasuya donna yumemiteru no?", vi:"Ngủ say thế, đang mơ giấc mơ gì vậy?", blank:["夢","ゆめ"], exp:"スヤスヤ: ngủ say, ngủ ngon lành (từ tượng thanh); どんな夢 (どんなゆめ): giấc mơ như thế nào; 夢見る (ゆめみる): mơ"},
+    {t:18, e:20.92, ja:"ねぇ Darling 脱ぎっぱなし", fj:"ねぇ Darling 脱ぎ[ぬぎ]っぱなし", furi:"ねぇ Darling ぬぎっぱなし", romaji:"nee Darling nugippanashi", vi:"Này anh yêu, lại cởi đồ vứt lung tung", blank:["脱ぎっぱなし","ぬぎっぱなし"], exp:"脱ぎっぱなし (ぬぎっぱなし): cởi ra rồi bỏ mặc đó (～っぱなし: làm xong rồi để nguyên)"},
+    {t:21.6, e:23.86, ja:"靴下も裏返しで", fj:"靴下[くつした]も裏返し[うらがえし]で", furi:"くつしたもうらがえしで", romaji:"kutsushita mo uragaeshi de", vi:"Cả tất cũng lộn trái", blank:["靴下","くつした"], exp:"靴下 (くつした): tất, vớ; も: cũng; 裏返し (うらがえし): lộn trái, lộn ngược"},
+    {t:24.66, e:28.26, ja:"もー、誰が片づけるの?", fj:"もー、誰[だれ]が片づける[かたづける]の?", furi:"もー、だれがかたづけるの?", romaji:"moo, dare ga katazukeru no?", vi:"Trời ơi, ai dọn dẹp đây?", blank:["片づける","かたづける"], exp:"もー (もう): trời ơi, thật là (thán từ, tỏ ý ngán ngẩm); 誰 (だれ): ai; 片づける (かたづける): dọn dẹp, thu dọn; の?: (hỏi, giọng nữ)"},
+    {t:30.02, e:33.84, ja:"いつか友達と語り合った", fj:"いつか友達[ともだち]と語り合っ[かたりあっ]た", furi:"いつかともだちとかたりあった", romaji:"itsuka tomodachi to katariatta", vi:"Ngày xưa đã cùng bạn bè tâm sự", blank:["友達","ともだち"], exp:"いつか: ngày xưa, đã có lúc; 友達 (ともだち): bạn bè; と: cùng; 語り合う (かたりあう): tâm sự, trò chuyện với nhau"},
+    {t:33.84, e:36.06, ja:"理想の人と", fj:"理想[りそう]の人[ひと]と", furi:"りそうのひとと", romaji:"risou no hito to", vi:"Về người lý tưởng", blank:["理想","りそう"], exp:"理想 (りそう): lý tưởng; 人 (ひと): người; と: (trợ từ, về, với)"},
+    {t:36.06, e:41.7, ja:"まるでかけ離れてるのに", fj:"まるでかけ離れ[かけはなれ]てるのに", furi:"まるでかけはなれてるのに", romaji:"marude kakehanareteru noni", vi:"Vậy mà anh khác xa hoàn toàn", blank:["かけ離れてる","かけはなれてる"], exp:"まるで: hoàn toàn, chẳng giống chút nào; かけ離れる (かけはなれる): khác xa, xa vời; のに: vậy mà, thế mà"},
+    {t:41.7, e:47.72, ja:"Ah なんで好きになっちゃったのかなぁ", fj:"Ah なんで好き[すき]になっちゃったのかなぁ", furi:"Ah なんですきになっちゃったのかなぁ", romaji:"Ah nande suki ni natchatta no ka naa", vi:"À, tại sao mình lại yêu anh mất rồi nhỉ?", blank:["好き","すき"], exp:"Ah (ああ): à, ôi; なんで: tại sao; 好きになる (すきになる): thích, yêu; ～ちゃった: (lỡ) đã… rồi; のかなぁ: nhỉ (tự hỏi)"},
+    {t:48.58, e:53.16, ja:"私って少し変わり者なのね", fj:"私[わたし]って少し[すこし]変わり者[かわりもの]なのね", furi:"わたしってすこしかわりものなのね", romaji:"watashi tte sukoshi kawarimono na no ne", vi:"Chắc mình cũng hơi kỳ lạ nhỉ", blank:["変わり者","かわりもの"], exp:"私 (わたし): mình, tôi; って: (nhấn mạnh chủ ngữ); 少し (すこし): hơi, một chút; 変わり者 (かわりもの): người kỳ lạ, người khác người; なのね: nhỉ, đấy (giọng nữ)"},
+    {t:53.16, e:60.1, ja:"Ah こんなにも放っておけない人は", fj:"Ah こんなにも放っ[ほうっ]ておけない人[ひと]は", furi:"Ah こんなにもほうっておけないひとは", romaji:"Ah konnanimo hootte okenai hito wa", vi:"À, người mà mình không thể bỏ mặc được như thế này", blank:["放っておけない","ほうっておけない"], exp:"こんなにも: đến mức này, như thế này; 放っておけない (ほうっておけない): không thể bỏ mặc, không thể làm ngơ; 人 (ひと): người"},
+    {t:60.1, e:65.32, ja:"星の数ほどいる中で ねぇ Darling", fj:"星[ほし]の数[かず]ほどいる中[なか]で ねぇ Darling", furi:"ほしのかずほどいるなかで ねぇ Darling", romaji:"hoshi no kazu hodo iru naka de nee Darling", vi:"Trong muôn vàn người như sao trên trời, này anh yêu", blank:["星","ほし"], exp:"星 (ほし): ngôi sao; 数ほど (かずほど): nhiều như; いる: có, tồn tại; 中で (なかで): trong số; ねぇ Darling: này anh yêu"},
+    {t:65.32, e:67.16, ja:"あなたしかいない", fj:"あなたしかいない", furi:"あなたしかいない", romaji:"anata shika inai", vi:"Chỉ có mình anh thôi", blank:["あなた","あなた"], exp:"あなた: anh, em (cách gọi người yêu); しか～ない: chỉ có… thôi"},
+    {t:77.96, e:81.32, ja:"ねぇ Darling どっちがいい?", fj:"ねぇ Darling どっちがいい?", furi:"ねぇ Darling どっちがいい?", romaji:"nee Darling dotchi ga ii?", vi:"Này anh yêu, cái nào đẹp hơn?", blank:["どっち","どっち"], exp:"どっち: cái nào (trong hai); がいい: tốt hơn, đẹp hơn; ?: (hỏi ý kiến)"},
+    {t:81.32, e:83.94, ja:"このスカートとワンピース", fj:"このスカートとワンピース", furi:"このスカートとワンピース", romaji:"kono sukaato to wanpiisu", vi:"Chiếc váy này với cái đầm này", blank:["スカート","スカート"], exp:"この: này; スカート: váy, chân váy; と: với, và; ワンピース: đầm liền thân (one-piece)"},
+    {t:83.94, e:88.8, ja:"あー、今あくびしてたでしょ", fj:"あー、今[いま]あくびしてたでしょ", furi:"あー、いまあくびしてたでしょ", romaji:"aa, ima akubi shiteta desho", vi:"À, vừa nãy anh ngáp đấy nhé", blank:["あくび","あくび"], exp:"あー: à; 今 (いま): vừa nãy; あくび: ngáp; してた: đã làm (thể tiếp diễn quá khứ); でしょ: đấy nhé (xác nhận)"},
+    {t:88.8, e:92.86, ja:"ねぇ早く 出かけよう", fj:"ねぇ早く[はやく] 出かけよ[でかけよ]う", furi:"ねぇはやく でかけよう", romaji:"nee hayaku dekakeyou", vi:"Này, đi ra ngoài nhanh lên nào", blank:["出かけよう","でかけよう"], exp:"ねぇ: này; 早く (はやく): nhanh lên; 出かける (でかける): ra ngoài, đi chơi; ～よう: nào, nhé (rủ rê)"},
+    {t:93.24, e:95.88, ja:"待って! 携帯忘れたかも", fj:"待っ[まっ]て! 携帯[けいたい]忘れ[わすれ]たかも", furi:"まって! けいたいわすれたかも", romaji:"matte! keitai wasureta kamo", vi:"Đợi đã! Hình như em quên điện thoại rồi", blank:["携帯","けいたい"], exp:"待って (まって): đợi đã; 携帯 (けいたい): điện thoại di động; 忘れた (わすれた): đã quên; かも: hình như, có lẽ"},
+    {t:96.68, e:100.8, ja:"あー、今ため息ついたでしょ?", fj:"あー、今[いま]ため息[ためいき]ついたでしょ?", furi:"あー、いまためいきついたでしょ?", romaji:"aa, ima tameiki tsuita desho?", vi:"À, vừa nãy anh thở dài đấy nhé?", blank:["ため息","ためいき"], exp:"ため息 (ためいき): thở dài; ついた: đã (thở dài); でしょ?: đấy nhé?"},
+    {t:102.02, e:105.9, ja:"いつか聞いたあなたの好きな", fj:"いつか聞い[きい]たあなたの好き[すき]な", furi:"いつかきいたあなたのすきな", romaji:"itsuka kiita anata no suki na", vi:"Người mà ngày xưa anh nói là anh thích", blank:["聞いた","きいた"], exp:"いつか: ngày xưa; 聞いた (きいた): đã nghe; あなたの: của anh; 好きな (すきな): thích, yêu thích"},
+    {t:105.9, e:107.94, ja:"女優さんとは", fj:"女優[じょゆう]さんとは", furi:"じょゆうさんとは", romaji:"joyuu-san to wa", vi:"Nữ diễn viên ấy thì", blank:["女優","じょゆう"], exp:"女優 (じょゆう): nữ diễn viên; さん: (kính ngữ); とは: thì, còn…"},
+    {t:107.94, e:111.9, ja:"似ても似つかないのに私", fj:"似[に]ても似つか[につか]ないのに私[わたし]", furi:"にてもにつかないのにわたし", romaji:"nite mo nitsukanai noni watashi", vi:"Vậy mà em chẳng giống chút nào", blank:["似つかない","につかない"], exp:"似ても似つかない (にてもにつかない): chẳng giống chút nào; のに: vậy mà; 私 (わたし): em, mình"},
+    {t:113.94, e:119.68, ja:"Ah なんで好きになっちゃったのかなぁ", fj:"Ah なんで好き[すき]になっちゃったのかなぁ", furi:"Ah なんですきになっちゃったのかなぁ", romaji:"Ah nande suki ni natchatta no ka naa", vi:"À, tại sao mình lại yêu anh mất rồi nhỉ?", blank:["好き","すき"], exp:"Ah (ああ): à, ôi; なんで: tại sao; 好きになる (すきになる): thích, yêu; ～ちゃった: (lỡ) đã… rồi; のかなぁ: nhỉ (tự hỏi)"},
+    {t:120.68, e:124.6, ja:"あなたってほんと変わり者なのね", fj:"あなたってほんと変わり者[かわりもの]なのね", furi:"あなたってほんとかわりものなのね", romaji:"anata tte honto kawarimono na no ne", vi:"Anh đúng là người kỳ lạ thật đấy", blank:["変わり者","かわりもの"], exp:"あなた: anh; って: (nhấn mạnh); ほんと: thật là; 変わり者 (かわりもの): người kỳ lạ; なのね: đấy (giọng nữ)"},
+    {t:125.4, e:132.28, ja:"Ah こんなにもワガママ言える人は", fj:"Ah こんなにもワガママ言える[いえる]人[ひと]は", furi:"Ah こんなにもワガママいえるひとは", romaji:"Ah konnanimo wagamama ieru hito wa", vi:"À, người mà mình có thể nhõng nhẽo như thế này", blank:["ワガママ","ワガママ"], exp:"ワガママ (わがまま): nhõng nhẽo, ích kỷ; 言える (いえる): có thể nói; 人 (ひと): người"},
+    {t:132.28, e:137.26, ja:"星の数ほどいる中で ねぇ Darling", fj:"星[ほし]の数[かず]ほどいる中[なか]で ねぇ Darling", furi:"ほしのかずほどいるなかで ねぇ Darling", romaji:"hoshi no kazu hodo iru naka de nee Darling", vi:"Trong muôn vàn người như sao trên trời, này anh yêu", blank:["星","ほし"], exp:"星 (ほし): ngôi sao; 数ほど (かずほど): nhiều như; いる: có, tồn tại; 中で (なかで): trong số; ねぇ Darling: này anh yêu"},
+    {t:137.26, e:139.08, ja:"あなたしかいない", fj:"あなたしかいない", furi:"あなたしかいない", romaji:"anata shika inai", vi:"Chỉ có mình anh thôi", blank:["あなた","あなた"], exp:"あなた: anh, em (cách gọi người yêu); しか～ない: chỉ có… thôi"},
+    {t:150, e:155.74, ja:"そう きっとこんな毎日が", fj:"そう きっとこんな毎日[まいにち]が", furi:"そう きっとこんなまいにちが", romaji:"sou kitto konna mainichi ga", vi:"Ừ, chắc những ngày như thế này", blank:["毎日","まいにち"], exp:"そう: ừ, đúng vậy; きっと: chắc chắn, hẳn là; こんな: như thế này; 毎日 (まいにち): mỗi ngày, ngày thường"},
+    {t:156.42, e:160.8, ja:"幸せなのかな", fj:"幸せ[しあわせ]なのかな", furi:"しあわせなのかな", romaji:"shiawase na no ka na", vi:"Là hạnh phúc chăng?", blank:["幸せ","しあわせ"], exp:"幸せ (しあわせ): hạnh phúc; なのかな: chăng, nhỉ (tự hỏi)"},
+    {t:162.98, e:167.12, ja:"嫌よ嫌よも好きのうちかな", fj:"嫌[いや]よ嫌[いや]よも好き[すき]のうちかな", furi:"いやよいやよもすきのうちかな", romaji:"iya yo iya yo mo suki no uchi ka na", vi:"Ghét cũng là một cách yêu chăng?", blank:["嫌","いや"], exp:"嫌よ嫌よも好きのうち (いやよいやよもすきのうち): thành ngữ — 'ghét cũng là yêu', càng nói ghét càng chứng tỏ thích; かな: chăng, nhỉ"},
+    {t:167.56, e:175.46, ja:"今日もあなたの抜け殻を全部集めなきゃ", fj:"今日[きょう]もあなたの抜け殻[ぬけがら]を全部[ぜんぶ]集め[あつめ]なきゃ", furi:"きょうもあなたのぬけがらをぜんぶあつめなきゃ", romaji:"kyou mo anata no nukegara wo zenbu atsumenakya", vi:"Hôm nay cũng phải thu dọn hết những thứ anh bỏ lại", blank:["抜け殻","ぬけがら"], exp:"今日も (きょうも): hôm nay cũng; 抜け殻 (ぬけがら): vỏ (ve) lột xác — ở đây chỉ đồ đạc, quần áo anh vứt lại; 全部 (ぜんぶ): tất cả; 集める (あつめる): thu dọn, gom lại; ～なきゃ: phải… (～なければならない)"},
+    {t:175.46, e:179.38, ja:"毎度毎度お騒がせしちゃう", fj:"毎度[まいど]毎度[まいど]お騒がせ[さわがせ]しちゃう", furi:"まいどまいどおさわがせしちゃう", romaji:"maido maido osawagase shichau", vi:"Lần nào cũng làm ồn ào náo loạn", blank:["毎度","まいど"], exp:"毎度毎度 (まいどまいど): lần nào cũng; お騒がせする (おさわがせする): làm ồn, gây náo loạn; ～しちゃう: (lỡ) làm…"},
+    {t:179.38, e:181.28, ja:"お出かけの前も", fj:"お出かけ[おでかけ]の前[まえ]も", furi:"おでかけのまえも", romaji:"odekake no mae mo", vi:"Cả trước khi ra ngoài cũng thế", blank:["出かけ","でかけ"], exp:"お出かけ (おでかけ): đi ra ngoài (cách nói lịch sự); 前 (まえ): trước; も: cũng"},
+    {t:181.78, e:185.78, ja:"懲りずに付き合ってね", fj:"懲り[こり]ずに付き合っ[つきあっ]てね", furi:"こりずにつきあってね", romaji:"korizu ni tsukiatte ne", vi:"Hãy cứ ở bên em nhé, đừng chán", blank:["付き合って","つきあって"], exp:"懲りずに (こりずに): không chán, không nản (懲りる: chán, rút kinh nghiệm); 付き合う (つきあう): ở bên, hẹn hò, đồng hành; ～てね: nhé (nhờ vả nhẹ nhàng)"},
+    {t:186.38, e:191.74, ja:"Ah なんで好きになっちゃったのかなぁ", fj:"Ah なんで好き[すき]になっちゃったのかなぁ", furi:"Ah なんですきになっちゃったのかなぁ", romaji:"Ah nande suki ni natchatta no ka naa", vi:"À, tại sao mình lại yêu anh mất rồi nhỉ?", blank:["好き","すき"], exp:"Ah (ああ): à, ôi; なんで: tại sao; 好きになる (すきになる): thích, yêu; ～ちゃった: (lỡ) đã… rồi; のかなぁ: nhỉ (tự hỏi)"},
+    {t:195, e:200.98, ja:"Ah だって好きになっちゃったんだから", fj:"Ah だって好き[すき]になっちゃったんだから", furi:"Ah だってすきになっちゃったんだから", romaji:"Ah datte suki ni natchatta ndakara", vi:"À, vì mình đã yêu anh mất rồi mà", blank:["好き","すき"], exp:"だって: vì, tại vì; 好きになっちゃった: đã yêu mất rồi; んだから: mà (giải thích, nhấn mạnh)"},
+    {t:201.54, e:206.18, ja:"変わり者同士うまくやってこうよ", fj:"変わり者[かわりもの]同士[どうし]うまくやってこうよ", furi:"かわりものどうしうまくやってこうよ", romaji:"kawarimono doushi umaku yattekou yo", vi:"Hai kẻ kỳ lạ cùng sống hòa thuận nhé", blank:["同士","どうし"], exp:"変わり者同士 (かわりものどうし): hai người kỳ lạ với nhau (同士: cùng nhau, với nhau); うまくやっていく: sống hòa thuận, làm tốt; ～こうよ: cùng… nhé"},
+    {t:206.18, e:213.16, ja:"Ah ずっとずっとそばにいてほしい人は", fj:"Ah ずっとずっとそばにいてほしい人[ひと]は", furi:"Ah ずっとずっとそばにいてほしいひとは", romaji:"Ah zutto zutto soba ni ite hoshii hito wa", vi:"À, người mà mình muốn mãi mãi ở bên", blank:["そば","そば"], exp:"ずっとずっと: mãi mãi, luôn luôn; そばに: bên cạnh; いてほしい: muốn (ai) ở bên; 人 (ひと): người"},
+    {t:213.16, e:218.34, ja:"星の数ほどいる中で ねぇ Darling", fj:"星[ほし]の数[かず]ほどいる中[なか]で ねぇ Darling", furi:"ほしのかずほどいるなかで ねぇ Darling", romaji:"hoshi no kazu hodo iru naka de nee Darling", vi:"Trong muôn vàn người như sao trên trời, này anh yêu", blank:["星","ほし"], exp:"星 (ほし): ngôi sao; 数ほど (かずほど): nhiều như; いる: có, tồn tại; 中で (なかで): trong số; ねぇ Darling: này anh yêu"},
+    {t:218.34, e:219.98, ja:"あなたしかいない", fj:"あなたしかいない", furi:"あなたしかいない", romaji:"anata shika inai", vi:"Chỉ có mình anh thôi", blank:["あなた","あなた"], exp:"あなた: anh, em (cách gọi người yêu); しか～ない: chỉ có… thôi"}
+  ];
+  var SV5_WIN = SV5_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV5_ID] = {
+    id: SV5_ID, dur: SV5_DUR, subs: SV5_SUBS, win: SV5_WIN,
+    practice: SV5_SUBS.slice(),
+    fill: SV5_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "DARLING - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/YjpACa-7f-o/mqdefault.jpg",
+    facadeAlt: "Ảnh xem trước video bài hát DARLING - 西野カナ",
+    facadeLabel: "Phát video bài hát DARLING — học tiếng Nhật qua bài hát",
     wide: true
   };
   /* Khung thời gian riêng từng câu — cùng thuật toán SV2_WIN của bài 2: các câu

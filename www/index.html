@@ -8858,6 +8858,26 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      name: "おあいこ - ハナレグミ", level: "", lines: 34, dur: "3:40",
      thumb: "https://i.ytimg.com/vi/41SjnN0KVtk/mqdefault.jpg",
      alt: "Ảnh xem trước video bài hát おあいこ của ハナレグミ"},
+    {id: "oLh0x1NtGuk", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
+     name: "僕のそばに", level: "", lines: 33, dur: "6:14",
+     thumb: "https://i.ytimg.com/vi/oLh0x1NtGuk/mqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát 僕のそばに"},
+    {id: "Kb-OLmmbMgk", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
+     name: "君に好きと伝えよう", level: "", lines: 67, dur: "4:52",
+     thumb: "https://i.ytimg.com/vi/Kb-OLmmbMgk/mqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát 君に好きと伝えよう"},
+    {id: "64FvLu0yq9c", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
+     name: "わたがし (綿菓子) - back number", level: "", lines: 51, dur: "4:25",
+     thumb: "https://i.ytimg.com/vi/64FvLu0yq9c/mqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát わたがし (綿菓子) của back number"},
+    {id: "iOLQjsGOLww", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
+     name: "Friendship - 岡崎律子", level: "", lines: 20, dur: "3:17",
+     thumb: "https://i.ytimg.com/vi/iOLQjsGOLww/mqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát Friendship của 岡崎律子"},
+    {id: "5di-PZtIRSI", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
+     name: "Bussin' - AK-69", level: "", lines: 76, dur: "3:20",
+     thumb: "https://i.ytimg.com/vi/5di-PZtIRSI/mqdefault.jpg",
+     alt: "Ảnh xem trước video bài hát Bussin' của AK-69"},
     {id: "mKPRQF70PvA", cat: "podcast", series: "Easy N5 Japanese Podcast", channel: "OkkeiJapanese",
      name: "Easy N5 Japanese Podcast: đi Thụy Sĩ", level: "N5", lines: 23, dur: "1:02",
      thumb: "https://i.ytimg.com/vi/mKPRQF70PvA/mqdefault.jpg",
@@ -11146,6 +11166,384 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     facadeImg: "https://i.ytimg.com/vi/41SjnN0KVtk/mqdefault.jpg",
     facadeAlt: "Ảnh xem trước video bài hát おあいこ - ハナレグミ",
     facadeLabel: "Phát video bài hát おあいこ — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* 僕のそばに (ca sĩ không xác định — khung hình video không ghi tên ca sĩ) — bài hát làm tay số 10 (SV10), 33 câu.
+     Video THƯỜNG 16:9 (không phải Shorts), ID oLh0x1NtGuk, 6:14, nhúng trực tiếp
+     video gốc vietsub+romaji của kênh Em Bé (không đăng lại; quyết định 2026-11-14).
+     33 câu lấy ĐÚNG từ sobani-12-lesson.json đã soát tay (KHÔNG có lời đã xuất bản:
+     đã tìm nhiều lượt, ứng viên シャイトープ bị loại — lời khác hoàn toàn; ground truth
+     = phụ đề Nhật cháy sẵn đọc từ frame 2fps, đối chiếu romaji cháy sẵn + Whisper base).
+     Mốc giờ căn theo Whisper base + word timestamps; 5 mốc bridge/outro ước lượng
+     (L24–L28, Whisper ảo giác ở đoạn này — ghi rõ trong review). Outro 277–374s là
+     nhạc không lời (Whisper nghe thấy mảnh điệp khúc là ảo giác, đã loại). Mở bằng
+     chính player sv2* qua svuActivate (wide: khung video nằm ngang 16:9). */
+  var SV10_ID = "oLh0x1NtGuk";
+  var SV10_DUR = 374;
+  var SV10_SUBS = [
+    {t:3.64, e:8.64, ja:"今慰める言葉より", fj:"今[いま]慰める[なぐさめる]言葉[ことば]より", furi:"いまなぐさめることばより", romaji:"ima nagusameru kotoba yori", vi:"Hơn cả những lời an ủi lúc này", blank:["慰める","なぐさめる"], exp:"慰める (なぐさめる): an ủi, dỗ dành; 言葉 (ことば): lời nói; ～より: hơn..."},
+    {t:10, e:14.2, ja:"君の寂しげな顔が", fj:"君[きみ]の寂しげ[さびしげ]な顔[かお]が", furi:"きみのさびしげなかおが", romaji:"kimi no sabishige na kao ga", vi:"Gương mặt buồn rầu của em", blank:["寂しげ","さびしげ"], exp:"寂しげ (さびしげ): vẻ buồn, dáng vẻ cô đơn (～げ: có vẻ...); 顔 (かお): gương mặt"},
+    {t:15.58, e:21.56, ja:"遠くに映る夕日の中で", fj:"遠く[とおく]に映る[うつる]夕日[ゆうひ]の中[なか]で", furi:"とおくにうつるゆうひのなかで", romaji:"tooku ni utsuru yuuhi no naka de", vi:"Giữa ánh hoàng hôn phản chiếu nơi xa", blank:["夕日","ゆうひ"], exp:"遠く (とおく): xa; 映る (うつる): phản chiếu, hắt lên; 夕日 (ゆうひ): hoàng hôn, nắng chiều"},
+    {t:21.56, e:26.74, ja:"この胸を閉ざしてしまう", fj:"この胸[むね]を閉ざし[とざし]てしまう", furi:"このむねをとざしてしまう", romaji:"kono mune wo tozashite shimau", vi:"Khiến trái tim anh như khép lại", blank:["閉ざす","とざす"], exp:"胸 (むね): ngực, trái tim; 閉ざす (とざす): khép lại, đóng kín; ～てしまう: (lỡ) làm..."},
+    {t:27.8, e:31.96, ja:"今ごろ他のやつならば", fj:"今ごろ[いまごろ]他[ほか]のやつならば", furi:"いまごろほかのやつならば", romaji:"ima goro hoka no yatsu naraba", vi:"Nếu là một gã khác vào lúc này", blank:["今ごろ","いまごろ"], exp:"今ごろ (いまごろ): vào lúc này, giờ này; 他の (ほかの): khác; やつ: gã, tên (cách gọi suồng sã); ～ならば: nếu... thì"},
+    {t:33.78, e:37.84, ja:"やさしい言葉で君を", fj:"やさしい言葉[ことば]で君[きみ]を", furi:"やさしいことばできみを", romaji:"yasashii kotoba de kimi wo", vi:"Bằng những lời dịu dàng, em...", blank:["やさしい","やさしい"], exp:"やさしい: dịu dàng, hiền lành; 言葉 (ことば): lời nói"},
+    {t:39.88, e:45.52, ja:"髪を撫でてる微笑んでいる", fj:"髪[かみ]を撫で[なで]てる微笑ん[ほほえん]でいる", furi:"かみをなでてるほほえんでいる", romaji:"kami wo nade teru hohoende iru", vi:"Vuốt nhẹ tóc em, mỉm cười với em", blank:["撫でる","なでる"], exp:"髪 (かみ): tóc; 撫でる (なでる): vuốt nhẹ, xoa; 微笑む (ほほえむ): mỉm cười; ～てる = ～ている"},
+    {t:45.52, e:50.2, ja:"僕には出来ないから", fj:"僕[ぼく]には出来[でき]ないから", furi:"ぼくにはできないから", romaji:"boku ni wa dekinai kara", vi:"Vì anh chẳng thể làm được như thế", blank:["出来ない","できない"], exp:"僕 (ぼく): anh (nam tự xưng); 出来ない (できない): không thể làm được; ～から: vì..."},
+    {t:54.08, e:58.96, ja:"もしも寂しいなら", fj:"もしも寂しい[さびしい]なら", furi:"もしもさびしいなら", romaji:"moshimo sabishii nara", vi:"Nếu em cảm thấy cô đơn", blank:["寂しい","さびしい"], exp:"もしも: nếu như; 寂しい (さびしい): buồn, cô đơn; ～なら: nếu... thì"},
+    {t:60.2, e:64.86, ja:"僕のそばにおいで", fj:"僕[ぼく]のそばにおいで", furi:"ぼくのそばにおいで", romaji:"boku no soba ni oide", vi:"Hãy đến bên anh", blank:["そば","そば"], exp:"そば: bên cạnh; おいで: hãy đến đây (lời mời thân mật)"},
+    {t:66.2, e:77.3, ja:"君を抱き寄せるくらいしか出来ないけど", fj:"君[きみ]を抱き[だき]寄せる[よせる]くらいしか出来[でき]ないけど", furi:"きみをだきよせるくらいしかできないけど", romaji:"kimi wo daki yoseru kurai shika dekinai kedo", vi:"Anh chỉ biết ôm chặt em vào lòng mà thôi", blank:["抱き寄せる","だきよせる"], exp:"抱き寄せる (だきよせる): ôm vào lòng, kéo lại gần mà ôm; くらい: chỉ, chừng; ～しか～ない: chỉ... mà thôi"},
+    {t:81.48, e:86.12, ja:"今の気持ち僕の心", fj:"今[いま]の気持ち[きもち]僕[ぼく]の心[こころ]", furi:"いまのきもちぼくのこころ", romaji:"ima no kimochi boku no kokoro", vi:"Cảm xúc lúc này, trái tim anh", blank:["気持ち","きもち"], exp:"今の (いまの): lúc này; 気持ち (きもち): cảm xúc, tâm trạng; 心 (こころ): trái tim, tấm lòng"},
+    {t:87.46, e:92.2, ja:"アカペラで歌えるけど", fj:"アカペラで歌える[うたえる]けど", furi:"アカペラでうたえるけど", romaji:"akapera de utaeru kedo", vi:"Anh có thể hát thành a cappella đấy, nhưng...", blank:["歌える","うたえる"], exp:"アカペラ: hát chay không nhạc đệm (a cappella); 歌える (うたえる): có thể hát (thể khả năng của 歌う)"},
+    {t:93.52, e:99.26, ja:"裸にされた言葉の意味は", fj:"裸[はだか]にされた言葉[ことば]の意味[いみ]は", furi:"はだかにされたことばのいみは", romaji:"hadaka ni sareta kotoba no imi wa", vi:"Nhưng ý nghĩa trần trụi trong những lời ấy", blank:["裸","はだか"], exp:"裸 (はだか): trần trụi; 裸にされる: bị phơi bày trần trụi; 意味 (いみ): ý nghĩa"},
+    {t:100.26, e:104.88, ja:"僕のわがままでしかない", fj:"僕[ぼく]のわがままでしかない", furi:"ぼくのわがままでしかない", romaji:"boku no wagamama de shika nai", vi:"Chẳng qua chỉ là sự ích kỷ của anh", blank:["わがまま","わがまま"], exp:"わがまま: ích kỷ, chỉ biết mình; ～でしかない: chẳng qua chỉ là..."},
+    {t:105.86, e:112.06, ja:"今ごろ他のやつならば", fj:"今ごろ[いまごろ]他[ほか]のやつならば", furi:"いまごろほかのやつならば", romaji:"ima goro hoka no yatsu naraba", vi:"Nếu là một gã khác vào lúc này", blank:["今ごろ","いまごろ"], exp:"今ごろ (いまごろ): vào lúc này, giờ này; 他の (ほかの): khác; やつ: gã, tên (cách gọi suồng sã); ～ならば: nếu... thì"},
+    {t:112.06, e:115.82, ja:"はやりのせりふで君を", fj:"はやりのせりふで君[きみ]を", furi:"はやりのせりふできみを", romaji:"hayari no serifu de kimi wo", vi:"Bằng những câu thoại thịnh hành, em...", blank:["せりふ","せりふ"], exp:"はやり: thịnh hành, đang hot; せりふ: lời thoại, câu nói (trong phim/kịch)"},
+    {t:117.98, e:120.2, ja:"涙を拭いて", fj:"涙[なみだ]を拭い[ふい]て", furi:"なみだをふいて", romaji:"namida wo fuite", vi:"Lau nước mắt cho em", blank:["涙","なみだ"], exp:"涙 (なみだ): nước mắt; 拭く (ふく): lau, chùi"},
+    {t:120.2, e:123.1, ja:"口づけをして", fj:"口づけ[くちづけ]をして", furi:"くちづけをして", romaji:"kuchizuke wo shite", vi:"Và hôn lên môi em", blank:["口づけ","くちづけ"], exp:"口づけ (くちづけ): nụ hôn; ～をする: làm..."},
+    {t:123.1, e:127.84, ja:"僕には書けないから", fj:"僕[ぼく]には書け[かけ]ないから", furi:"ぼくにはかけないから", romaji:"boku ni wa kakenai kara", vi:"Vì anh chẳng thể viết nên những lời như thế", blank:["書けない","かけない"], exp:"書けない (かけない): không thể viết (thể khả năng phủ định của 書く); ～から: vì..."},
+    {t:129.18, e:134.08, ja:"もしも悲しいなら", fj:"もしも悲しい[かなしい]なら", furi:"もしもかなしいなら", romaji:"moshimo kanashii nara", vi:"Nếu em cảm thấy buồn", blank:["悲しい","かなしい"], exp:"もしも: nếu như; 悲しい (かなしい): buồn, đau lòng; ～なら: nếu... thì"},
+    {t:135.1, e:140.02, ja:"僕のそばにおいで", fj:"僕[ぼく]のそばにおいで", furi:"ぼくのそばにおいで", romaji:"boku no soba ni oide", vi:"Hãy đến bên anh", blank:["そば","そば"], exp:"そば: bên cạnh; おいで: hãy đến đây (lời mời thân mật)"},
+    {t:141.1, e:151.98, ja:"君を抱き寄せるくらいしか出来ないけど", fj:"君[きみ]を抱き[だき]寄せる[よせる]くらいしか出来[でき]ないけど", furi:"きみをだきよせるくらいしかできないけど", romaji:"kimi wo daki yoseru kurai shika dekinai kedo", vi:"Anh chỉ biết ôm chặt em vào lòng mà thôi", blank:["抱き寄せる","だきよせる"], exp:"抱き寄せる (だきよせる): ôm vào lòng, kéo lại gần mà ôm; くらい: chỉ, chừng; ～しか～ない: chỉ... mà thôi"},
+    {t:199.6, e:203.5, ja:"胸の鼓動だけが", fj:"胸[むね]の鼓動[こどう]だけが", furi:"むねのこどうだけが", romaji:"mune no kodou dake ga", vi:"Chỉ còn nhịp đập của trái tim", blank:["鼓動","こどう"], exp:"鼓動 (こどう): nhịp đập (tim); ～だけ: chỉ..."},
+    {t:205.62, e:209.72, ja:"時を刻んでゆく", fj:"時[とき]を刻ん[きざん]でゆく", furi:"ときをきざんでゆく", romaji:"toki wo kizande yuku", vi:"Khắc ghi từng khoảnh khắc trôi qua", blank:["刻む","きざむ"], exp:"時 (とき): thời gian; 刻む (きざむ): khắc, ghi dấu; ～てゆく = ～ていく: dần dần..."},
+    {t:212.18, e:216, ja:"不器用すぎるけど", fj:"不器用[ぶきよう]すぎるけど", furi:"ぶきようすぎるけど", romaji:"bukiyou sugiru kedo", vi:"Dù anh vụng về quá đỗi", blank:["不器用","ぶきよう"], exp:"不器用 (ぶきよう): vụng về, hậu đậu; ～すぎる: quá..."},
+    {t:218, e:222, ja:"いつも見つめてる", fj:"いつも見つめ[みつめ]てる", furi:"いつもみつめてる", romaji:"itsumo mitsumeteru", vi:"Anh vẫn luôn dõi theo em", blank:["見つめる","みつめる"], exp:"いつも: luôn luôn; 見つめる (みつめる): nhìn chăm chú, dõi theo"},
+    {t:227.5, e:232.22, ja:"もしも寂しいなら", fj:"もしも寂しい[さびしい]なら", furi:"もしもさびしいなら", romaji:"moshimo sabishii nara", vi:"Nếu em cảm thấy cô đơn", blank:["寂しい","さびしい"], exp:"もしも: nếu như; 寂しい (さびしい): buồn, cô đơn; ～なら: nếu... thì"},
+    {t:233.22, e:237.96, ja:"僕のそばにおいで", fj:"僕[ぼく]のそばにおいで", furi:"ぼくのそばにおいで", romaji:"boku no soba ni oide", vi:"Hãy đến bên anh", blank:["そば","そば"], exp:"そば: bên cạnh; おいで: hãy đến đây (lời mời thân mật)"},
+    {t:239.42, e:250.32, ja:"君を抱き寄せるくらいしか出来ないけど", fj:"君[きみ]を抱き[だき]寄せる[よせる]くらいしか出来[でき]ないけど", furi:"きみをだきよせるくらいしかできないけど", romaji:"kimi wo daki yoseru kurai shika dekinai kedo", vi:"Anh chỉ biết ôm chặt em vào lòng mà thôi", blank:["抱き寄せる","だきよせる"], exp:"抱き寄せる (だきよせる): ôm vào lòng, kéo lại gần mà ôm; くらい: chỉ, chừng; ～しか～ない: chỉ... mà thôi"},
+    {t:252.22, e:256.26, ja:"もしも寂しいなら", fj:"もしも寂しい[さびしい]なら", furi:"もしもさびしいなら", romaji:"moshimo sabishii nara", vi:"Nếu em cảm thấy cô đơn", blank:["寂しい","さびしい"], exp:"もしも: nếu như; 寂しい (さびしい): buồn, cô đơn; ～なら: nếu... thì"},
+    {t:257.26, e:262.44, ja:"僕のそばにおいで", fj:"僕[ぼく]のそばにおいで", furi:"ぼくのそばにおいで", romaji:"boku no soba ni oide", vi:"Hãy đến bên anh", blank:["そば","そば"], exp:"そば: bên cạnh; おいで: hãy đến đây (lời mời thân mật)"},
+    {t:263.26, e:274.14, ja:"君を抱き寄せるくらいしか出来ないけど", fj:"君[きみ]を抱き[だき]寄せる[よせる]くらいしか出来[でき]ないけど", furi:"きみをだきよせるくらいしかできないけど", romaji:"kimi wo daki yoseru kurai shika dekinai kedo", vi:"Anh chỉ biết ôm chặt em vào lòng mà thôi", blank:["抱き寄せる","だきよせる"], exp:"抱き寄せる (だきよせる): ôm vào lòng, kéo lại gần mà ôm; くらい: chỉ, chừng; ～しか～ない: chỉ... mà thôi"}
+  ];
+  var SV10_WIN = SV10_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV10_ID] = {
+    id: SV10_ID, dur: SV10_DUR, subs: SV10_SUBS, win: SV10_WIN,
+    practice: SV10_SUBS.slice(),
+    fill: SV10_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "僕のそばに - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/oLh0x1NtGuk/mqdefault.jpg",
+    facadeAlt: "Ảnh xem trước video bài hát 僕のそばに",
+    facadeLabel: "Phát video bài hát 僕のそばに — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* 君に好きと伝えよう (ca sĩ không xác định — khung hình video không ghi tên ca sĩ) — bài hát làm tay số 11 (SV11), 67 câu.
+     Video THƯỜNG 16:9 (không phải Shorts), ID Kb-OLmmbMgk, 4:52, nhúng trực tiếp
+     video gốc vietsub+romaji của kênh Em Bé (không đăng lại; quyết định 2026-11-14).
+     67 câu lấy ĐÚNG từ tsutaeyou-13-lesson.json đã soát tay (KHÔNG có lời đã xuất bản
+     sau nhiều lượt tìm; ground truth = phụ đề Nhật cháy sẵn đọc từ frame 2fps, đối
+     chiếu romaji cháy sẵn + Whisper base). Mốc giờ căn theo Whisper base + word
+     timestamps; 6 mốc ước lượng (L32–L35 Whisper bôi 9s; L62–L63 vùng 2 giọng hát
+     chồng nhau — ghi rõ trong review). L23 "てついたため息" giữ đúng phụ đề gốc
+     nhưng đáng ngờ (có thể là lỗi phụ đề của ふとついた/つい出た — chưa xác minh được,
+     đã ghi chú trong review + notes). Mở bằng chính player sv2* qua svuActivate
+     (wide: khung video nằm ngang 16:9). */
+  var SV11_ID = "Kb-OLmmbMgk";
+  var SV11_DUR = 292;
+  var SV11_SUBS = [
+    {t:23.7, e:28.78, ja:"ずっと君の隣で話していたいけど", fj:"ずっと君[きみ]の隣[となり]で話し[はなし]ていたいけど", furi:"ずっときみのとなりではなしていたいけど", romaji:"zutto kimi no tonari de hanashite itai kedo", vi:"Anh muốn mãi được nói chuyện bên cạnh em, nhưng...", blank:["隣","となり"], exp:"ずっと: mãi, suốt; 隣 (となり): bên cạnh; 話していたい (はなしていたい): muốn nói chuyện mãi; ～けど: nhưng..."},
+    {t:28.78, e:34.56, ja:"もうあと少しで時がさらってしまう", fj:"もうあと少し[すこし]で時[とき]がさらってしまう", furi:"もうあとすこしでときがさらってしまう", romaji:"mou ato sukoshi de toki ga saratte shimau", vi:"Chỉ còn một chút nữa thôi, thời gian sẽ cuốn trôi mất", blank:["さらう","さらう"], exp:"もうあと少し: chỉ còn một chút nữa; 時 (とき): thời gian; さらう: cuốn đi, mang đi; ～てしまう: (lỡ) làm..."},
+    {t:34.56, e:38.68, ja:"もしも止められるなら", fj:"もしも止め[とめ]られるなら", furi:"もしもとめられるなら", romaji:"moshimo tomerareru nara", vi:"Nếu có thể ngăn lại được", blank:["止める","とめる"], exp:"もしも: nếu như; 止める (とめる): ngăn lại, dừng lại; ～られる: thể bị động/khả năng"},
+    {t:39.3, e:45.3, ja:"抱きしめて永遠を感じてたいな", fj:"抱きしめ[だきしめ]て永遠[えいえん]を感じ[かんじ]てたいな", furi:"だきしめてえいえんをかんじてたいな", romaji:"dakishimete eien wo kanjitetai na", vi:"Anh muốn ôm chặt em để cảm nhận mãi mãi", blank:["永遠","えいえん"], exp:"抱きしめる (だきしめる): ôm chặt; 永遠 (えいえん): mãi mãi, vĩnh viễn; 感じたい (かんじたい): muốn cảm nhận"},
+    {t:45.3, e:48.36, ja:"君と二人で行ったあの場所や", fj:"君[きみ]と二[ふた]人[り]で行っ[いっ]たあの場所[ばしょ]や", furi:"きみとふたりでいったあのばしょや", romaji:"kimi to futari de itta ano basho ya", vi:"Nơi ấy, nơi anh và em đã cùng đến", blank:["二人","ふたり"], exp:"二人 (ふたり): hai người; 行った (いった): đã đi (quá khứ của 行く); あの場所 (あのばしょ): nơi ấy"},
+    {t:48.36, e:51.9, ja:"寄り添って歩いた家までの帰り道", fj:"寄り添っ[よりそっ]て歩い[あるい]た家[いえ]までの帰り道[かえりみち]", furi:"よりそってあるいたいえまでのかえりみち", romaji:"yorisotte aruita ie made no kaerimichi", vi:"Con đường về nhà hai đứa đã sánh bước bên nhau", blank:["帰り道","かえりみち"], exp:"寄り添う (よりそう): sánh bên, nép vào nhau; 歩く (あるく): đi bộ; 帰り道 (かえりみち): đường về"},
+    {t:51.9, e:56.28, ja:"何故か急に思い返す", fj:"何故か[なぜか]急[きゅう]に思い返す[おもいかえす]", furi:"なぜかきゅうにおもいかえす", romaji:"nazeka kyuu ni omoikaesu", vi:"Chẳng hiểu sao bỗng nhớ lại", blank:["思い返す","おもいかえす"], exp:"何故か (なぜか): chẳng hiểu sao; 急に (きゅうに): bỗng nhiên, đột ngột; 思い返す (おもいかえす): nhớ lại, hồi tưởng"},
+    {t:56.28, e:58.96, ja:"突然消えてしまいそうな", fj:"突然[とつぜん]消え[きえ]てしまいそうな", furi:"とつぜんきえてしまいそうな", romaji:"totsuzen kiete shimaisou na", vi:"Như thể em sẽ đột nhiên biến mất", blank:["突然","とつぜん"], exp:"突然 (とつぜん): đột nhiên; 消える (きえる): biến mất; ～そうな: có vẻ như sẽ..."},
+    {t:58.96, e:61.92, ja:"そんな気がして今僕は", fj:"そんな気[き]がして今[いま]僕[ぼく]は", furi:"そんなきがしていまぼくは", romaji:"sonna ki ga shite ima boku wa", vi:"Bây giờ anh có cảm giác như thế", blank:["気","き"], exp:"そんな気 (そんなき): cảm giác như thế; ～気がする: có cảm giác..."},
+    {t:61.92, e:65.66, ja:"さよならを言えずにいる", fj:"さよならを言え[いえ]ずにいる", furi:"さよならをいえずにいる", romaji:"sayonara wo iezu ni iru", vi:"Anh chẳng thể nói lời tạm biệt", blank:["さよなら","さよなら"], exp:"さよなら: tạm biệt; 言えずにいる: chẳng thể nói (～ずに: không làm...)"},
+    {t:67.06, e:67.7, ja:"ありがとう", fj:"ありがとう", furi:"ありがとう", romaji:"arigatou", vi:"Cảm ơn em", blank:["ありがとう","ありがとう"], exp:"ありがとう: cảm ơn"},
+    {t:68.28, e:70.54, ja:"数えきれない微笑みも", fj:"数え[かぞえ]きれない微[ほほ]笑み[えみ]も", furi:"かぞえきれないほほえみも", romaji:"kazoekirenai hohoemi mo", vi:"Cả những nụ cười không đếm xuể", blank:["微笑み","ほほえみ"], exp:"数えきれない (かぞえきれない): không đếm xuể; 微笑み (ほほえみ): nụ cười"},
+    {t:70.54, e:72.92, ja:"君と触れ合った時間も", fj:"君[きみ]と触れ合っ[ふれあっ]た時間[じかん]も", furi:"きみとふれあったじかんも", romaji:"kimi to fureatta jikan mo", vi:"Cả những khoảnh khắc anh và em đã bên nhau", blank:["触れ合う","ふれあう"], exp:"触れ合う (ふれあう): chạm vào nhau, gần gũi nhau; 時間 (じかん): thời gian"},
+    {t:72.92, e:79.2, ja:"今の僕の生きてく力に変わって行くんだ", fj:"今[いま]の僕[ぼく]の生き[いき]てく力[ちから]に変わっ[かわっ]て行く[いく]んだ", furi:"いまのぼくのいきてくちからにかわっていくんだ", romaji:"ima no boku no ikiteku chikara ni kawatte ikunda", vi:"Giờ đây đã trở thành sức mạnh để anh sống tiếp", blank:["力","ちから"], exp:"生きてく力 (いきてくちから): sức mạnh để sống tiếp; 変わって行く (かわっていく): dần trở thành"},
+    {t:79.2, e:82.28, ja:"誰にも見せない涙も", fj:"誰[だれ]にも見せ[みせ]ない涙[なみだ]も", furi:"だれにもみせないなみだも", romaji:"dare ni mo misenai namida mo", vi:"Cả những giọt nước mắt chẳng cho ai thấy", blank:["涙","なみだ"], exp:"誰にも (だれにも): chẳng ai; 見せない (みせない): không cho thấy; 涙 (なみだ): nước mắt"},
+    {t:82.28, e:84.22, ja:"かかえこんできた悩みも", fj:"かかえこんできた悩み[なやみ]も", furi:"かかえこんできたなやみも", romaji:"kakaekonde kita nayami mo", vi:"Cả những nỗi lo đã ôm ấp bấy lâu", blank:["悩み","なやみ"], exp:"かかえこむ: ôm ấp, giữ trong lòng; 悩み (なやみ): nỗi lo, phiền muộn"},
+    {t:84.78, e:88.18, ja:"僕らは分かち合える", fj:"僕ら[ぼくら]は分かち[わかち]合える[あえる]", furi:"ぼくらはわかちあえる", romaji:"bokura wa wakachiaeru", vi:"Hai ta có thể chia sẻ cùng nhau", blank:["分かち合う","わかちあう"], exp:"僕ら (ぼくら): chúng ta, hai ta; 分かち合う (わかちあう): chia sẻ cùng nhau"},
+    {t:89.7, e:92.28, ja:"これからも", fj:"これからも", furi:"これからも", romaji:"korekara mo", vi:"Từ bây giờ trở đi", blank:["これから","これから"], exp:"これから: từ bây giờ; ～も: cũng..."},
+    {t:95.32, e:97.78, ja:"この先も", fj:"この先[さき]も", furi:"このさきも", romaji:"kono saki mo", vi:"Và cả sau này nữa", blank:["この先","このさき"], exp:"この先 (このさき): phía trước, sau này"},
+    {t:101.08, e:104.52, ja:"春夏秋冬季節が巡っても", fj:"春夏秋冬[しゅんかしゅうとう]季節[きせつ]が巡っ[めぐっ]ても", furi:"しゅんかしゅうとうきせつがめぐっても", romaji:"shunkashuutou kisetsu ga megutte mo", vi:"Dù bốn mùa xuân hạ thu đông có xoay vần", blank:["季節","きせつ"], exp:"春夏秋冬 (しゅんかしゅうとう): bốn mùa; 季節 (きせつ): mùa; 巡る (めぐる): xoay vần, tuần hoàn; ～ても: dù..."},
+    {t:104.52, e:108.68, ja:"ずっと同じ時を過ごしていたいねと", fj:"ずっと同じ[おなじ]時[とき]を過ごし[すごし]ていたいねと", furi:"ずっとおなじときをすごしていたいねと", romaji:"zutto onaji toki wo sugoshite itai ne to", vi:"Anh muốn mãi cùng em trải qua những khoảnh khắc như thế", blank:["過ごす","すごす"], exp:"同じ (おなじ): giống nhau, như thế; 時 (とき): thời gian, khoảnh khắc; 過ごす (すごす): trải qua"},
+    {t:108.68, e:114.16, ja:"いつも眠りにつくまで2人で語り合っていたね", fj:"いつも眠り[ねむり]につくまで2人[り]で語り合っ[かたりあっ]ていたね", furi:"いつもねむりにつくまでふたりでかたりあっていたね", romaji:"itsumo nemuri ni tsuku made futari de katariatte ita ne", vi:"Hai đứa vẫn luôn trò chuyện với nhau cho đến khi chìm vào giấc ngủ", blank:["語り合う","かたりあう"], exp:"眠りにつく (ねむりにつく): chìm vào giấc ngủ; 2人 (ふたり): hai người; 語り合う (かたりあう): trò chuyện với nhau"},
+    {t:114.68, e:118.8, ja:"てついたため息を見て心配そうな顔して", fj:"てついたため息[ためいき]を見[み]て心配[しんぱい]そうな顔[かお]して", furi:"てついたためいきをみてしんぱいそうなかおして", romaji:"tetsuita tameiki wo mite shinpaisou na kao shite", vi:"Nhìn thấy tiếng thở dài ấy, em lộ vẻ mặt lo lắng", blank:["ため息","ためいき"], exp:"ため息 (ためいき): tiếng thở dài; 心配そうな顔 (しんぱいそうなかお): vẻ mặt lo lắng (～そうな: có vẻ...); ※ \"てついた\" giữ đúng phụ đề gốc (chữ này lạ — xem ghi chú trong review)"},
+    {t:119.44, e:124.14, ja:"何も言わずにギュッと手を握りしめてくれた", fj:"何[なに]も言わ[いわ]ずにギュッと手[て]を握りしめ[にぎりしめ]てくれた", furi:"なにもいわずにギュッとてをにぎりしめてくれた", romaji:"nani mo iwazu ni gyutto te wo nigirishimete kureta", vi:"Em chẳng nói gì, chỉ nắm chặt tay anh", blank:["握りしめる","にぎりしめる"], exp:"何も言わずに (なにもいわずに): chẳng nói gì; ギュッと: thật chặt (từ tượng thanh); 握りしめる (にぎりしめる): nắm chặt"},
+    {t:124.68, e:127.48, ja:"人は愛して愛される事で", fj:"人[ひと]は愛し[あいし]て愛さ[あいさ]れる事[こと]で", furi:"ひとはあいしてあいされることで", romaji:"hito wa aishite aisareru koto de", vi:"Con người, qua việc yêu thương và được yêu thương", blank:["愛する","あいする"], exp:"愛する (あいする): yêu; 愛される: được yêu; 事 (こと): việc"},
+    {t:127.48, e:131.14, ja:"本当の愛の意味を知って行くんだよと", fj:"本当[ほんとう]の愛[あい]の意味[いみ]を知っ[しっ]て行く[いく]んだよと", furi:"ほんとうのあいのいみをしっていくんだよと", romaji:"hontou no ai no imi wo shitte ikunda yo to", vi:"Mà dần hiểu được ý nghĩa thật sự của tình yêu", blank:["意味","いみ"], exp:"本当の (ほんとうの): thật sự; 意味 (いみ): ý nghĩa; 知って行く (しっていく): dần hiểu ra"},
+    {t:131.14, e:135.4, ja:"君が教えてくれたんだ", fj:"君[きみ]が教え[おしえ]てくれたんだ", furi:"きみがおしえてくれたんだ", romaji:"kimi ga oshiete kuretanda", vi:"Là em đã dạy cho anh điều đó", blank:["教える","おしえる"], exp:"教える (おしえる): dạy, chỉ cho; ～てくれる: làm... cho (ai)"},
+    {t:135.4, e:140.96, ja:"言葉じゃなく愛で涙じゃなく笑顔で", fj:"言葉[ことば]じゃなく愛[あい]で涙[なみだ]じゃなく笑顔[えがお]で", furi:"ことばじゃなくあいでなみだじゃなくえがおで", romaji:"kotoba janaku ai de namida janaku egao de", vi:"Không phải bằng lời nói mà bằng tình yêu, không phải bằng nước mắt mà bằng nụ cười", blank:["笑顔","えがお"], exp:"言葉 (ことば): lời nói; 愛 (あい): tình yêu; 笑顔 (えがお): nụ cười"},
+    {t:140.96, e:144.92, ja:"次は僕が伝えよう", fj:"次[つぎ]は僕[ぼく]が伝えよ[つたえよ]う", furi:"つぎはぼくがつたえよう", romaji:"tsugi wa boku ga tsutaeyou", vi:"Lần này, anh sẽ là người nói ra", blank:["伝える","つたえる"], exp:"次は (つぎは): lần này, tiếp theo; 伝える (つたえる): truyền đạt, nói ra; ～よう: sẽ... (thể ý chí)"},
+    {t:144.92, e:146.86, ja:"例えば", fj:"例えば[たとえば]", furi:"たとえば", romaji:"tatoeba", vi:"Ví dụ như", blank:["例えば","たとえば"], exp:"例えば (たとえば): ví dụ như"},
+    {t:146.86, e:149.34, ja:"僕が明日いなくなったら", fj:"僕[ぼく]が明日[あした]いなくなったら", furi:"ぼくがあしたいなくなったら", romaji:"boku ga ashita inakunattara", vi:"Nếu ngày mai anh biến mất", blank:["明日","あした"], exp:"明日 (あした): ngày mai; いなくなる: biến mất, không còn nữa; ～たら: nếu..."},
+    {t:149.34, e:152, ja:"君は何を思うだろう", fj:"君[きみ]は何[なに]を思う[おもう]だろう", furi:"きみはなにをおもうだろう", romaji:"kimi wa nani wo omou darou", vi:"Em sẽ nghĩ gì nhỉ", blank:["思う","おもう"], exp:"何を思う (なにをおもう): nghĩ gì; ～だろう: nhỉ, chắc là..."},
+    {t:152, e:155.5, ja:"そんな事を思ってしまうような", fj:"そんな事[こと]を思っ[おもっ]てしまうような", furi:"そんなことをおもってしまうような", romaji:"sonna koto wo omotte shimau youna", vi:"Những suy nghĩ như thế cứ chợt đến", blank:["そんな","そんな"], exp:"そんな事 (そんなこと): chuyện như thế; 思ってしまう: lỡ nghĩ; ～ような: như là..."},
+    {t:155.5, e:158.5, ja:"寂しい夜に", fj:"寂しい[さびしい]夜[よる]に", furi:"さびしいよるに", romaji:"sabishii yoru ni", vi:"Trong những đêm cô đơn", blank:["寂しい","さびしい"], exp:"寂しい (さびしい): buồn, cô đơn; 夜 (よる): đêm"},
+    {t:158.5, e:160.58, ja:"君が明日いなくなったら", fj:"君[きみ]が明日[あした]いなくなったら", furi:"きみがあしたいなくなったら", romaji:"kimi ga ashita inakunattara", vi:"Nếu ngày mai em biến mất", blank:["明日","あした"], exp:"明日 (あした): ngày mai; いなくなる: biến mất, không còn nữa; ～たら: nếu..."},
+    {t:160.58, e:163.42, ja:"僕は何を思うだろう", fj:"僕[ぼく]は何[なに]を思う[おもう]だろう", furi:"ぼくはなにをおもうだろう", romaji:"boku wa nani wo omou darou", vi:"Anh sẽ nghĩ gì nhỉ", blank:["思う","おもう"], exp:"何を思う (なにをおもう): nghĩ gì; ～だろう: nhỉ, chắc là..."},
+    {t:163.42, e:170.74, ja:"今すぐ君に好きと伝えよう", fj:"今[いま]すぐ君[きみ]に好き[すき]と伝えよ[つたえよ]う", furi:"いますぐきみにすきとつたえよう", romaji:"imasugu kimi ni suki to tsutaeyou", vi:"Ngay bây giờ anh sẽ nói với em rằng anh thích em", blank:["今すぐ","いますぐ"], exp:"今すぐ (いますぐ): ngay bây giờ; 好き (すき): thích; 伝えよう: hãy nói ra"},
+    {t:177.52, e:180.46, ja:"いつだって僕はきっと", fj:"いつだって僕[ぼく]はきっと", furi:"いつだってぼくはきっと", romaji:"itsudatte boku wa kitto", vi:"Lúc nào anh cũng nhất định", blank:["きっと","きっと"], exp:"いつだって: lúc nào cũng; きっと: nhất định, chắc chắn"},
+    {t:180.46, e:183.26, ja:"どこまでも君をずっと", fj:"どこまでも君[きみ]をずっと", furi:"どこまでもきみをずっと", romaji:"dokomademo kimi wo zutto", vi:"Mãi mãi, dù đến bất cứ đâu, em...", blank:["どこまでも","どこまでも"], exp:"どこまでも: đến bất cứ đâu; ずっと: mãi"},
+    {t:183.26, e:188.7, ja:"笑顔で照らし続けるから", fj:"笑顔[えがお]で照らし[てらし]続ける[つづける]から", furi:"えがおでてらしつづけるから", romaji:"egao de terashitsuzukeru kara", vi:"Anh sẽ mãi soi sáng em bằng nụ cười", blank:["照らす","てらす"], exp:"笑顔 (えがお): nụ cười; 照らす (てらす): chiếu sáng, soi sáng; ～続ける: tiếp tục..."},
+    {t:188.7, e:191.9, ja:"永遠を君と感じたい", fj:"永遠[えいえん]を君[きみ]と感じ[かんじ]たい", furi:"えいえんをきみとかんじたい", romaji:"eien wo kimi to kanjitai", vi:"Anh muốn cùng em cảm nhận mãi mãi", blank:["永遠","えいえん"], exp:"永遠 (えいえん): mãi mãi, vĩnh viễn; 感じたい (かんじたい): muốn cảm nhận"},
+    {t:191.9, e:194.88, ja:"明日も隣で笑いたい", fj:"明日[あした]も隣[となり]で笑い[わらい]たい", furi:"あしたもとなりでわらいたい", romaji:"ashita mo tonari de waraitai", vi:"Ngày mai anh cũng muốn được cười bên cạnh em", blank:["笑う","わらう"], exp:"明日 (あした): ngày mai; 隣 (となり): bên cạnh; 笑いたい (わらいたい): muốn cười"},
+    {t:194.88, e:198.14, ja:"君のために僕は強くなる", fj:"君[きみ]のために僕[ぼく]は強く[つよく]なる", furi:"きみのためにぼくはつよくなる", romaji:"kimi no tame ni boku wa tsuyokunaru", vi:"Vì em, anh sẽ trở nên mạnh mẽ", blank:["強くなる","つよくなる"], exp:"～のために: vì...; 強くなる (つよくなる): trở nên mạnh mẽ"},
+    {t:199.22, e:200.5, ja:"そう誓うよ", fj:"そう誓う[ちかう]よ", furi:"そうちかうよ", romaji:"sou chikau yo", vi:"Anh thề như thế đấy", blank:["誓う","ちかう"], exp:"誓う (ちかう): thề, nguyện"},
+    {t:203.2, e:205.96, ja:"僕が明日いなくなったら", fj:"僕[ぼく]が明日[あした]いなくなったら", furi:"ぼくがあしたいなくなったら", romaji:"boku ga ashita inakunattara", vi:"Nếu ngày mai anh biến mất", blank:["明日","あした"], exp:"明日 (あした): ngày mai; いなくなる: biến mất, không còn nữa; ～たら: nếu..."},
+    {t:205.96, e:208.28, ja:"君は何を思うだろう", fj:"君[きみ]は何[なに]を思う[おもう]だろう", furi:"きみはなにをおもうだろう", romaji:"kimi wa nani wo omou darou", vi:"Em sẽ nghĩ gì nhỉ", blank:["思う","おもう"], exp:"何を思う (なにをおもう): nghĩ gì; ～だろう: nhỉ, chắc là..."},
+    {t:208.28, e:211.72, ja:"そんな事を思ってしまうような", fj:"そんな事[こと]を思っ[おもっ]てしまうような", furi:"そんなことをおもってしまうような", romaji:"sonna koto wo omotte shimau youna", vi:"Những suy nghĩ như thế cứ chợt đến", blank:["そんな","そんな"], exp:"そんな事 (そんなこと): chuyện như thế; 思ってしまう: lỡ nghĩ; ～ような: như là..."},
+    {t:211.72, e:214.58, ja:"寂しい夜に", fj:"寂しい[さびしい]夜[よる]に", furi:"さびしいよるに", romaji:"sabishii yoru ni", vi:"Trong những đêm cô đơn", blank:["寂しい","さびしい"], exp:"寂しい (さびしい): buồn, cô đơn; 夜 (よる): đêm"},
+    {t:214.58, e:217.24, ja:"君が明日いなくなったら", fj:"君[きみ]が明日[あした]いなくなったら", furi:"きみがあしたいなくなったら", romaji:"kimi ga ashita inakunattara", vi:"Nếu ngày mai em biến mất", blank:["明日","あした"], exp:"明日 (あした): ngày mai; いなくなる: biến mất, không còn nữa; ～たら: nếu..."},
+    {t:217.24, e:219.92, ja:"僕は何を思うだろう", fj:"僕[ぼく]は何[なに]を思う[おもう]だろう", furi:"ぼくはなにをおもうだろう", romaji:"boku wa nani wo omou darou", vi:"Anh sẽ nghĩ gì nhỉ", blank:["思う","おもう"], exp:"何を思う (なにをおもう): nghĩ gì; ～だろう: nhỉ, chắc là..."},
+    {t:220.56, e:223.1, ja:"今すぐ君に", fj:"今[いま]すぐ君[きみ]に", furi:"いますぐきみに", romaji:"imasugu kimi ni", vi:"Ngay bây giờ, với em...", blank:["今すぐ","いますぐ"], exp:"今すぐ (いますぐ): ngay bây giờ"},
+    {t:225.14, e:225.74, ja:"ありがとう", fj:"ありがとう", furi:"ありがとう", romaji:"arigatou", vi:"Cảm ơn em", blank:["ありがとう","ありがとう"], exp:"ありがとう: cảm ơn"},
+    {t:225.74, e:228.54, ja:"数えきれない微笑みも", fj:"数え[かぞえ]きれない微[ほほ]笑み[えみ]も", furi:"かぞえきれないほほえみも", romaji:"kazoekirenai hohoemi mo", vi:"Cả những nụ cười không đếm xuể", blank:["微笑み","ほほえみ"], exp:"数えきれない (かぞえきれない): không đếm xuể; 微笑み (ほほえみ): nụ cười"},
+    {t:228.54, e:231.04, ja:"君と触れ合った時間も", fj:"君[きみ]と触れ合っ[ふれあっ]た時間[じかん]も", furi:"きみとふれあったじかんも", romaji:"kimi to fureatta jikan mo", vi:"Cả những khoảnh khắc anh và em đã bên nhau", blank:["触れ合う","ふれあう"], exp:"触れ合う (ふれあう): chạm vào nhau, gần gũi nhau; 時間 (じかん): thời gian"},
+    {t:231.04, e:237.36, ja:"今の僕の生きてく力に変わって行くんだ", fj:"今[いま]の僕[ぼく]の生き[いき]てく力[ちから]に変わっ[かわっ]て行く[いく]んだ", furi:"いまのぼくのいきてくちからにかわっていくんだ", romaji:"ima no boku no ikiteku chikara ni kawatte ikunda", vi:"Giờ đây đã trở thành sức mạnh để anh sống tiếp", blank:["力","ちから"], exp:"生きてく力 (いきてくちから): sức mạnh để sống tiếp; 変わって行く (かわっていく): dần trở thành"},
+    {t:237.36, e:239.9, ja:"誰にも見せない涙も", fj:"誰[だれ]にも見せ[みせ]ない涙[なみだ]も", furi:"だれにもみせないなみだも", romaji:"dare ni mo misenai namida mo", vi:"Cả những giọt nước mắt chẳng cho ai thấy", blank:["涙","なみだ"], exp:"誰にも (だれにも): chẳng ai; 見せない (みせない): không cho thấy; 涙 (なみだ): nước mắt"},
+    {t:239.9, e:242.66, ja:"かかえこんできた悩みも", fj:"かかえこんできた悩み[なやみ]も", furi:"かかえこんできたなやみも", romaji:"kakaekonde kita nayami mo", vi:"Cả những nỗi lo đã ôm ấp bấy lâu", blank:["悩み","なやみ"], exp:"かかえこむ: ôm ấp, giữ trong lòng; 悩み (なやみ): nỗi lo, phiền muộn"},
+    {t:242.66, e:246.58, ja:"僕らは分かち合える", fj:"僕ら[ぼくら]は分かち[わかち]合える[あえる]", furi:"ぼくらはわかちあえる", romaji:"bokura wa wakachiaeru", vi:"Hai ta có thể chia sẻ cùng nhau", blank:["分かち合う","わかちあう"], exp:"僕ら (ぼくら): chúng ta, hai ta; 分かち合う (わかちあう): chia sẻ cùng nhau"},
+    {t:247.8, e:249.08, ja:"これからも", fj:"これからも", furi:"これからも", romaji:"korekara mo", vi:"Từ bây giờ trở đi", blank:["これから","これから"], exp:"これから: từ bây giờ; ～も: cũng..."},
+    {t:249.08, e:251.26, ja:"2人で描いてく未来図", fj:"2人[り]で描い[えがい]てく未来[みらい]図[ず]", furi:"ふたりでえがいてくみらいず", romaji:"futari de egaiteku miraizu", vi:"Bức tranh tương lai hai ta cùng vẽ", blank:["未来図","みらいず"], exp:"2人 (ふたり): hai người; 描く (えがく): vẽ; 未来図 (みらいず): bức tranh tương lai"},
+    {t:251.26, e:254.08, ja:"守り続けるよどこにいても", fj:"守り[まもり]続ける[つづける]よどこにいても", furi:"まもりつづけるよどこにいても", romaji:"mamoritsuzukeru yo doko ni ite mo", vi:"Anh sẽ mãi bảo vệ, dù em ở bất cứ đâu", blank:["守る","まもる"], exp:"守る (まもる): bảo vệ, giữ gìn; ～続ける: tiếp tục...; どこにいても: dù ở đâu"},
+    {t:254.08, e:255.5, ja:"この先も", fj:"この先[さき]も", furi:"このさきも", romaji:"kono saki mo", vi:"Và cả sau này nữa", blank:["この先","このさき"], exp:"この先 (このさき): phía trước, sau này"},
+    {t:255.5, e:257.66, ja:"誰より大切な君へ", fj:"誰[だれ]より大切[たいせつ]な君[きみ]へ", furi:"だれよりたいせつなきみへ", romaji:"dare yori taisetsu na kimi e", vi:"Gửi đến em, người quan trọng với anh hơn bất cứ ai", blank:["大切な","たいせつな"], exp:"誰より (だれより): hơn bất cứ ai; 大切な (たいせつな): quan trọng, quý giá; ～へ: gửi đến..."},
+    {t:260.72, e:266.08, ja:"ずっと君の隣で話していたいけど", fj:"ずっと君[きみ]の隣[となり]で話し[はなし]ていたいけど", furi:"ずっときみのとなりではなしていたいけど", romaji:"zutto kimi no tonari de hanashite itai kedo", vi:"Anh muốn mãi được nói chuyện bên cạnh em, nhưng...", blank:["隣","となり"], exp:"ずっと: mãi, suốt; 隣 (となり): bên cạnh; 話していたい (はなしていたい): muốn nói chuyện mãi; ～けど: nhưng..."},
+    {t:267, e:271.58, ja:"もうあと少しで時がさらってしまう", fj:"もうあと少し[すこし]で時[とき]がさらってしまう", furi:"もうあとすこしでときがさらってしまう", romaji:"mou ato sukoshi de toki ga saratte shimau", vi:"Chỉ còn một chút nữa thôi, thời gian sẽ cuốn trôi mất", blank:["さらう","さらう"], exp:"もうあと少し: chỉ còn một chút nữa; 時 (とき): thời gian; さらう: cuốn đi, mang đi; ～てしまう: (lỡ) làm..."},
+    {t:271.58, e:275.88, ja:"もしも止められるなら", fj:"もしも止め[とめ]られるなら", furi:"もしもとめられるなら", romaji:"moshimo tomerareru nara", vi:"Nếu có thể ngăn lại được", blank:["止める","とめる"], exp:"もしも: nếu như; 止める (とめる): ngăn lại, dừng lại; ～られる: thể bị động/khả năng"},
+    {t:276.58, e:281.68, ja:"抱きしめる永遠に君を", fj:"抱きしめる[だきしめる]永遠[えいえん]に君[きみ]を", furi:"だきしめるえいえんにきみを", romaji:"dakishimeru eien ni kimi wo", vi:"Anh sẽ ôm em, mãi mãi", blank:["抱きしめる","だきしめる"], exp:"抱きしめる (だきしめる): ôm chặt; 永遠に (えいえんに): mãi mãi"}
+  ];
+  var SV11_WIN = SV11_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV11_ID] = {
+    id: SV11_ID, dur: SV11_DUR, subs: SV11_SUBS, win: SV11_WIN,
+    practice: SV11_SUBS.slice(),
+    fill: SV11_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "君に好きと伝えよう - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/Kb-OLmmbMgk/mqdefault.jpg",
+    facadeAlt: "Ảnh xem trước video bài hát 君に好きと伝えよう",
+    facadeLabel: "Phát video bài hát 君に好きと伝えよう — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* わたがし (綿菓子) — back number — bài hát làm tay số 9 (loạt scale-up Em Bé), 51 câu.
+     Video THƯỜNG 16:9 (không phải Shorts), ID 64FvLu0yq9c, 4:25, nhúng trực tiếp
+     video gốc vietsub+romaji của kênh Em Bé (không đăng lại; quyết định 2026-11-14).
+     51 câu lấy ĐÚNG từ watagashi-14-lesson.json đã soát tay (lời theo bản đã xuất bản
+     Oricon, mốc giờ căn theo Whisper base + word timestamps; âm thanh là bản studio,
+     toàn bộ lời đã xuất bản đều có mặt đúng thứ tự). Mở bằng chính player sv2*
+     qua svuActivate (wide: khung video nằm ngang 16:9). */
+  var SV12_ID = "64FvLu0yq9c";
+  var SV12_DUR = 265;
+  var SV12_SUBS = [
+    {t:1.14, e:8.52, ja:"水色にはなびらの浴衣がこの世で一番", fj:"水色[みずいろ]にはなびらの浴衣[ゆかた]がこの世[このよ]で一番[いちばん]", furi:"みずいろにはなびらのゆかたがこのよでいちばん", romaji:"mizuiro ni hanabira no yukata ga kono yo de ichiban", vi:"Bộ yukata màu xanh da trời in cánh hoa là đẹp nhất trên đời", blank:["浴衣","ゆかた"], exp:"水色 (みずいろ): màu xanh da trời; はなびら: cánh hoa; 浴衣 (ゆかた): yukata, áo mặc mùa hè; この世で一番 (このよでいちばん): nhất trên đời"},
+    {t:8.52, e:13.22, ja:"似合うのはたぶん君だと思う", fj:"似合う[にあう]のはたぶん君[きみ]だと思う[おもう]", furi:"にあうのはたぶんきみだとおもう", romaji:"niau no wa tabun kimi da to omou", vi:"Người hợp với nó nhất có lẽ là em, anh nghĩ vậy", blank:["似合う","にあう"], exp:"似合う (にあう): hợp, xứng; たぶん: có lẽ, chắc là; 君 (きみ): em (cách gọi thân mật); ～と思う (とおもう): anh nghĩ là…"},
+    {t:13.22, e:17, ja:"よく誘えた 泣きそうだ", fj:"よく誘え[さそえ]た 泣き[なき]そうだ", furi:"よくさそえた なきそうだ", romaji:"yoku sasoeta nakisou da", vi:"May mà rủ được em đi, anh muốn khóc quá", blank:["誘えた","さそえた"], exp:"よく: may mà, thật tốt là; 誘う (さそう): rủ, mời; 誘えた (さそえた): đã rủ được; 泣きそうだ (なきそうだ): sắp khóc, muốn khóc"},
+    {t:17, e:20.7, ja:"夏祭りの最後の日", fj:"夏[なつ]祭り[まつり]の最後[さいご]の日[ひ]", furi:"なつまつりのさいごのひ", romaji:"natsu matsuri no saigo no hi", vi:"Ngày cuối cùng của lễ hội mùa hè", blank:["夏祭り","なつまつり"], exp:"夏祭り (なつまつり): lễ hội mùa hè; 最後 (さいご): cuối cùng; 日 (ひ): ngày"},
+    {t:21.1, e:24.3, ja:"わたがしを口で溶かす君は", fj:"わたがしを口[くち]で溶かす[とかす]君[きみ]は", furi:"わたがしをくちでとかすきみは", romaji:"watagashi wo kuchi de tokasu kimi wa", vi:"Em đang tan kẹo bông gòn trong miệng", blank:["溶かす","とかす"], exp:"わたがし: kẹo bông gòn; 口 (くち): miệng; 溶かす (とかす): làm tan ra; 君は (きみは): em thì…"},
+    {t:24.3, e:28.48, ja:"わたがしになりたい僕に言う", fj:"わたがしになりたい僕[ぼく]に言う[いう]", furi:"わたがしになりたいぼくにいう", romaji:"watagashi ni naritai boku ni iu", vi:"Em nói với anh, người muốn trở thành kẹo bông gòn", blank:["わたがし","わたがし"], exp:"～になりたい: muốn trở thành…; 僕 (ぼく): anh, tớ (nam tự xưng); 言う (いう): nói"},
+    {t:28.48, e:31, ja:"楽しいねって", fj:"楽しい[たのしい]ねって", furi:"たのしいねって", romaji:"tanoshii ne tte", vi:"Rằng 'vui thật đấy nhỉ'", blank:["楽しい","たのしい"], exp:"楽しい (たのしい): vui; ね: nhỉ, đấy; ～って: (trích dẫn) rằng…"},
+    {t:32.52, e:35.88, ja:"僕はうなずくだけで", fj:"僕[ぼく]はうなずくだけで", furi:"ぼくはうなずくだけで", romaji:"boku wa unazuku dake de", vi:"Anh chỉ biết gật đầu", blank:["うなずく","うなずく"], exp:"うなずく: gật đầu; ～だけで: chỉ… thôi"},
+    {t:36.18, e:40.12, ja:"気の利いた言葉も出てきやしない", fj:"気[き]の利い[きい]た言葉[ことば]も出[で]てきやしない", furi:"きのきいたことばもでてきやしない", romaji:"ki no kiita kotoba mo dete kiya shinai", vi:"Chẳng nói được câu nào khéo léo cả", blank:["気の利いた","きのきいた"], exp:"気の利いた (きのきいた): khéo léo, tinh tế; 言葉 (ことば): lời nói; 出てくる (でてくる): (lời) bật ra; ～やしない: chẳng… chút nào (cách nói nhấn mạnh phủ định)"},
+    {t:40.12, e:45.98, ja:"君の隣歩く事に慣れてない自分が", fj:"君[きみ]の隣[となり]歩く[あるく]事[こと]に慣れ[なれ]てない自分[じぶん]が", furi:"きみのとなりあるくことになれてないじぶんが", romaji:"kimi no tonari aruku koto ni narete nai jibun ga", vi:"Bản thân anh chưa quen với việc đi bên cạnh em", blank:["隣","となり"], exp:"隣 (となり): bên cạnh; 歩く (あるく): đi bộ; 事 (こと): việc; 慣れる (なれる): quen; 自分 (じぶん): bản thân"},
+    {t:45.98, e:49.7, ja:"恥ずかしくて", fj:"恥ずかしく[はずかしく]て", furi:"はずかしくて", romaji:"hazukashikute", vi:"Thật xấu hổ", blank:["恥ずかしい","はずかしい"], exp:"恥ずかしい (はずかしい): xấu hổ, ngượng; ～くて: (nối câu) …và, …đến mức"},
+    {t:49.7, e:53.22, ja:"想いがあふれたらどうやって", fj:"想い[おもい]があふれたらどうやって", furi:"おもいがあふれたらどうやって", romaji:"omoi ga afuretara dou yatte", vi:"Nếu tình cảm tràn ra thì phải làm sao", blank:["想い","おもい"], exp:"想い (おもい): tình cảm, nỗi lòng; あふれる: tràn ra; ～たら: nếu…; どうやって: bằng cách nào, làm sao"},
+    {t:53.22, e:57.56, ja:"どんなきっかけタイミングで", fj:"どんなきっかけタイミングで", furi:"どんなきっかけタイミングで", romaji:"donna kikkake taimingu de", vi:"Với cơ hội và thời điểm nào", blank:["きっかけ","きっかけ"], exp:"どんな: như thế nào; きっかけ: cơ hội, duyên cớ; タイミング: thời điểm, lúc thích hợp"},
+    {t:57.56, e:63.82, ja:"手を繋いだらいいんだろう", fj:"手[て]を繋い[つない]だらいいんだろう", furi:"てをつないだらいいんだろう", romaji:"te wo tsunaidara ii ndarou", vi:"Mới nên nắm tay em đây", blank:["繋ぐ","つなぐ"], exp:"手 (て): tay; 繋ぐ (つなぐ): nắm, nối; ～たらいい: nên…; ～んだろう: nhỉ, không biết… (tự hỏi)"},
+    {t:63.82, e:69.5, ja:"どう見ても柔らかい君の手を", fj:"どう見[み]ても柔らかい[やわらかい]君[きみ]の手[て]を", furi:"どうみてもやわらかいきみのてを", romaji:"dou mite mo yawarakai kimi no te wo", vi:"Bàn tay em nhìn thế nào cũng thật mềm mại", blank:["柔らかい","やわらかい"], exp:"どう見ても (どうみても): nhìn thế nào cũng; 柔らかい (やわらかい): mềm mại; 君の手 (きみのて): bàn tay em"},
+    {t:69.5, e:73.18, ja:"どんな強さでつかんで", fj:"どんな強[つよ]さでつかんで", furi:"どんなつよさでつかんで", romaji:"donna tsuyosa de tsukande", vi:"Phải nắm chặt đến mức nào", blank:["強さ","つよさ"], exp:"強さ (つよさ): độ mạnh, sức mạnh; つかむ: nắm, bắt lấy; ～で: bằng, với (cách thức)"},
+    {t:73.18, e:79.48, ja:"どんな顔で見つめればいいの", fj:"どんな顔[かお]で見つめれ[みつめれ]ばいいの", furi:"どんなかおでみつめればいいの", romaji:"donna kao de mitsumereba ii no", vi:"Phải nhìn em bằng vẻ mặt nào đây", blank:["見つめる","みつめる"], exp:"顔 (かお): vẻ mặt; 見つめる (みつめる): nhìn chăm chú; ～ばいい: nên…; の: (cuối câu, giọng tự hỏi)"},
+    {t:80.62, e:84.52, ja:"君がさっき口ずさんだ", fj:"君[きみ]がさっき口ずさん[くちずさん]だ", furi:"きみがさっきくちずさんだ", romaji:"kimi ga sakki kuchizusanda", vi:"Bài hát em vừa ngâm nga lúc nãy", blank:["口ずさむ","くちずさむ"], exp:"さっき: lúc nãy, vừa rồi; 口ずさむ (くちずさむ): ngâm nga, hát khẽ; ～んだ: (thì quá khứ) đã…"},
+    {t:84.86, e:88.34, ja:"歌にもたまに目が合う事も", fj:"歌[うた]にもたまに目[め]が合う[あう]事[こと]も", furi:"うたにもたまにめがあうことも", romaji:"uta ni mo tamani me ga au koto mo", vi:"Và cả những lúc mắt chúng ta vô tình chạm nhau", blank:["目が合う","めがあう"], exp:"歌 (うた): bài hát; たまに: thỉnh thoảng; 目が合う (めがあう): ánh mắt chạm nhau; 事 (こと): việc, chuyện"},
+    {t:88.34, e:92.26, ja:"深い意味なんてないのだろう", fj:"深い[ふかい]意味[いみ]なんてないのだろう", furi:"ふかいいみなんてないのだろう", romaji:"fukai imi nante nai no darou", vi:"Chắc chẳng có ý nghĩa sâu xa gì đâu", blank:["意味","いみ"], exp:"深い (ふかい): sâu xa; 意味 (いみ): ý nghĩa; ～なんてない: chẳng có… gì đâu; のだろう: chắc là…"},
+    {t:92.62, e:94.86, ja:"悲しいけど", fj:"悲しい[かなしい]けど", furi:"かなしいけど", romaji:"kanashii kedo", vi:"Buồn thật, nhưng…", blank:["悲しい","かなしい"], exp:"悲しい (かなしい): buồn; けど: nhưng (nối câu, bỏ lửng)"},
+    {t:96.46, e:99.58, ja:"君が笑ってくれる", fj:"君[きみ]が笑っ[わらっ]てくれる", furi:"きみがわらってくれる", romaji:"kimi ga waratte kureru", vi:"Em cười với anh", blank:["笑う","わらう"], exp:"笑う (わらう): cười; ～てくれる: (ai) làm… cho mình (biết ơn)"},
+    {t:100.26, e:104.1, ja:"ただそれだけの事で僕はついに", fj:"ただそれだけの事[こと]で僕[ぼく]はついに", furi:"ただそれだけのことでぼくはついに", romaji:"tada sore dake no koto de boku wa tsuini", vi:"Chỉ vì điều đó thôi mà cuối cùng anh đã", blank:["ついに","ついに"], exp:"ただそれだけ: chỉ có thế thôi; 事 (こと): việc; ついに: cuối cùng, rốt cuộc"},
+    {t:104.1, e:107.38, ja:"心の場所を見つけたよ", fj:"心[こころ]の場所[ばしょ]を見つけ[みつけ]たよ", furi:"こころのばしょをみつけたよ", romaji:"kokoro no basho wo mitsuketa yo", vi:"Tìm thấy nơi trái tim mình thuộc về", blank:["心","こころ"], exp:"心 (こころ): trái tim; 場所 (ばしょ): nơi, chỗ; 見つける (みつける): tìm thấy; よ: đấy (nhấn mạnh)"},
+    {t:107.52, e:111.72, ja:"うるさくて痛くてもどかしくて", fj:"うるさくて痛く[いたく]てもどかしくて", furi:"うるさくていたくてもどかしくて", romaji:"urusakute itakute modokashikute", vi:"Ồn ào, đau đớn và bứt rứt", blank:["もどかしい","もどかしい"], exp:"うるさい: ồn ào; 痛い (いたい): đau; もどかしい: bứt rứt, sốt ruột; ～くて: (nối tính từ) …và…"},
+    {t:113.22, e:117.14, ja:"想いがあふれたらどうやって", fj:"想い[おもい]があふれたらどうやって", furi:"おもいがあふれたらどうやって", romaji:"omoi ga afuretara dou yatte", vi:"Nếu tình cảm tràn ra thì phải làm sao", blank:["想い","おもい"], exp:"想い (おもい): tình cảm, nỗi lòng; あふれる: tràn ra; ～たら: nếu…; どうやって: bằng cách nào, làm sao"},
+    {t:117.14, e:121.06, ja:"どんなきっかけタイミングで", fj:"どんなきっかけタイミングで", furi:"どんなきっかけタイミングで", romaji:"donna kikkake taimingu de", vi:"Với cơ hội và thời điểm nào", blank:["タイミング","タイミング"], exp:"どんな: như thế nào; きっかけ: cơ hội, duyên cớ; タイミング: thời điểm, lúc thích hợp"},
+    {t:121.06, e:127.5, ja:"手を繋いだらいいんだろう", fj:"手[て]を繋い[つない]だらいいんだろう", furi:"てをつないだらいいんだろう", romaji:"te wo tsunaidara ii ndarou", vi:"Mới nên nắm tay em đây", blank:["繋ぐ","つなぐ"], exp:"手 (て): tay; 繋ぐ (つなぐ): nắm, nối; ～たらいい: nên…; ～んだろう: nhỉ, không biết… (tự hỏi)"},
+    {t:127.5, e:133.34, ja:"どう見ても柔らかい君の手を", fj:"どう見[み]ても柔らかい[やわらかい]君[きみ]の手[て]を", furi:"どうみてもやわらかいきみのてを", romaji:"dou mite mo yawarakai kimi no te wo", vi:"Bàn tay em nhìn thế nào cũng thật mềm mại", blank:["柔らかい","やわらかい"], exp:"どう見ても (どうみても): nhìn thế nào cũng; 柔らかい (やわらかい): mềm mại; 君の手 (きみのて): bàn tay em"},
+    {t:133.34, e:137.02, ja:"どんな強さでつかんで", fj:"どんな強[つよ]さでつかんで", furi:"どんなつよさでつかんで", romaji:"donna tsuyosa de tsukande", vi:"Phải nắm chặt đến mức nào", blank:["つかむ","つかむ"], exp:"強さ (つよさ): độ mạnh, sức mạnh; つかむ: nắm, bắt lấy; ～で: bằng, với (cách thức)"},
+    {t:137.02, e:143.36, ja:"どんな顔で見つめればいいの", fj:"どんな顔[かお]で見つめれ[みつめれ]ばいいの", furi:"どんなかおでみつめればいいの", romaji:"donna kao de mitsumereba ii no", vi:"Phải nhìn em bằng vẻ mặt nào đây", blank:["見つめる","みつめる"], exp:"顔 (かお): vẻ mặt; 見つめる (みつめる): nhìn chăm chú; ～ばいい: nên…; の: (cuối câu, giọng tự hỏi)"},
+    {t:144.98, e:150.38, ja:"もうすぐ花火が上がるね", fj:"もうすぐ花火[はなび]が上がる[あがる]ね", furi:"もうすぐはなびがあがるね", romaji:"mou sugu hanabi ga agaru ne", vi:"Sắp bắn pháo hoa rồi nhỉ", blank:["花火","はなび"], exp:"もうすぐ: sắp, chẳng bao lâu nữa; 花火 (はなび): pháo hoa; 上がる (あがる): bắn lên, bay lên; ね: nhỉ"},
+    {t:151.02, e:157.06, ja:"君の横顔を今焼き付けるように", fj:"君[きみ]の横顔[よこがお]を今[いま]焼き付ける[やきつける]ように", furi:"きみのよこがおをいまやきつけるように", romaji:"kimi no yokogao wo ima yakitsukeru you ni", vi:"Như muốn khắc ghi khuôn mặt nghiêng của em ngay lúc này", blank:["横顔","よこがお"], exp:"横顔 (よこがお): khuôn mặt nhìn nghiêng; 今 (いま): ngay lúc này; 焼き付ける (やきつける): khắc ghi, in sâu; ～ように: như thể, như muốn…"},
+    {t:157.06, e:159.92, ja:"じっと見つめる", fj:"じっと見つめる[みつめる]", furi:"じっとみつめる", romaji:"jitto mitsumeru", vi:"Anh lặng lẽ nhìn em", blank:["じっと","じっと"], exp:"じっと: lặng lẽ, chăm chú (không chớp mắt); 見つめる (みつめる): nhìn chăm chú"},
+    {t:175.16, e:179.1, ja:"この胸の痛みはどうやって", fj:"この胸[むね]の痛み[いたみ]はどうやって", furi:"このむねのいたみはどうやって", romaji:"kono mune no itami wa dou yatte", vi:"Nỗi đau trong lòng này phải làm sao", blank:["胸","むね"], exp:"胸 (むね): ngực, lòng; 痛み (いたみ): nỗi đau; どうやって: bằng cách nào, làm sao"},
+    {t:179.54, e:183.38, ja:"君にうつしたらいいんだろう", fj:"君[きみ]にうつしたらいいんだろう", furi:"きみにうつしたらいいんだろう", romaji:"kimi ni utsushitara ii ndarou", vi:"Mới truyền được sang em đây", blank:["うつす","うつす"], exp:"うつす: truyền, lây sang; ～たらいい: nên…; ～んだろう: nhỉ, không biết… (tự hỏi)"},
+    {t:183.38, e:189.14, ja:"横にいるだけじゃ駄目なんだ", fj:"横[よこ]にいるだけじゃ駄目[だめ]なんだ", furi:"よこにいるだけじゃだめなんだ", romaji:"yoko ni iru dake ja dame nanda", vi:"Chỉ ở bên cạnh em thôi là không đủ", blank:["駄目","だめ"], exp:"横にいる (よこにいる): ở bên cạnh; ～だけじゃ: chỉ… thôi thì; 駄目 (だめ): không được, không đủ; んだ: (nhấn mạnh)"},
+    {t:190.36, e:195.6, ja:"もう君の気を引ける話題なんて", fj:"もう君[きみ]の気[き]を引ける[ひける]話題[わだい]なんて", furi:"もうきみのきをひけるわだいなんて", romaji:"mou kimi no ki wo hikeru wadai nante", vi:"Những chủ đề có thể thu hút em", blank:["話題","わだい"], exp:"もう: đã… rồi; 気を引く (きをひく): thu hút (sự chú ý); 話題 (わだい): chủ đề trò chuyện; ～なんて: những thứ như…"},
+    {t:195.6, e:198.84, ja:"とっくに底をついて", fj:"とっくに底[そこ]をついて", furi:"とっくにそこをついて", romaji:"tokkuni soko wo tsuite", vi:"Thì đã cạn kiệt từ lâu rồi", blank:["底をつく","そこをつく"], exp:"とっくに: từ lâu rồi; 底をつく (そこをつく): cạn kiệt, chạm đáy; ～て: (nối câu)"},
+    {t:199.65, e:204.18, ja:"残されてる言葉はもう", fj:"残さ[のこさ]れてる言葉[ことば]はもう", furi:"のこされてることばはもう", romaji:"nokosareteru kotoba wa mou", vi:"Những lời còn lại thì", blank:["残される","のこされる"], exp:"残される (のこされる): còn lại, được để lại; 言葉 (ことば): lời nói; もう: đã…"},
+    {t:204.72, e:206.14, ja:"わかってるけど", fj:"わかってるけど", furi:"わかってるけど", romaji:"wakatteru kedo", vi:"Anh biết rõ, nhưng…", blank:["分かる","わかる"], exp:"分かる (わかる): hiểu, biết; わかってる: biết rõ (thể tiếp diễn); けど: nhưng (bỏ lửng)"},
+    {t:206.49, e:209.98, ja:"想いがあふれたらどうやって", fj:"想い[おもい]があふれたらどうやって", furi:"おもいがあふれたらどうやって", romaji:"omoi ga afuretara dou yatte", vi:"Nếu tình cảm tràn ra thì phải làm sao", blank:["想い","おもい"], exp:"想い (おもい): tình cảm, nỗi lòng; あふれる: tràn ra; ～たら: nếu…; どうやって: bằng cách nào, làm sao"},
+    {t:209.98, e:214.42, ja:"どんなきっかけタイミングで", fj:"どんなきっかけタイミングで", furi:"どんなきっかけタイミングで", romaji:"donna kikkake taimingu de", vi:"Với cơ hội và thời điểm nào", blank:["きっかけ","きっかけ"], exp:"どんな: như thế nào; きっかけ: cơ hội, duyên cớ; タイミング: thời điểm, lúc thích hợp"},
+    {t:214.42, e:220.68, ja:"手を繋いだらいいんだろう", fj:"手[て]を繋い[つない]だらいいんだろう", furi:"てをつないだらいいんだろう", romaji:"te wo tsunaidara ii ndarou", vi:"Mới nên nắm tay em đây", blank:["繋ぐ","つなぐ"], exp:"手 (て): tay; 繋ぐ (つなぐ): nắm, nối; ～たらいい: nên…; ～んだろう: nhỉ, không biết… (tự hỏi)"},
+    {t:221.68, e:226.2, ja:"どう見ても柔らかい君の手を", fj:"どう見[み]ても柔らかい[やわらかい]君[きみ]の手[て]を", furi:"どうみてもやわらかいきみのてを", romaji:"dou mite mo yawarakai kimi no te wo", vi:"Bàn tay em nhìn thế nào cũng thật mềm mại", blank:["柔らかい","やわらかい"], exp:"どう見ても (どうみても): nhìn thế nào cũng; 柔らかい (やわらかい): mềm mại; 君の手 (きみのて): bàn tay em"},
+    {t:226.2, e:229.82, ja:"どんな強さでつかんで", fj:"どんな強[つよ]さでつかんで", furi:"どんなつよさでつかんで", romaji:"donna tsuyosa de tsukande", vi:"Phải nắm chặt đến mức nào", blank:["強さ","つよさ"], exp:"強さ (つよさ): độ mạnh, sức mạnh; つかむ: nắm, bắt lấy; ～で: bằng, với (cách thức)"},
+    {t:230.68, e:236.46, ja:"どんな顔で見つめればいいの", fj:"どんな顔[かお]で見つめれ[みつめれ]ばいいの", furi:"どんなかおでみつめればいいの", romaji:"donna kao de mitsumereba ii no", vi:"Phải nhìn em bằng vẻ mặt nào đây", blank:["見つめる","みつめる"], exp:"顔 (かお): vẻ mặt; 見つめる (みつめる): nhìn chăm chú; ～ばいい: nên…; の: (cuối câu, giọng tự hỏi)"},
+    {t:237.52, e:241.26, ja:"夏祭りの最後の日", fj:"夏[なつ]祭り[まつり]の最後[さいご]の日[ひ]", furi:"なつまつりのさいごのひ", romaji:"natsu matsuri no saigo no hi", vi:"Ngày cuối cùng của lễ hội mùa hè", blank:["夏祭り","なつまつり"], exp:"夏祭り (なつまつり): lễ hội mùa hè; 最後 (さいご): cuối cùng; 日 (ひ): ngày"},
+    {t:241.7, e:244.98, ja:"わたがしを口で溶かす君に", fj:"わたがしを口[くち]で溶かす[とかす]君[きみ]に", furi:"わたがしをくちでとかすきみに", romaji:"watagashi wo kuchi de tokasu kimi ni", vi:"Với em đang tan kẹo bông gòn trong miệng", blank:["溶かす","とかす"], exp:"わたがし: kẹo bông gòn; 口 (くち): miệng; 溶かす (とかす): làm tan ra; 君に (きみに): với em, đối với em"},
+    {t:244.98, e:249.1, ja:"わたがしになりたい僕は言う", fj:"わたがしになりたい僕[ぼく]は言う[いう]", furi:"わたがしになりたいぼくはいう", romaji:"watagashi ni naritai boku wa iu", vi:"Anh, người muốn trở thành kẹo bông gòn, nói rằng", blank:["わたがし","わたがし"], exp:"わたがし: kẹo bông gòn; ～になりたい: muốn trở thành…; 僕 (ぼく): anh, tớ; 言う (いう): nói"},
+    {t:249.36, e:251.66, ja:"楽しいねって", fj:"楽しい[たのしい]ねって", furi:"たのしいねって", romaji:"tanoshii ne tte", vi:"'Vui thật đấy nhỉ'", blank:["楽しい","たのしい"], exp:"楽しい (たのしい): vui; ね: nhỉ, đấy; ～って: (trích dẫn) rằng…"}
+  ];
+  var SV12_WIN = SV12_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV12_ID] = {
+    id: SV12_ID, dur: SV12_DUR, subs: SV12_SUBS, win: SV12_WIN,
+    practice: SV12_SUBS.slice(),
+    fill: SV12_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "わたがし (綿菓子) - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/64FvLu0yq9c/mqdefault.jpg",
+    facadeAlt: "Ảnh xem trước video bài hát わたがし (綿菓子) - back number",
+    facadeLabel: "Phát video bài hát わたがし — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* Friendship ～ for 好きっていいなよ。 — 岡崎律子 — bài hát làm tay số 10 (loạt scale-up Em Bé), 20 câu.
+     Video THƯỜNG 16:9 (không phải Shorts), ID iOLQjsGOLww, 3:17, nhúng trực tiếp
+     video gốc vietsub+romaji của kênh Em Bé (không đăng lại; quyết định 2026-11-14).
+     20 câu lấy ĐÚNG từ sukitte-15-lesson.json đã soát tay (lời theo bản đã xuất bản
+     Uta-Net; video chỉ hát 20 dòng đầu của bản full 29 dòng — bỏ đoạn lặp cuối
+     L21–L29, outro nhạc 179.66–197s không lời; mốc giờ căn theo Whisper base +
+     word timestamps + xác minh bằng frame phụ đề cháy sẵn). Mở bằng chính player sv2*
+     qua svuActivate (wide: khung video nằm ngang 16:9). */
+  var SV13_ID = "iOLQjsGOLww";
+  var SV13_DUR = 197;
+  var SV13_SUBS = [
+    {t:0, e:10.48, ja:"Yesterday 言葉がたりなくて", fj:"Yesterday 言葉[ことば]がたりなくて", furi:"Yesterday ことばがたりなくて", romaji:"Yesterday kotoba ga tarinakute", vi:"Hôm qua, lời nói chẳng đủ", blank:["言葉","ことば"], exp:"Yesterday: hôm qua; 言葉 (ことば): lời nói; たりない: không đủ, thiếu; ～くて: (nối câu) …và, …đến mức"},
+    {t:10.48, e:16.14, ja:"すれ違ったとしても", fj:"すれ違っ[すれちがっ]たとしても", furi:"すれちがったとしても", romaji:"surechigatta toshite mo", vi:"Dù chúng ta có lướt qua nhau", blank:["すれ違う","すれちがう"], exp:"すれ違う (すれちがう): lướt qua nhau, không gặp được nhau; ～としても: dù cho có… đi nữa"},
+    {t:16.14, e:24.9, ja:"やめないで もっとわかりたい", fj:"やめないで もっとわかりたい", furi:"やめないで もっとわかりたい", romaji:"yamenai de motto wakaritai", vi:"Đừng dừng lại, tớ muốn hiểu cậu hơn nữa", blank:["分かる","わかる"], exp:"やめないで: đừng dừng lại, đừng bỏ cuộc; もっと: hơn nữa; 分かる (わかる): hiểu; ～たい: muốn…"},
+    {t:32.06, e:42.02, ja:"時にひとりになりたくて", fj:"時に[ときに]ひとりになりたくて", furi:"ときにひとりになりたくて", romaji:"toki ni hitori ni naritakute", vi:"Có lúc tớ muốn ở một mình", blank:["ひとり","ひとり"], exp:"時に (ときに): có lúc, đôi khi; ひとり: một mình; ～になりたい: muốn trở thành…; ～くて: (nối câu)"},
+    {t:42.02, e:51.5, ja:"旅をしても心は埋まらない", fj:"旅[たび]をしても心[こころ]は埋まら[うまら]ない", furi:"たびをしてもこころはうまらない", romaji:"tabi wo shite mo kokoro wa umaranai", vi:"Dù có đi xa, lòng vẫn không lấp đầy được", blank:["埋まる","うまる"], exp:"旅 (たび): chuyến đi, du lịch; ～ても: dù có…; 心 (こころ): lòng, trái tim; 埋まる (うまる): được lấp đầy; ～ない: không…"},
+    {t:51.5, e:55.92, ja:"そして 大切な人に気づくよ", fj:"そして 大切[たいせつ]な人[ひと]に気づく[きづく]よ", furi:"そして たいせつなひとにきづくよ", romaji:"soshite taisetsu na hito ni kizuku yo", vi:"Và rồi tớ nhận ra người quan trọng với mình", blank:["大切な","たいせつな"], exp:"そして: và rồi, sau đó; 大切な (たいせつな): quan trọng, quý giá; 人 (ひと): người; 気づく (きづく): nhận ra; よ: đấy (nhấn mạnh)"},
+    {t:58.18, e:68.3, ja:"いつもいつも そう うまくいくとは限らない毎日", fj:"いつもいつも そう うまくいくとは限ら[かぎら]ない毎日[まいにち]", furi:"いつもいつも そう うまくいくとはかぎらないまいにち", romaji:"itsumo itsumo sou umaku iku to wa kagiranai mainichi", vi:"Ngày nào cũng vậy, đâu phải lúc nào mọi chuyện cũng suôn sẻ", blank:["毎日","まいにち"], exp:"いつもいつも: lúc nào cũng; そう: như thế, như vậy; うまくいく: suôn sẻ, thuận lợi; ～とは限らない: không hẳn là…; 毎日 (まいにち): mỗi ngày"},
+    {t:68.3, e:71.06, ja:"だけど笑って", fj:"だけど笑っ[わらっ]て", furi:"だけどわらって", romaji:"dakedo waratte", vi:"Nhưng hãy cười lên nào", blank:["笑う","わらう"], exp:"だけど: nhưng; 笑う (わらう): cười; ～て: (dạng nhờ vả/khuyên) hãy…"},
+    {t:71.92, e:80.54, ja:"君がくれたたったひとことがどれほど嬉しかったか", fj:"君[きみ]がくれたたったひとことがどれほど嬉しかっ[うれしかっ]たか", furi:"きみがくれたたったひとことがどれほどうれしかったか", romaji:"kimi ga kureta tatta hitokoto ga dorehodo ureshikatta ka", vi:"Một lời duy nhất cậu trao tớ đã khiến tớ vui đến nhường nào", blank:["嬉しい","うれしい"], exp:"君 (きみ): cậu; くれた: đã cho (tớ); たったひとこと: chỉ một lời duy nhất; どれほど: đến nhường nào; 嬉しい (うれしい): vui; か: (cuối câu cảm thán)"},
+    {t:80.54, e:87.2, ja:"ずっとずっと覚えてる", fj:"ずっとずっと覚え[おぼえ]てる", furi:"ずっとずっとおぼえてる", romaji:"zutto zutto oboeteru", vi:"Tớ sẽ nhớ mãi, nhớ mãi", blank:["覚える","おぼえる"], exp:"ずっとずっと: mãi mãi, luôn luôn; 覚える (おぼえる): nhớ; 覚えてる: (đang) nhớ, sẽ nhớ"},
+    {t:93.22, e:102.2, ja:"Memories 真冬の帰り道", fj:"Memories 真冬[まふゆ]の帰り道[かえりみち]", furi:"Memories まふゆのかえりみち", romaji:"Memories mafuyu no kaerimichi", vi:"Kỷ niệm — con đường về giữa mùa đông lạnh giá", blank:["真冬","まふゆ"], exp:"Memories: kỷ niệm, hồi ức; 真冬 (まふゆ): giữa mùa đông; 帰り道 (かえりみち): đường về"},
+    {t:103.96, e:109.56, ja:"白い雪に足跡", fj:"白い[しろい]雪[ゆき]に足跡[あしあと]", furi:"しろいゆきにあしあと", romaji:"shiroi yuki ni ashiato", vi:"Dấu chân trên tuyết trắng", blank:["足跡","あしあと"], exp:"白い (しろい): trắng; 雪 (ゆき): tuyết; 足跡 (あしあと): dấu chân"},
+    {t:110.56, e:118.2, ja:"降りつもる暖かなきもち", fj:"降り[おり]つもる暖か[あたたか]なきもち", furi:"おりつもるあたたかなきもち", romaji:"oritsumoru atataka na kimochi", vi:"Cảm xúc ấm áp cứ chất chồng", blank:["暖かな","あたたかな"], exp:"降りつもる (ふりつもる): rơi và chất chồng; 暖かな (あたたかな): ấm áp; きもち (気持ち): cảm xúc, tâm trạng"},
+    {t:124.52, e:136.5, ja:"いつか離れて暮らす日がきても", fj:"いつか離れ[はなれ]て暮らす[くらす]日[ひ]がきても", furi:"いつかはなれてくらすひがきても", romaji:"itsuka hanarete kurasu hi ga kite mo", vi:"Dù một ngày nào đó chúng ta phải sống xa nhau", blank:["離れる","はなれる"], exp:"いつか: một ngày nào đó; 離れる (はなれる): xa cách; 暮らす (くらす): sống; 日 (ひ): ngày; ～ても: dù có…"},
+    {t:136.5, e:140.42, ja:"きっと友達", fj:"きっと友達[ともだち]", furi:"きっとともだち", romaji:"kitto tomodachi", vi:"Thì chắc chắn vẫn là bạn bè", blank:["友達","ともだち"], exp:"きっと: chắc chắn; 友達 (ともだち): bạn bè"},
+    {t:141.08, e:148.66, ja:"誰よりいつも近くに感じてるから", fj:"誰[だれ]よりいつも近く[ちかく]に感じ[かんじ]てるから", furi:"だれよりいつもちかくにかんじてるから", romaji:"dare yori itsumo chikaku ni kanjiteru kara", vi:"Vì tớ luôn cảm thấy cậu ở gần hơn bất cứ ai", blank:["近く","ちかく"], exp:"誰より (だれより): hơn bất cứ ai; いつも: luôn luôn; 近く (ちかく): gần; 感じる (かんじる): cảm thấy; から: vì…"},
+    {t:150.42, e:161.38, ja:"遠く遠くただ輝いてみえた未来がすぐそこ", fj:"遠く[とおく]遠く[とおく]ただ輝い[かがやい]てみえた未来[みらい]がすぐそこ", furi:"とおくとおくただかがやいてみえたみらいがすぐそこ", romaji:"tooku tooku tada kagayaite mieta mirai ga sugu soko", vi:"Tương lai lấp lánh tưởng chừng xa xôi ấy, giờ đã ở ngay trước mắt", blank:["輝く","かがやく"], exp:"遠く遠く (とおくとおく): xa xôi; ただ: chỉ, đơn thuần; 輝く (かがやく): tỏa sáng, lấp lánh; 未来 (みらい): tương lai; すぐそこ: ngay trước mắt, ngay đó"},
+    {t:161.94, e:164.46, ja:"さあ 行かなくちゃ", fj:"さあ 行か[いか]なくちゃ", furi:"さあ いかなくちゃ", romaji:"saa ikanakucha", vi:"Nào, chúng ta phải đi thôi", blank:["行く","いく"], exp:"さあ: nào; 行く (いく): đi; ～なくちゃ: phải… (～なければならない, dạng rút gọn)"},
+    {t:164.46, e:174.5, ja:"きっと君がその憧れや願いを叶えること", fj:"きっと君[きみ]がその憧れ[あこがれ]や願い[ねがい]を叶える[かなえる]こと", furi:"きっときみがそのあこがれやねがいをかなえること", romaji:"kitto kimi ga sono akogare ya negai wo kanaeru koto", vi:"Chắc chắn cậu sẽ biến ước mơ và mong muốn ấy thành hiện thực", blank:["叶える","かなえる"], exp:"きっと: chắc chắn; 憧れ (あこがれ): ước mơ, khao khát; 願い (ねがい): mong muốn, nguyện vọng; 叶える (かなえる): biến thành hiện thực; こと: việc (danh từ hóa)"},
+    {t:174.5, e:179.66, ja:"ずっとずっと信じてる", fj:"ずっとずっと信じ[しんじ]てる", furi:"ずっとずっとしんじてる", romaji:"zutto zutto shinjiteru", vi:"Tớ sẽ luôn luôn tin như vậy", blank:["信じる","しんじる"], exp:"ずっとずっと: mãi mãi, luôn luôn; 信じる (しんじる): tin; 信じてる: (đang) tin, sẽ tin"}
+  ];
+  var SV13_WIN = SV13_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV13_ID] = {
+    id: SV13_ID, dur: SV13_DUR, subs: SV13_SUBS, win: SV13_WIN,
+    practice: SV13_SUBS.slice(),
+    fill: SV13_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "Friendship (好きっていいなよ。 OP) - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/iOLQjsGOLww/mqdefault.jpg",
+    facadeAlt: "Ảnh xem trước video bài hát Friendship - 岡崎律子 (nhạc anime 好きっていいなよ。)",
+    facadeLabel: "Phát video bài hát Friendship — học tiếng Nhật qua bài hát",
+    wide: true
+  };
+  /* Bussin' (feat. ¥ellow Bucks) — AK-69, rap Nhật + tiếng Anh, 76 câu.
+     Video THƯỜNG 16:9 (không phải Shorts), ID 5di-PZtIRSI, 3:20, nhúng trực tiếp
+     video gốc vietsub+romaji của kênh Em Bé (không đăng lại; quyết định 2026-11-14).
+     76 câu lấy ĐÚNG từ bussin-18-lesson.json đã soát tay (lời theo bản đã xuất bản
+     Uta-Net, mốc giờ căn theo Whisper small + word timestamps + frame phụ đề cháy sẵn;
+     âm thanh là bản studio, toàn bộ lời đã xuất bản đều có mặt đúng thứ tự). 2 đoạn
+     Whisper bị ảo giác đã loại (đoạn mở đầu 5.22-7.10s + đoạn cuối 198.42-199.82s).
+     Mốc giờ câu L36 (84.00-85.42) và ranh giới L21/L22 (55.40) là ước lượng theo
+     frame phụ đề. Mở bằng chính player sv2* qua svuActivate (wide: khung video
+     nằm ngang 16:9). */
+  var SV14_ID = "5di-PZtIRSI";
+  var SV14_DUR = 200;
+  var SV14_SUBS = [
+    {t:7.1, e:8.28, ja:"Go at it Ding Ding Dong", fj:"Go at it Ding Ding Dong", furi:"Go at it Ding Ding Dong", romaji:"Go at it Ding Ding Dong", vi:"Xông lên nào, ding ding dong", blank:["Ding Dong","ディン ドン"], exp:"Go at it: xông vào, bắt tay vào làm ngay; Ding Ding Dong: tiếng chuông (mở đầu trận đấu, như chuông báo hiệu)"},
+    {t:8.28, e:9.2, ja:"もう遠慮なく", fj:"もう遠慮なく[えんりょなく]", furi:"もうえんりょなく", romaji:"mou enryonaku", vi:"Chẳng cần giữ ý nữa", blank:["遠慮","えんりょ"], exp:"もう: đã… rồi, không còn… nữa; 遠慮 (えんりょ): giữ ý, ngại ngùng; ～なく: không…"},
+    {t:9.82, e:11.18, ja:"Feel like a hungry tiger", fj:"Feel like a hungry tiger", furi:"Feel like a hungry tiger", romaji:"Feel like a hungry tiger", vi:"Cảm giác như một con hổ đói", blank:["tiger","タイガー"], exp:"Feel like: cảm giác như; hungry: đói khát; tiger: hổ — ví mình như con hổ đói khát chiến thắng"},
+    {t:11.18, e:12.1, ja:"お腹はグー", fj:"お腹[おなか]はグー", furi:"おなかはグー", romaji:"onaka wa guu", vi:"Bụng đang sôi ùng ục", blank:["お腹","おなか"], exp:"お腹 (おなか): bụng; グー: tiếng bụng kêu (đói) — chơi chữ với 'go' (tiến lên)"},
+    {t:12.62, e:13.84, ja:"They never do what they say", fj:"They never do what they say", furi:"They never do what they say", romaji:"They never do what they say", vi:"Bọn chúng chẳng bao giờ làm như đã nói", blank:["never","ネバー"], exp:"They: bọn chúng; never: không bao giờ; do what they say: làm như những gì đã nói"},
+    {t:13.84, e:15, ja:"すぐ油売る", fj:"すぐ油[あぶら]売る[うる]", furi:"すぐあぶらうる", romaji:"sugu abura uru", vi:"Toàn lười biếng, trốn việc", blank:["油","あぶら"], exp:"すぐ: ngay, liền; 油を売る (あぶらをうる): thành ngữ — lười biếng, tán dóc thay vì làm việc"},
+    {t:15, e:17.02, ja:"We're gonna go get it right back again", fj:"We're gonna go get it right back again", furi:"We're gonna go get it right back again", romaji:"We're gonna go get it right back again", vi:"Bọn tao sẽ quay lại và giành lại tất cả", blank:["again","アゲイン"], exp:"We're gonna: bọn tao sẽ; go get it: đi lấy lại nó; right back: trở lại ngay; again: một lần nữa"},
+    {t:17.02, e:17.72, ja:"守るRoots Yeah", fj:"守る[まもる]Roots Yeah", furi:"まもるRoots Yeah", romaji:"mamoru Roots Yeah", vi:"Bảo vệ cội nguồn của mình, yeah", blank:["守る","まもる"], exp:"守る (まもる): bảo vệ, giữ gìn; Roots: cội nguồn, gốc rễ; Yeah: ừ, yeah (thán từ rap)"},
+    {t:18.5, e:21.26, ja:"We bussin' bussin' bussin' bussin' 24-7", fj:"We bussin' bussin' bussin' bussin' 24-7", furi:"We bussin' bussin' bussin' bussin' 24-7", romaji:"We bussin' bussin' bussin' bussin' 24-7", vi:"Bọn tao đang bùng nổ, bùng nổ, 24/7", blank:["bussin'","バッシン"], exp:"We bussin': bọn tao đang bùng nổ (bussin' = đang hot, đang làm ăn phát đạt, tiếng lóng hip-hop); 24-7: 24 giờ 7 ngày, suốt ngày đêm"},
+    {t:21.26, e:23.96, ja:"言葉の弾丸 in my AK-47", fj:"言葉[ことば]の弾丸[だんがん] in my AK-47", furi:"ことばのだんがん in my AK-47", romaji:"kotoba no dangan in my AK-47", vi:"Lời nói là đạn trong khẩu AK-47 của tao", blank:["弾丸","だんがん"], exp:"言葉 (ことば): lời nói; 弾丸 (だんがん): đạn; in my AK-47: trong khẩu AK-47 của tao — lời nói là đạn"},
+    {t:23.96, e:26.88, ja:"We movin' movin' movin' movin' 24-7", fj:"We movin' movin' movin' movin' 24-7", furi:"We movin' movin' movin' movin' 24-7", romaji:"We movin' movin' movin' movin' 24-7", vi:"Bọn tao không ngừng tiến lên, 24/7", blank:["movin'","ムービン"], exp:"We movin': bọn tao đang di chuyển, đang tiến lên (movin' = moving, dạng rút gọn); 24-7: suốt ngày đêm"},
+    {t:26.88, e:29.62, ja:"一体これから何年後だ？Hell or Heaven", fj:"一体[いったい]これから何[なん]年[ねん]後[ご]だ？Hell or Heaven", furi:"いったいこれからなんねんごだ？Hell or Heaven", romaji:"ittai korekara nannen-go da? Hell or Heaven", vi:"Rốt cuộc từ giờ còn bao nhiêu năm nữa? Thiên đường hay địa ngục", blank:["何年後","なんねんご"], exp:"一体 (いったい): rốt cuộc, thật sự; これから: từ giờ; 何年後 (なんねんご): bao nhiêu năm nữa; Hell or Heaven: địa ngục hay thiên đường"},
+    {t:30.22, e:32.86, ja:"まずは存在するだけでI smack your ass", fj:"まずは存在[そんざい]するだけでI smack your ass", furi:"まずはそんざいするだけでI smack your ass", romaji:"mazu wa sonzai suru dake de I smack your ass", vi:"Chỉ cần tồn tại thôi, tao đã cho mày một phát rồi", blank:["存在","そんざい"], exp:"まずは: trước hết; 存在する (そんざいする): tồn tại; だけで: chỉ… thôi; I smack your ass: tao tát cho mày một phát (đánh bại mày, tiếng lóng)"},
+    {t:32.86, e:35.58, ja:"自分のケツなら自分で叩けるぜ", fj:"自分[じぶん]のケツなら自分[じぶん]で叩ける[たたける]ぜ", furi:"じぶんのケツならじぶんでたたけるぜ", romaji:"jibun no ketsu nara jibun de tatakeru ze", vi:"Mông của mình thì tự mình đánh được", blank:["ケツ","ケツ"], exp:"自分の (じぶんの): của mình; ケツ: mông (từ thô); 叩く (たたく): đánh, vỗ; ～ぜ: (cuối câu, giọng nam mạnh mẽ)"},
+    {t:35.58, e:38.36, ja:"憧れたやつの背中で学べ", fj:"憧れ[あこがれ]たやつの背中[せなか]で学べ[まなべ]", furi:"あこがれたやつのせなかでまなべ", romaji:"akogareta yatsu no senaka de manabe", vi:"Hãy học từ tấm lưng của người mình ngưỡng mộ", blank:["憧れる","あこがれる"], exp:"憧れる (あこがれる): ngưỡng mộ; やつ: thằng, đứa (cách gọi thô); 背中 (せなか): tấm lưng; 学ぶ (まなぶ): học; ～べ: hãy… (mệnh lệnh)"},
+    {t:38.36, e:40.84, ja:"ケツ拭いてもらうことは当たり前じゃねえ", fj:"ケツ拭い[ふい]てもらうことは当たり前[あたりまえ]じゃねえ", furi:"ケツふいてもらうことはあたりまえじゃねえ", romaji:"ketsu fuite morau koto wa atarimae janee", vi:"Đừng tưởng có người dọn dẹp hậu quả cho mình là chuyện đương nhiên", blank:["当たり前","あたりまえ"], exp:"ケツを拭く (けつをふく): lau mông (dọn dẹp hậu quả cho ai); ～てもらう: được ai làm cho; 当たり前 (あたりまえ): đương nhiên; じゃねえ: không phải (giọng thô)"},
+    {t:40.84, e:43.96, ja:"配ってたCD-R くたばる尻軽", fj:"配っ[くばっ]てたCD-R くたばる尻軽[しりがる]", furi:"くばってたCD-R くたばるしりがる", romaji:"kubatteta CD-R kutabaru shirigaru", vi:"Ngày xưa tao đi phát CD-R khắp nơi, còn lũ lẳng lơ thì chết đi", blank:["尻軽","しりがる"], exp:"配る (くばる): phát, phân phát; CD-R: đĩa CD ghi được (demo thời xưa); くたばる: chết đi (chửi); 尻軽 (しりがる): lẳng lơ, dễ dãi"},
+    {t:43.96, e:46.78, ja:"金なる木がある 5年後が気になる", fj:"金[かね]なる木[き]がある 5年[ねん]後[ご]が気[き]になる", furi:"かねなるきがある ごねんごがきになる", romaji:"kanenaru ki ga aru gonen-go ga ki ni naru", vi:"Có cây tiền rồi, chỉ lo 5 năm nữa sẽ ra sao", blank:["金なる木","かねなるき"], exp:"金なる木 (かねなるき): cây tiền (nguồn thu nhập); 5年後 (ごねんご): 5 năm nữa; 気になる (きになる): lo lắng, bận tâm"},
+    {t:46.78, e:49.52, ja:"くだらねえ意地悪 あれにも意味ある", fj:"くだらねえ意地悪[いじわる] あれにも意味[いみ]ある", furi:"くだらねえいじわる あれにもいみある", romaji:"kudaranee ijiwaru are ni mo imi aru", vi:"Mấy trò chơi xấu vớ vẩn, chúng cũng có ý nghĩa của chúng", blank:["意地悪","いじわる"], exp:"くだらねえ: vớ vẩn, nhảm nhí (くだらない, giọng thô); 意地悪 (いじわる): chơi xấu, ác ý; あれ: cái đó; 意味 (いみ): ý nghĩa"},
+    {t:49.52, e:52.32, ja:"オレ等は絵になる Skrr like GTR", fj:"オレ等[ら]は絵[え]になる Skrr like GTR", furi:"オレらはえになる Skrr like GTR", romaji:"orera wa e ni naru Skrr like GTR", vi:"Bọn tao trông thật ngầu, skrr như xe GTR", blank:["絵","え"], exp:"オレ等 (オレら): bọn tao; 絵になる (えになる): trông như tranh vẽ, rất ngầu; Skrr: tiếng lốp xe rít (hiệu ứng âm thanh rap); GTR: xe Nissan GT-R"},
+    {t:52.68, e:55.4, ja:"泳ぎ続ける ためには息継ぎ", fj:"泳ぎ[およぎ]続ける[つづける] ためには息継ぎ[いきつぎ]", furi:"およぎつづける ためにはいきつぎ", romaji:"oyogitsuzukeru tame ni wa ikitsugi", vi:"Muốn bơi mãi thì phải biết lấy hơi", blank:["息継ぎ","いきつぎ"], exp:"泳ぎ続ける (およぎつづける): tiếp tục bơi; ためには: để mà…; 息継ぎ (いきつぎ): lấy hơi (khi bơi)"},
+    {t:55.4, e:58.08, ja:"じゃ好きな女連れアムスに息抜き", fj:"じゃ好き[すき]な女[おんな]連れ[づれ]アムスに息抜き[いきぬき]", furi:"じゃすきなおんなづれアムスにいきぬき", romaji:"ja suki na onnazure amusu ni ikinuki", vi:"Thế thì dắt cô gái mình thích đến Amsterdam nghỉ ngơi", blank:["息抜き","いきぬき"], exp:"じゃ: thế thì; 好きな女 (すきなおんな): cô gái mình thích; 連れ (つれ): dắt theo; アムス: Amsterdam (viết tắt); 息抜き (いきぬき): nghỉ ngơi, thư giãn"},
+    {t:58.08, e:60.76, ja:"山かき分けては 今ここ行き着き", fj:"山[やま]かき分け[かきわけ]ては 今[いま]ここ行き着き[いきつき]", furi:"やまかきわけては いまここいきつき", romaji:"yama kakiwakete wa ima koko ikitsuki", vi:"Vượt qua bao núi đồi, giờ đã đến được đây", blank:["山","やま"], exp:"山 (やま): núi; かき分ける: rẽ ra, vượt qua; 今ここ (いまここ): ngay đây, lúc này; 行き着く (いきつく): đến được, tới nơi"},
+    {t:60.76, e:63.52, ja:"Yo Bucks hold on みんなより行き過ぎ", fj:"Yo Bucks hold on みんなより行き過ぎ[いきすぎ]", furi:"Yo Bucks hold on みんなよりいきすぎ", romaji:"Yo Bucks hold on minna yori ikisugi", vi:"Yo Bucks, đợi đã, tao đi xa hơn tất cả mọi người", blank:["行き過ぎる","いきすぎる"], exp:"Yo Bucks: này Bucks (gọi ¥ellow Bucks); hold on: đợi đã; みんなより: hơn tất cả mọi người; 行き過ぎる (いきすぎる): đi quá xa, vượt qua"},
+    {t:63.52, e:66.2, ja:"あいつ等は毎日がApril fool", fj:"あいつ等[ら]は毎日[まいにち]がApril fool", furi:"あいつらはまいにちがApril fool", romaji:"aitsura wa mainichi ga April fool", vi:"Bọn chúng ngày nào cũng như Cá tháng Tư", blank:["April fool","エイプリルフール"], exp:"あいつ等 (あいつら): bọn chúng; 毎日 (まいにち): mỗi ngày; April fool: Cá tháng Tư (ngày nói dối) — bọn chúng ngày nào cũng nói dối"},
+    {t:66.2, e:69.08, ja:"どうせ出す作品は誰々風", fj:"どうせ出す[だす]作品[さくひん]は誰々[だれだれ]風[ふう]", furi:"どうせだすさくひんはだれだれふう", romaji:"douse dasu sakuhin wa daredarefuu", vi:"Đằng nào tác phẩm chúng tung ra cũng chỉ là bắt chước người này người nọ", blank:["作品","さくひん"], exp:"どうせ: đằng nào thì; 出す (だす): tung ra; 作品 (さくひん): tác phẩm; 誰々風 (だれだれふう): kiểu bắt chước người này người nọ"},
+    {t:69.08, e:71.36, ja:"小細工も本物にはすぐバレる", fj:"小細工[こざいく]も本物[ほんもの]にはすぐバレる", furi:"こざいくもほんものにはすぐバレる", romaji:"kozaiku mo honmono ni wa sugu bareru", vi:"Mấy trò tiểu xảo trước đồ thật là lộ ngay", blank:["小細工","こざいく"], exp:"小細工 (こざいく): tiểu xảo, mánh khóe; 本物 (ほんもの): đồ thật, người thật; すぐ: ngay; バレる: bị lộ, bị phát hiện"},
+    {t:71.36, e:74.16, ja:"翼を授ける Red BullとYellow Bull", fj:"翼[つばさ]を授ける[さずける] Red BullとYellow Bull", furi:"つばさをさずける Red BullとYellow Bull", romaji:"tsubasa wo sazukeru Red Bull to Yellow Bull", vi:"Trao cho đôi cánh, Red Bull và Yellow Bull", blank:["翼","つばさ"], exp:"翼 (つばさ): đôi cánh; 授ける (さずける): ban cho; Red Bull: nước tăng lực (khẩu hiệu 'gives you wings'); Yellow Bull: chơi chữ với ¥ellow Bucks"},
+    {t:74.16, e:75.42, ja:"Go at it Ding Ding Dong", fj:"Go at it Ding Ding Dong", furi:"Go at it Ding Ding Dong", romaji:"Go at it Ding Ding Dong", vi:"Xông lên nào, ding ding dong", blank:["Ding Dong","ディン ドン"], exp:"Go at it: xông vào, bắt tay vào làm ngay; Ding Ding Dong: tiếng chuông (mở đầu trận đấu, như chuông báo hiệu)"},
+    {t:75.44, e:76.16, ja:"もう遠慮なく", fj:"もう遠慮なく[えんりょなく]", furi:"もうえんりょなく", romaji:"mou enryonaku", vi:"Chẳng cần giữ ý nữa", blank:["遠慮","えんりょ"], exp:"もう: đã… rồi, không còn… nữa; 遠慮 (えんりょ): giữ ý, ngại ngùng; ～なく: không…"},
+    {t:76.7, e:78.22, ja:"Feel like a hungry tiger", fj:"Feel like a hungry tiger", furi:"Feel like a hungry tiger", romaji:"Feel like a hungry tiger", vi:"Cảm giác như một con hổ đói", blank:["tiger","タイガー"], exp:"Feel like: cảm giác như; hungry: đói khát; tiger: hổ — ví mình như con hổ đói khát chiến thắng"},
+    {t:78.22, e:79.36, ja:"お腹はグー", fj:"お腹[おなか]はグー", furi:"おなかはグー", romaji:"onaka wa guu", vi:"Bụng đang sôi ùng ục", blank:["お腹","おなか"], exp:"お腹 (おなか): bụng; グー: tiếng bụng kêu (đói) — chơi chữ với 'go' (tiến lên)"},
+    {t:79.36, e:80.8, ja:"They never do what they say", fj:"They never do what they say", furi:"They never do what they say", romaji:"They never do what they say", vi:"Bọn chúng chẳng bao giờ làm như đã nói", blank:["never","ネバー"], exp:"They: bọn chúng; never: không bao giờ; do what they say: làm như những gì đã nói"},
+    {t:80.8, e:81.94, ja:"すぐ油売る", fj:"すぐ油[あぶら]売る[うる]", furi:"すぐあぶらうる", romaji:"sugu abura uru", vi:"Toàn lười biếng, trốn việc", blank:["油","あぶら"], exp:"すぐ: ngay, liền; 油を売る (あぶらをうる): thành ngữ — lười biếng, tán dóc thay vì làm việc"},
+    {t:81.94, e:84, ja:"We're gonna go get it right back again", fj:"We're gonna go get it right back again", furi:"We're gonna go get it right back again", romaji:"We're gonna go get it right back again", vi:"Bọn tao sẽ quay lại và giành lại tất cả", blank:["again","アゲイン"], exp:"We're gonna: bọn tao sẽ; go get it: đi lấy lại nó; right back: trở lại ngay; again: một lần nữa"},
+    {t:84, e:85.42, ja:"守るRoots Yeah", fj:"守る[まもる]Roots Yeah", furi:"まもるRoots Yeah", romaji:"mamoru Roots Yeah", vi:"Bảo vệ cội nguồn của mình, yeah", blank:["守る","まもる"], exp:"守る (まもる): bảo vệ, giữ gìn; Roots: cội nguồn, gốc rễ; Yeah: ừ, yeah (thán từ rap)"},
+    {t:85.42, e:88.22, ja:"We bussin' bussin' bussin' bussin' 24-7", fj:"We bussin' bussin' bussin' bussin' 24-7", furi:"We bussin' bussin' bussin' bussin' 24-7", romaji:"We bussin' bussin' bussin' bussin' 24-7", vi:"Bọn tao đang bùng nổ, bùng nổ, 24/7", blank:["bussin'","バッシン"], exp:"We bussin': bọn tao đang bùng nổ (bussin' = đang hot, đang làm ăn phát đạt, tiếng lóng hip-hop); 24-7: 24 giờ 7 ngày, suốt ngày đêm"},
+    {t:88.22, e:90.98, ja:"言葉の弾丸 in my AK-47", fj:"言葉[ことば]の弾丸[だんがん] in my AK-47", furi:"ことばのだんがん in my AK-47", romaji:"kotoba no dangan in my AK-47", vi:"Lời nói là đạn trong khẩu AK-47 của tao", blank:["弾丸","だんがん"], exp:"言葉 (ことば): lời nói; 弾丸 (だんがん): đạn; in my AK-47: trong khẩu AK-47 của tao — lời nói là đạn"},
+    {t:90.98, e:93.86, ja:"We movin' movin' movin' movin' 24-7", fj:"We movin' movin' movin' movin' 24-7", furi:"We movin' movin' movin' movin' 24-7", romaji:"We movin' movin' movin' movin' 24-7", vi:"Bọn tao không ngừng tiến lên, 24/7", blank:["movin'","ムービン"], exp:"We movin': bọn tao đang di chuyển, đang tiến lên (movin' = moving, dạng rút gọn); 24-7: suốt ngày đêm"},
+    {t:93.86, e:96.56, ja:"一体これから何年後だ？Hell or Heaven", fj:"一体[いったい]これから何[なん]年[ねん]後[ご]だ？Hell or Heaven", furi:"いったいこれからなんねんごだ？Hell or Heaven", romaji:"ittai korekara nannen-go da? Hell or Heaven", vi:"Rốt cuộc từ giờ còn bao nhiêu năm nữa? Thiên đường hay địa ngục", blank:["何年後","なんねんご"], exp:"一体 (いったい): rốt cuộc, thật sự; これから: từ giờ; 何年後 (なんねんご): bao nhiêu năm nữa; Hell or Heaven: địa ngục hay thiên đường"},
+    {t:96.56, e:99.48, ja:"話戻そめぇ 結果で全て証明", fj:"話[はなし]戻そ[もどそ]めぇ 結果[けっか]で全て[すべて]証明[しょうめい]", furi:"はなしもどそめぇ けっかですべてしょうめい", romaji:"hanashi modosomee kekka de subete shoumei", vi:"Quay lại vấn đề nào, kết quả sẽ chứng minh tất cả", blank:["証明","しょうめい"], exp:"話戻そめぇ: quay lại vấn đề nào (話を戻そう, giọng thô); 結果 (けっか): kết quả; 全て (すべて): tất cả; 証明 (しょうめい): chứng minh"},
+    {t:99.48, e:102.24, ja:"全身キメ足元ならAir DRで", fj:"全身[ぜんしん]キメ足元[あしもと]ならAir DRで", furi:"ぜんしんキメあしもとならAir DRで", romaji:"zenshin kime ashimoto nara Air DR de", vi:"Cả người ăn diện, dưới chân là Air DR", blank:["足元","あしもと"], exp:"全身 (ぜんしん): cả người; キメる: ăn diện bảnh bao; 足元 (あしもと): dưới chân; Air DR: giày Air DR (hãng Nike)"},
+    {t:102.24, e:104.96, ja:"この路上で王手 超レアな成功例", fj:"この路上[ろじょう]で王手[おうて] 超[ちょう]レアな成功[せいこう]例[れい]", furi:"このろじょうでおうて ちょうレアなせいこうれい", romaji:"kono rojou de oute chou rea na seikourei", vi:"Chiếu tướng ngay trên đường phố này, một trường hợp thành công siêu hiếm", blank:["王手","おうて"], exp:"路上 (ろじょう): trên đường phố; 王手 (おうて): chiếu tướng (shogi) — dồn đối thủ vào thế bí; 超レア (ちょうレア): siêu hiếm; 成功例 (せいこうれい): trường hợp thành công"},
+    {t:104.96, e:107.84, ja:"駆け上がるていで 何度も吐いた「落とせ」", fj:"駆け[かけ]上がる[あがる]ていで 何[なん]度[ど]も吐い[はい]た「落とせ[おとせ]」", furi:"かけあがるていで なんどもはいた「おとせ」", romaji:"kakeagaru teide nando mo haita 「otose」", vi:"Trong lúc đang lao lên, tao đã bao lần thốt lên 'Drop đi'", blank:["駆け上がる","かけあがる"], exp:"駆け上がる (かけあがる): lao lên, leo lên; ～ていで: trong lúc đang…; 何度も (なんども): bao nhiêu lần; 吐く (はく): thốt ra; 落とせ: hãy drop đi (phát hành bài nhạc)"},
+    {t:107.84, e:110.58, ja:"めくってきたページ 殺してきたステージ", fj:"めくってきたページ 殺し[ころし]てきたステージ", furi:"めくってきたページ ころしてきたステージ", romaji:"mekutte kita peeji koroshite kita suteeji", vi:"Những trang đã lật qua, những sân khấu đã chinh phục", blank:["ステージ","ステージ"], exp:"めくる: lật (trang); ページ: trang sách; 殺す (ころす): giết — ở đây là chinh phục, làm chủ; ステージ: sân khấu"},
+    {t:110.58, e:113.52, ja:"乗りこなすG-Wagon BentleyならLatest", fj:"乗りこなす[のりこなす]G-Wagon BentleyならLatest", furi:"のりこなすG-Wagon BentleyならLatest", romaji:"norikonasu G-Wagon Bentley nara Latest", vi:"Lái thuần thục G-Wagon, Bentley thì phải đời mới nhất", blank:["Bentley","ベントレー"], exp:"乗りこなす (のりこなす): lái thuần thục; G-Wagon: xe Mercedes G-Class; Bentley: xe Bentley; Latest: đời mới nhất"},
+    {t:113.52, e:115.88, ja:"誰もが言うオメーには無理", fj:"誰[だれ]もが言う[いう]オメーには無理[むり]", furi:"だれもがいうオメーにはむり", romaji:"dare mo ga iu omee ni wa muri", vi:"Ai cũng bảo mày không làm được đâu", blank:["無理","むり"], exp:"誰もが (だれもが): ai cũng; 言う (いう): nói; オメー: mày (お前, cách gọi thô); 無理 (むり): không thể, vô lý"},
+    {t:115.88, e:119.02, ja:"そうやって言われた日 なると決めたFamous", fj:"そうやって言わ[いわ]れた日[ひ] なると決め[きめ]たFamous", furi:"そうやっていわれたひ なるときめたFamous", romaji:"sou yatte iwareta hi naru to kimeta Famous", vi:"Từ ngày bị nói như thế, tao đã quyết sẽ trở nên nổi tiếng", blank:["Famous","フェイマス"], exp:"そうやって: như thế; 言われた (いわれた): bị nói; 日 (ひ): ngày; なると決めた: đã quyết sẽ trở thành; Famous: nổi tiếng"},
+    {t:119.02, e:120.62, ja:"そりゃ売れてりゃええね そう落ち目のせいで", fj:"そりゃ売れ[うれ]てりゃええね そう落ち目[おちめ]のせいで", furi:"そりゃうれてりゃええね そうおちめのせいで", romaji:"sorya ureterya ee ne sou ochime no seide", vi:"Ừ thì nổi tiếng cũng tốt đấy, chỉ tại đang xuống dốc mà thôi", blank:["落ち目","おちめ"], exp:"そりゃ: ừ thì; 売れる (うれる): bán chạy, nổi tiếng; ええ: tốt (ええね: tốt đấy); 落ち目 (おちめ): đang xuống dốc; ～せいで: chỉ tại…"},
+    {t:120.64, e:124.66, ja:"こう見えてる 傷つかねぇ 俺はStainless", fj:"こう見え[みえ]てる 傷つか[きずつか]ねぇ 俺[おれ]はStainless", furi:"こうみえてる きずつかねぇ おれはStainless", romaji:"kou mieteru kizutsukanee ore wa Stainless", vi:"Nhìn tao thế này thôi, tao không bị thương đâu, tao là thép không gỉ", blank:["Stainless","ステンレス"], exp:"こう見えてる: nhìn tao thế này thôi; 傷つく (きずつく): bị thương; ～ねぇ: không (giọng thô); 俺 (おれ): tao; Stainless: thép không gỉ"},
+    {t:124.66, e:127.66, ja:"あの時売れてた奴らはとっくにいねぇ", fj:"あの時[とき]売れ[うれ]てた奴ら[やつら]はとっくにいねぇ", furi:"あのときうれてたやつらはとっくにいねぇ", romaji:"ano toki ureteta yatsura wa tokkuni inee", vi:"Mấy đứa nổi tiếng hồi đó giờ chẳng còn ai nữa", blank:["とっくに","とっくに"], exp:"あの時 (あのとき): hồi đó; 売れてた: đã từng nổi tiếng; 奴ら (やつら): bọn chúng; とっくに: từ lâu rồi; いねぇ: không còn (いない, giọng thô)"},
+    {t:127.66, e:130.44, ja:"今売れてる奴ぁ2,3年後 Faded", fj:"今[いま]売れ[うれ]てる奴[やつ]ぁ2,3年[ねん]後[ご] Faded", furi:"いまうれてるやつぁに,さんねんご Faded", romaji:"ima ureteru yatsaa ni,sannen-go Faded", vi:"Mấy đứa đang nổi bây giờ, 2-3 năm nữa sẽ phai nhạt", blank:["Faded","フェイデッド"], exp:"今 (いま): bây giờ; 2,3年後 (にさんねんご): 2-3 năm nữa; Faded: phai nhạt, mờ nhạt"},
+    {t:130.44, e:132.74, ja:"10年経っても俺はこの通り", fj:"10年[ねん]経っ[たっ]ても俺[おれ]はこの通り[とおり]", furi:"じゅうねんたってもおれはこのとおり", romaji:"juunen tatte mo ore wa kono toori", vi:"10 năm trôi qua, tao vẫn như thế này", blank:["10年","じゅうねん"], exp:"10年 (じゅうねん): 10 năm; 経っても (たっても): dù trôi qua; 俺 (おれ): tao; この通り (このとおり): như thế này"},
+    {t:132.74, e:135.52, ja:"意気消沈してちゃ Where's glory？", fj:"意気[いき]消沈[しょうちん]してちゃ Where's glory？", furi:"いきしょうちんしてちゃ Where's glory？", romaji:"ikishouchin shitecha Where's glory?", vi:"Nếu cứ chán nản thì vinh quang ở đâu?", blank:["意気消沈","いきしょうちん"], exp:"意気消沈 (いきしょうちん): chán nản, mất tinh thần; ～してちゃ: nếu cứ… thì; Where's glory?: vinh quang ở đâu?"},
+    {t:135.52, e:138.4, ja:"侘びと寂び楽ありゃ苦もあり", fj:"侘び[わび]と寂び[さび]楽[らく]ありゃ苦[く]もあり", furi:"わびとさびらくありゃくもあり", romaji:"wabi to sabi rakuarya ku mo ari", vi:"Có thanh đạm, có tĩnh lặng, có vui thì có khổ", blank:["侘び","わび"], exp:"侘び (わび): vẻ đẹp thanh đạm; 寂び (さび): vẻ đẹp tĩnh lặng, thời gian (wabi-sabi); 楽 (らく): sướng, vui; 苦 (く): khổ; ～ありゃ: có… thì có…"},
+    {t:138.4, e:141.4, ja:"悔しさの旅で見つけろ鍵 Maaaan！", fj:"悔し[くやし]さの旅[たび]で見つけろ[みつけろ]鍵[かぎ] Maaaan！", furi:"くやしさのたびでみつけろかぎ Maaaan！", romaji:"kuyashisa no tabi de mitsukero kagi Maaaan!", vi:"Trong hành trình đầy tiếc nuối, hãy tìm ra chiếc chìa khóa, maaaan!", blank:["悔しさ","くやしさ"], exp:"悔しさ (くやしさ): sự tiếc nuối, cay đắng; 旅 (たび): hành trình; 見つける (みつける): tìm ra; 鍵 (かぎ): chìa khóa; Maaaan!: trời ơi (thán từ kéo dài)"},
+    {t:141.4, e:144.5, ja:"思い出せ行けるその程度", fj:"思い出せ[おもいだせ]行ける[いける]その程度[ていど]", furi:"おもいだせいけるそのていど", romaji:"omoidase ikeru sono teido", vi:"Nhớ lại đi, mày cũng chỉ đi được đến thế thôi", blank:["思い出す","おもいだす"], exp:"思い出せ (おもいだせ): hãy nhớ lại; 行ける (いける): đi được; その程度 (そのていど): chỉ đến mức đó thôi"},
+    {t:144.5, e:147.64, ja:"マインド曇りゃたちまち迷路", fj:"マインド曇りゃ[くもりゃ]たちまち迷路[めいろ]", furi:"マインドくもりゃたちまちめいろ", romaji:"maindo kumorya tachimachi meiro", vi:"Tâm trí mà u ám thì lập tức thành mê cung", blank:["迷路","めいろ"], exp:"マインド: tâm trí (mind); 曇る (くもる): u ám, mờ mịt; ～りゃ: nếu… thì; たちまち: lập tức; 迷路 (めいろ): mê cung"},
+    {t:147.64, e:149.88, ja:"伊達じゃねぇ 狂気に満ちたスピード", fj:"伊達[だて]じゃねぇ 狂気[きょうき]に満ち[みち]たスピード", furi:"だてじゃねぇ きょうきにみちたスピード", romaji:"date janee kyouki ni michita supiido", vi:"Không phải đùa đâu, tốc độ tràn đầy điên cuồng", blank:["狂気","きょうき"], exp:"伊達 (だて): giả vờ, đùa; ～じゃねぇ: không phải… đâu; 狂気 (きょうき): điên cuồng; 満ちた (みちた): tràn đầy; スピード: tốc độ"},
+    {t:150.38, e:152.7, ja:"笑われても 燃やせGreed", fj:"笑わ[わらわ]れても 燃やせ[もやせ]Greed", furi:"わらわれても もやせGreed", romaji:"warawarete mo moyase Greed", vi:"Dù bị cười nhạo, hãy đốt cháy lòng tham", blank:["Greed","グリード"], exp:"笑われる (わらわれる): bị cười nhạo; ～ても: dù…; 燃やす (もやす): đốt cháy; Greed: lòng tham, tham vọng"},
+    {t:153.18, e:155.7, ja:"眠ろうと 起きていようと", fj:"眠ろ[ねむろ]うと 起き[おき]ていようと", furi:"ねむろうと おきていようと", romaji:"nemurou to okiteiyou to", vi:"Dù đang ngủ hay đang thức", blank:["眠る","ねむる"], exp:"眠る (ねむる): ngủ; ～ろうと: dù có…; 起きる (おきる): thức dậy; ～いようと: dù có đang…"},
+    {t:155.7, e:158.32, ja:"止められねぇ 時計と本能", fj:"止め[とめ]られねぇ 時計[とけい]と本能[ほんのう]", furi:"とめられねぇ とけいとほんのう", romaji:"tomerarenee tokei to honnou", vi:"Không thể dừng lại, đồng hồ và bản năng", blank:["本能","ほんのう"], exp:"止める (とめる): dừng lại; ～られねぇ: không thể… được; 時計 (とけい): đồng hồ; 本能 (ほんのう): bản năng"},
+    {t:158.32, e:161.12, ja:"アクセル抜くかはお前次第", fj:"アクセル抜く[ぬく]かはお前[おまえ]次第[しだい]", furi:"アクセルぬくかはおまえしだい", romaji:"akuseru nuku ka wa omae shidai", vi:"Có nhả ga hay không là tùy mày", blank:["アクセル","アクセル"], exp:"アクセル: chân ga; 抜く (ぬく): nhả ra, rút ra; ～かは: có… hay không; お前次第 (おまえしだい): tùy mày"},
+    {t:161.12, e:163.06, ja:"You should know life is too short", fj:"You should know life is too short", furi:"You should know life is too short", romaji:"You should know life is too short", vi:"Mày nên biết đời người ngắn ngủi lắm", blank:["short","ショート"], exp:"You should know: mày nên biết; life: đời người; too short: quá ngắn ngủi"},
+    {t:163.06, e:164.56, ja:"Go at it Ding Ding Dong", fj:"Go at it Ding Ding Dong", furi:"Go at it Ding Ding Dong", romaji:"Go at it Ding Ding Dong", vi:"Xông lên nào, ding ding dong", blank:["Ding Dong","ディン ドン"], exp:"Go at it: xông vào, bắt tay vào làm ngay; Ding Ding Dong: tiếng chuông (mở đầu trận đấu, như chuông báo hiệu)"},
+    {t:164.74, e:165.44, ja:"もう遠慮なく", fj:"もう遠慮なく[えんりょなく]", furi:"もうえんりょなく", romaji:"mou enryonaku", vi:"Chẳng cần giữ ý nữa", blank:["遠慮","えんりょ"], exp:"もう: đã… rồi, không còn… nữa; 遠慮 (えんりょ): giữ ý, ngại ngùng; ～なく: không…"},
+    {t:165.9, e:167.66, ja:"Feel like a hungry tiger", fj:"Feel like a hungry tiger", furi:"Feel like a hungry tiger", romaji:"Feel like a hungry tiger", vi:"Cảm giác như một con hổ đói", blank:["tiger","タイガー"], exp:"Feel like: cảm giác như; hungry: đói khát; tiger: hổ — ví mình như con hổ đói khát chiến thắng"},
+    {t:167.66, e:168.6, ja:"お腹はグー", fj:"お腹[おなか]はグー", furi:"おなかはグー", romaji:"onaka wa guu", vi:"Bụng đang sôi ùng ục", blank:["お腹","おなか"], exp:"お腹 (おなか): bụng; グー: tiếng bụng kêu (đói) — chơi chữ với 'go' (tiến lên)"},
+    {t:168.9, e:170.08, ja:"They never do what they say", fj:"They never do what they say", furi:"They never do what they say", romaji:"They never do what they say", vi:"Bọn chúng chẳng bao giờ làm như đã nói", blank:["never","ネバー"], exp:"They: bọn chúng; never: không bao giờ; do what they say: làm như những gì đã nói"},
+    {t:170.08, e:171.22, ja:"すぐ油売る", fj:"すぐ油[あぶら]売る[うる]", furi:"すぐあぶらうる", romaji:"sugu abura uru", vi:"Toàn lười biếng, trốn việc", blank:["油","あぶら"], exp:"すぐ: ngay, liền; 油を売る (あぶらをうる): thành ngữ — lười biếng, tán dóc thay vì làm việc"},
+    {t:171.22, e:173.28, ja:"We're gonna go get it right back again", fj:"We're gonna go get it right back again", furi:"We're gonna go get it right back again", romaji:"We're gonna go get it right back again", vi:"Bọn tao sẽ quay lại và giành lại tất cả", blank:["again","アゲイン"], exp:"We're gonna: bọn tao sẽ; go get it: đi lấy lại nó; right back: trở lại ngay; again: một lần nữa"},
+    {t:173.28, e:174.52, ja:"守るRoots Yeah", fj:"守る[まもる]Roots Yeah", furi:"まもるRoots Yeah", romaji:"mamoru Roots Yeah", vi:"Bảo vệ cội nguồn của mình, yeah", blank:["守る","まもる"], exp:"守る (まもる): bảo vệ, giữ gìn; Roots: cội nguồn, gốc rễ; Yeah: ừ, yeah (thán từ rap)"},
+    {t:174.52, e:177.52, ja:"We bussin' bussin' bussin' bussin' 24-7", fj:"We bussin' bussin' bussin' bussin' 24-7", furi:"We bussin' bussin' bussin' bussin' 24-7", romaji:"We bussin' bussin' bussin' bussin' 24-7", vi:"Bọn tao đang bùng nổ, bùng nổ, 24/7", blank:["bussin'","バッシン"], exp:"We bussin': bọn tao đang bùng nổ (bussin' = đang hot, đang làm ăn phát đạt, tiếng lóng hip-hop); 24-7: 24 giờ 7 ngày, suốt ngày đêm"},
+    {t:177.52, e:180.08, ja:"言葉の弾丸 in my AK-47", fj:"言葉[ことば]の弾丸[だんがん] in my AK-47", furi:"ことばのだんがん in my AK-47", romaji:"kotoba no dangan in my AK-47", vi:"Lời nói là đạn trong khẩu AK-47 của tao", blank:["弾丸","だんがん"], exp:"言葉 (ことば): lời nói; 弾丸 (だんがん): đạn; in my AK-47: trong khẩu AK-47 của tao — lời nói là đạn"},
+    {t:180.4, e:183.16, ja:"We movin' movin' movin' movin' 24-7", fj:"We movin' movin' movin' movin' 24-7", furi:"We movin' movin' movin' movin' 24-7", romaji:"We movin' movin' movin' movin' 24-7", vi:"Bọn tao không ngừng tiến lên, 24/7", blank:["movin'","ムービン"], exp:"We movin': bọn tao đang di chuyển, đang tiến lên (movin' = moving, dạng rút gọn); 24-7: suốt ngày đêm"},
+    {t:183.16, e:185.88, ja:"一体これから何年後だ？Hell or Heaven", fj:"一体[いったい]これから何[なん]年[ねん]後[ご]だ？Hell or Heaven", furi:"いったいこれからなんねんごだ？Hell or Heaven", romaji:"ittai korekara nannen-go da? Hell or Heaven", vi:"Rốt cuộc từ giờ còn bao nhiêu năm nữa? Thiên đường hay địa ngục", blank:["何年後","なんねんご"], exp:"一体 (いったい): rốt cuộc, thật sự; これから: từ giờ; 何年後 (なんねんご): bao nhiêu năm nữa; Hell or Heaven: địa ngục hay thiên đường"}
+  ];
+  var SV14_WIN = SV14_SUBS.map(function(s){ return {start: s.t, end: s.e}; });
+  SVU_DATA[SV14_ID] = {
+    id: SV14_ID, dur: SV14_DUR, subs: SV14_SUBS, win: SV14_WIN,
+    practice: SV14_SUBS.slice(),
+    fill: SV14_SUBS.filter(function(s){ return !!s.blank; }),
+    headTitle: "Shadowing · Bài hát",
+    headSub: "Bussin' (feat. ¥ellow Bucks) - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/5di-PZtIRSI/mqdefault.jpg",
+    facadeAlt: "Ảnh xem trước video bài hát Bussin' (feat. ¥ellow Bucks) - AK-69",
+    facadeLabel: "Phát video bài hát Bussin' — học tiếng Nhật qua bài hát",
     wide: true
   };
   /* Khung thời gian riêng từng câu — cùng thuật toán SV2_WIN của bài 2: các câu

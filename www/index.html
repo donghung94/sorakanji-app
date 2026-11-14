@@ -1103,10 +1103,21 @@
   .sv-toptab.on{border-color:var(--red); background:var(--red-soft); color:var(--red);}
   .sv-toptab:active{transform:scale(.97);}
   #svPanelReady[hidden], #svPanelMine[hidden], .sv-catpanel[hidden]{display:none;}
-  .sv-cattabs{display:flex; gap:6px; margin:0 0 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;}
+  /* Khung riêng từng mục trong Luyện nghe: JLPT 1 khung, Shadowing 1 khung */
+  .sv-sec{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:14px; margin:0 0 14px; box-shadow:0 2px 8px rgba(20,20,28,.06);}
+  #listenOverlay .sv-sec .wvsec{margin:0 0 10px; padding-left:10px; border-left:3px solid var(--red);}
+  #listenOverlay .sv-sec .sv-row:last-child{margin-bottom:2px;}
+  #listenOverlay .sv-sec .sv-empty{margin-bottom:2px;}
+  .sv-cattabs{
+    display:flex; gap:6px; margin:0 -14px 12px; padding:4px 14px 6px; overflow-x:auto;
+    -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    scroll-snap-type:x proximity; overscroll-behavior-x:contain;
+    -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);
+    mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);
+  }
   .sv-cattabs::-webkit-scrollbar{display:none;}
   .sv-cattab{
-    flex:0 0 auto; padding:7px 14px; border:1.5px solid var(--line); border-radius:999px;
+    flex:0 0 auto; scroll-snap-align:start; white-space:nowrap; padding:7px 14px; border:1.5px solid var(--line); border-radius:999px;
     background:var(--card); color:var(--ink); font-family:inherit; font-size:13.5px; font-weight:700;
     cursor:pointer; box-shadow:0 1.5px 4px rgba(20,20,28,.07);
     transition:transform .12s, border-color .12s, background .12s;
@@ -1116,14 +1127,16 @@
   .sv-row{margin-bottom:16px;}
   .sv-rowhead{margin:0 0 8px;}
   .sv-rowhead h4{margin:0; font-size:15px; font-weight:800;}
-  .sv-hscroll{display:flex; gap:10px; overflow-x:auto; padding:2px 2px 8px; -webkit-overflow-scrolling:touch; scroll-snap-type:x mandatory; scrollbar-width:none;}
+  .sv-hscroll{display:flex; gap:10px; overflow-x:auto; padding:4px 4px 10px; -webkit-overflow-scrolling:touch; scroll-snap-type:x mandatory; scrollbar-width:none;}
   .sv-hscroll::-webkit-scrollbar{display:none;}
   .sv-card{
     flex:0 0 168px; scroll-snap-align:start; text-align:left; cursor:pointer;
     font-family:inherit; color:var(--ink); background:var(--card);
     border:1px solid var(--line); border-radius:12px; padding:0 0 8px; overflow:hidden;
+    box-shadow:0 2px 8px rgba(20,20,28,.08);
+    transition:box-shadow .12s, border-color .12s;
   }
-  .sv-card:active{border-color:var(--red);}
+  .sv-card:active{border-color:var(--red); box-shadow:0 1px 3px rgba(20,20,28,.06);}
   .sv-card-thumb{position:relative; display:block; aspect-ratio:16/9; background:#14141c;}
   .sv-card-thumb img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
   .sv-card-dur{position:absolute; right:5px; bottom:5px; background:rgba(0,0,0,.78); color:#fff; font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:5px;}
@@ -3379,9 +3392,12 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <button class="sv-toptab" id="svTopMine" type="button" role="tab" aria-selected="false">Video tôi tạo</button>
         </div>
         <div id="svPanelReady">
-          <h3 class="wvsec">Luyện nghe theo đề JLPT</h3>
-          <div id="lsLevels" class="ls-lvgrid"></div>
-          <h3 class="wvsec">Shadowing bằng video</h3>
+          <section class="sv-sec" aria-label="Luyện nghe theo đề JLPT">
+            <h3 class="wvsec">Luyện nghe theo đề JLPT</h3>
+            <div id="lsLevels" class="ls-lvgrid"></div>
+          </section>
+          <section class="sv-sec" aria-label="Shadowing bằng video">
+            <h3 class="wvsec">Shadowing bằng video</h3>
           <div class="sv-cattabs" role="tablist" aria-label="Thể loại video shadowing">
             <button class="sv-cattab on" type="button" role="tab" data-cat="podcast" aria-selected="true">Podcast</button>
             <button class="sv-cattab" type="button" role="tab" data-cat="anime" aria-selected="false">Anime</button>
@@ -3395,7 +3411,8 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
             <div class="sv-catpanel" id="svCat-daily" hidden></div>
             <div class="sv-catpanel" id="svCat-jlpt" hidden></div>
             <div class="sv-catpanel" id="svCat-karaoke" hidden></div>
-          </div>
+            </div>
+          </section>
           <div class="wv-endpad" aria-hidden="true"></div>
         </div>
         <div id="svPanelMine" hidden>
@@ -8804,9 +8821,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      name: "マリーゴールド (Marigold)", level: "", lines: 50, dur: "5:22",
      thumb: "https://i.ytimg.com/vi/PFvoDVgrroA/hqdefault.jpg",
      alt: "Ảnh xem trước video bài hát Marigold"},
-    {id: "K2I36uuDJVY", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Tiếng Nhật Thực Chiến",
+    {id: "SeZCeyrMnlY", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Em Bé",
      name: "春夏秋冬 (Shunkashuutou) - Hilcrhyme", level: "", lines: 51, dur: "4:59",
-     thumb: "https://i.ytimg.com/vi/K2I36uuDJVY/hqdefault.jpg",
+     thumb: "https://i.ytimg.com/vi/SeZCeyrMnlY/hqdefault.jpg",
      alt: "Ảnh xem trước video bài hát Xuân Hạ Thu Đông của Hilcrhyme"},
     {id: "mKPRQF70PvA", cat: "podcast", series: "Easy N5 Japanese Podcast", channel: "OkkeiJapanese",
      name: "Easy N5 Japanese Podcast: đi Thụy Sĩ", level: "N5", lines: 23, dur: "1:02",
@@ -10670,8 +10687,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     wide: true
   };
   /* 春夏秋冬 (Hilcrhyme) — bài hát làm tay số 2 (sau Marigold), 51 câu.
-     Video THƯỜNG 16:9 (không phải Shorts), ID K2I36uuDJVY, 4:59, đăng Ẩn trên kênh
-     Tiếng Nhật Thực Chiến (gốc: video vietsub+romaji của kênh Em Bé [SeZCeyrMnlY]).
+     Video THƯỜNG 16:9 (không phải Shorts), ID SeZCeyrMnlY, 4:59, nhúng trực tiếp
+     video gốc vietsub+romaji của kênh Em Bé (không đăng lại; quyết định 2026-11-14).
      51 câu lấy ĐÚNG từ shunka-lesson.json đã soát tay (start/end chính xác tới
      phần thập phân, jp/reading/romaji/vi/notes/tokens); fj dựng từ tokens bằng
      đúng luật svuFjFromTokens. LƯU Ý: âm thanh là bản LIVE (Content ID ghi
@@ -10680,7 +10697,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      271-288s chuyển sang アフターストーリー (2 câu outro, đã đối chiếu lời đã
      xuất bản). Mở bằng chính player sv2* qua svuActivate (wide: khung video
      nằm ngang 16:9). */
-  var SV4_ID = "K2I36uuDJVY";
+  var SV4_ID = "SeZCeyrMnlY";
   var SV4_DUR = 299;
   var SV4_SUBS = [
     {t:14.2, e:21.2, ja:"鮮やかな色 四季おりおりの景色求め二人で It's going going on", fj:"鮮やか[あざやか]な色[いろ] 四季[しき]おりおりの景色[けしき]求め[もとめ]二人[ふたり]で It's going going on", furi:"あざやかないろ しきおりおりのけしきもとめふたりで It's going going on", romaji:"azayaka na iro shiki ori ori no keshiki motome futari de It-'-s going going on", vi:"Với những sắc màu rực rỡ, hai đứa cùng đi tìm cảnh đẹp bốn mùa thay đổi — It's going going on", blank:["鮮やか","あざやか"], exp:"鮮やかな (あざやかな): rực rỡ, tươi sáng; 四季おりおり (しきおりおり): bốn mùa, mỗi mùa một vẻ; 景色 (けしき): phong cảnh; 求める (もとめる): tìm kiếm; 二人で (ふたりで): hai người cùng nhau"},
@@ -10742,8 +10759,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     fill: SV4_SUBS.filter(function(s){ return !!s.blank; }),
     headTitle: "Shadowing · Bài hát",
     headSub: "春夏秋冬 - Học tiếng Nhật qua bài hát (Vietsub + Romaji)",
-    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video đăng ẩn trên kênh Tiếng Nhật Thực Chiến.",
-    facadeImg: "https://i.ytimg.com/vi/K2I36uuDJVY/hqdefault.jpg",
+    srcNote: "Lời bài hát, bản dịch tiếng Việt và giải thích đã soát tay · video gốc của kênh Em Bé.",
+    facadeImg: "https://i.ytimg.com/vi/SeZCeyrMnlY/hqdefault.jpg",
     facadeAlt: "Ảnh xem trước video bài hát 春夏秋冬 - Hilcrhyme",
     facadeLabel: "Phát video bài hát 春夏秋冬 — học tiếng Nhật qua bài hát",
     wide: true

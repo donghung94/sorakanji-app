@@ -37,7 +37,7 @@
     --page-bg:#E9E7E1;
     --shadow:0 24px 60px rgba(20,16,10,.22), 0 4px 14px rgba(20,16,10,.12);
     --radius:18px;
-    --tabh:calc(70px + env(safe-area-inset-bottom));
+    --tabh:calc(52px + env(safe-area-inset-bottom));
   }
   @media (prefers-color-scheme: dark){
     :root{
@@ -117,14 +117,14 @@
   .tabbar{
     flex:0 0 auto; display:grid; grid-template-columns:repeat(5,1fr);
     background:var(--card); border-top:1px solid var(--line);
-    padding:8px 6px calc(10px + env(safe-area-inset-bottom));
+    padding:6px 6px calc(6px + env(safe-area-inset-bottom));
     z-index:60;
   }
   .tabbtn{
     appearance:none; border:none; background:none; cursor:pointer;
-    display:flex; flex-direction:column; align-items:center; gap:3px;
-    padding:7px 2px 4px; border-radius:12px; color:var(--ink-3);
-    font-family:inherit; font-size:11px; font-weight:600; min-height:52px; justify-content:center;
+    display:flex; flex-direction:column; align-items:center; gap:0;
+    padding:6px 2px; border-radius:12px; color:var(--ink-3);
+    font-family:inherit; min-height:40px; justify-content:center;
   }
   .tabbtn svg{width:24px; height:24px;}
   .tabbtn.on{color:var(--red);}
@@ -1202,6 +1202,17 @@
      phát lớn – câu sau – tốc độ */
   /* Cụm điều khiển thu nhỏ ~50% theo yêu cầu: mọi kích thước (nút, chip,
      công tắc, chữ) giảm còn khoảng một nửa để nhường chỗ cho khung phụ đề */
+  /* Trình phát video (SV1 + SV2): bỏ tiêu đề header, chỉ để nút quay lại, thu hẹp tối đa */
+  #sv2Overlay .detailhead, #shadowVideoOverlay .detailhead{padding:6px 12px 4px;}
+  #sv2Overlay .detailhead > div, #shadowVideoOverlay .detailhead > div{display:none;}
+  #sv2Overlay .detailhead .iconbtn, #shadowVideoOverlay .detailhead .iconbtn{width:40px; height:40px;}
+  /* SV2: thanh tiến trình + 2 mũi tên gộp 1 hàng (cao bằng một nửa trước) */
+  #sv2Overlay .sv-dock{display:flex; align-items:center; gap:10px;}
+  #sv2Overlay .sv-seekrow{flex:1 1 auto; min-width:0;}
+  #sv2Overlay .sv-transport{margin-top:0;}
+  /* Chừa chỗ cho nút phát nổi ở cuối trang + cuối khung phụ đề */
+  #sv2Overlay .detailbody, #shadowVideoOverlay .detailbody{padding-bottom:100px;}
+  #sv2Overlay .sv2-subs, #shadowVideoOverlay #svLines{padding-bottom:72px;}
   .sv-dock{margin-top:6px;}
   .sv-seekrow{display:flex; align-items:center; gap:7px;}
   .sv-seekrow .sv-t{font-size:10.5px; font-weight:700; color:var(--ink-2); font-variant-numeric:tabular-nums; min-width:26px;}
@@ -1222,16 +1233,19 @@
   .sv-switch[aria-checked="true"]{background:var(--red);}
   .sv-switch[aria-checked="true"]::after{left:17px;}
   @media (prefers-reduced-motion: reduce){ .sv-switch, .sv-switch::after{transition:none;} }
-  .sv-transport{display:flex; align-items:center; justify-content:space-between; margin-top:3px; padding:0 4px;}
+  .sv-transport{display:flex; align-items:center; justify-content:center; gap:8px; margin-top:3px; padding:0;}
   .sv-tbtn{width:30px; height:30px; border:none; background:transparent; color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:9px; padding:0;}
   .sv-tbtn svg{width:19px; height:19px;}
   .sv-tbtn.on{color:var(--red);}
   .sv-tbtn:active{background:var(--red-soft);}
+  /* Nút phát nổi giữa dưới màn hình (trên thanh tab): tách khỏi hàng điều khiển */
   .sv-bigplay{
-    width:34px; height:34px; border:none; border-radius:11px; background:var(--red); color:#fff; cursor:pointer;
-    display:flex; align-items:center; justify-content:center; box-shadow:0 5px 13px rgba(200,16,46,.3); padding:0;
+    position:absolute; bottom:calc(var(--tabh) + 32px); left:50%; transform:translateX(-50%); z-index:5;
+    width:56px; height:56px; border:none; border-radius:50%; background:var(--red); color:#fff; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(200,16,46,.4); padding:0;
   }
-  .sv-bigplay svg{width:18px; height:18px;}
+  .sv-bigplay svg{width:26px; height:26px;}
+  .sv-bigplay:active{transform:translateX(-50%) scale(.94);}
   .sv-speedbtn{min-width:30px; height:30px; border:none; background:transparent; color:var(--red); font-family:inherit; font-size:12.5px; font-weight:800; cursor:pointer; border-radius:9px; padding:0 4px;}
   .sv-speedbtn:active{background:var(--red-soft);}
   /* Chữ chạy: phụ đề nằm trong KHUNG CUỘN riêng có chiều cao cố định ngay
@@ -1649,9 +1663,9 @@
   /* ---------- Bottom nav: Home ở giữa ---------- */
   .tabbar{grid-template-columns:repeat(5,1fr); align-items:end;}
   .tabbtn .fabhome{
-    width:52px; height:52px; border-radius:50%; background:var(--red); color:#fff;
+    width:46px; height:46px; border-radius:50%; background:var(--red); color:#fff;
     display:flex; align-items:center; justify-content:center;
-    margin-top:-24px; border:3px solid var(--card);
+    margin-top:-22px; border:3px solid var(--card);
     box-shadow:0 6px 16px rgba(200,16,46,.35);
   }
   .tabbtn .fabhome svg{width:26px; height:26px;}
@@ -3067,25 +3081,20 @@
 
     <!-- bottom nav: Xếp hạng · Phòng chat · HOME (giữa) · Cá nhân · Cài đặt -->
     <nav class="tabbar" id="tabbar">
-      <button class="tabbtn" data-tab="rank">
+      <button class="tabbtn" data-tab="rank" aria-label="Xếp hạng">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0Z"/><path d="M7 6H4a2 2 0 0 0 0 4h3M17 6h3a2 2 0 0 1 0 4h-3"/></svg>
-        Xếp hạng
       </button>
-      <button class="tabbtn" data-tab="chat">
+      <button class="tabbtn" data-tab="chat" aria-label="Phòng chat">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5Z"/></svg>
-        Phòng chat
       </button>
-      <button class="tabbtn homebtn on" data-tab="home">
+      <button class="tabbtn homebtn on" data-tab="home" aria-label="Home">
         <span class="fabhome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6h5v6"/></svg></span>
-        Home
       </button>
-      <button class="tabbtn" data-tab="me">
+      <button class="tabbtn" data-tab="me" aria-label="Cá nhân">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg>
-        Cá nhân
       </button>
-      <button class="tabbtn" data-tab="settings">
+      <button class="tabbtn" data-tab="settings" aria-label="Cài đặt">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.14-1.4l2.1-1.63-2-3.46-2.49 1a7 7 0 0 0-2.42-1.4L13.66 2.6h-3.32l-.39 2.51a7 7 0 0 0-2.42 1.4l-2.49-1-2 3.46L5.14 10.6a7 7 0 0 0 0 2.8l-2.1 1.63 2 3.46 2.49-1a7 7 0 0 0 2.42 1.4l.39 2.51h3.32l.39-2.51a7 7 0 0 0 2.42-1.4l2.49 1 2-3.46L18.86 13.4c.1-.45.14-.92.14-1.4Z"/></svg>
-        Cài đặt
       </button>
     </nav>
 

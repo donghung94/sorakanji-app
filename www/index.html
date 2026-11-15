@@ -8798,25 +8798,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("closeRead").addEventListener("click", function(){ hideOv(readOverlay); });
   lsRenderLevels();
 
-  /* ---------- Shadowing bằng video (bản thử 1 bài): YouTube nhúng + phụ đề đồng bộ ----------
-     Video của chính kênh SoraKanji (Unlisted để thử): ID r_o5gRWkkaA, hội thoại n5-1-1
-     (ga tàu, hỏi tàu đi Tokyo + mua vé). Phụ đề + giải thích VIẾT SẴN (9 câu, mốc thời
-     gian đo trên audio gốc) — lúc chạy KHÔNG gọi API nào. Bấm câu: nhảy video tới câu
-     đó + hiện giải thích. Trình phát nạp qua YouTube IFrame API khi mở lần đầu.
-     Không có link mở ra YouTube: iframe được phủ lớp chặn click (sv-shield) nên bấm
-     vào khung video chỉ phát/dừng trong app, không bị kéo ra ngoài. */
-  var SV_ID = "r_o5gRWkkaA";
-  var SV_SUBS = [
-    {start:0.00, end:5.36, spk:"男", ja:"すみません、東京駅へ行きたいんですが、この電車は東京駅へ行きますか。", furi:"すみません、東京[とうきょう]駅[えき]へ行きたいんですが、この電車は東京[とうきょう]駅[えき]へ行きますか。", vi:"Xin lỗi, tôi muốn đi ga Tokyo. Tàu này có tới ga Tokyo không ạ?", exp:"～たいんですが: ～たい là “muốn”, thêm んです để giải thích lý do một cách lịch sự khi nhờ vả. Từ mới: 東京駅 (とうきょうえき, ga Tokyo), 電車 (でんしゃ, tàu điện).", wt:[0,1.44,1.44,1.86,1.96,2.38,2.53,3.22,3.22,4.02,4.54,4.64,5.12]},
-    {start:6.06, end:9.02, spk:"女", ja:"いいえ、この電車は東京駅へ行きません。", furi:"いいえ、この電車は東京[とうきょう]駅[えき]へ行きません。", vi:"Không ạ, tàu này không đi ga Tokyo.", exp:"Phủ định lịch sự: 行きます (đi) → 行きません (không đi). Mẫu ～へ行きません = “không đi đến…”.", wt:[6.06,6.74,7.6,8.16,8.27,8.81]},
-    {start:9.52, end:10.82, spk:"女", ja:"次の電車に乗ってください。", furi:"次[つぎ]の電車に乗[の]ってください。", vi:"Anh đi chuyến tàu tiếp theo nhé.", exp:"～てください: “hãy…” — nhờ vả, yêu cầu lịch sự. Từ mới: 次 (つぎ, tiếp theo), 乗る (のる, lên tàu/xe).", wt:[9.52,9.66,10.16,10.28,10.61]},
-    {start:11.47, end:11.94, spk:"男", ja:"そうですか。", furi:"そうですか。", vi:"Vậy à.", exp:"そうですか: “Vậy à / Thế à” — đáp lại khi vừa nghe thông tin mới, không phải câu hỏi thật sự.", wt:[11.47,11.65,11.94]},
-    {start:12.36, end:12.91, spk:"男", ja:"わかりました。", furi:"わかりました。", vi:"Tôi hiểu rồi.", exp:"わかりました: dạng lịch sự quá khứ của わかる (hiểu) — “Tôi hiểu rồi”, dùng khi đã nắm được thông tin.", wt:[12.36,12.46]},
-    {start:13.89, end:15.51, spk:"男", ja:"あの、切符はどこで買いますか。", furi:"あの、切符[きっぷ]はどこで買[か]いますか。", vi:"À, vé thì mua ở đâu ạ?", exp:"あの: từ đệm khi ngập ngừng trước khi hỏi. Từ mới: 切符 (きっぷ, vé). どこで + 買いますか: hỏi “mua ở đâu” (で chỉ nơi diễn ra hành động).", wt:[13.89,14.14,14.52,14.94,15.04,15.51]},
-    {start:16.10, end:17.64, spk:"女", ja:"あちらの券売機で買えますよ。", furi:"あちらの券売機[けんばいき]で買[か]えますよ。", vi:"Anh mua được ở máy bán vé đằng kia đấy.", exp:"あちら: “đằng kia” (xa cả người nói và người nghe). Từ mới: 券売機 (けんばいき, máy bán vé). ～で買えます: 買える là thể khả năng của 買う — “có thể mua”.", wt:[16.1,16.44,16.92,17.02,17.14]},
-    {start:18.22, end:19.83, spk:"女", ja:"東京駅まで300円です。", furi:"東京[とうきょう]駅[えき]まで300円です。", vi:"Đến ga Tokyo là 300 yên.", exp:"～まで + số tiền: “đến ga Tokyo là 300 yên” — まで chỉ điểm đến, phạm vi. 円 (えん, yên).", wt:[18.22,18.44,18.62,18.82,19.64]},
-    {start:20.35, end:21.32, spk:"男", ja:"ありがとうございます。", furi:"ありがとうございます。", vi:"Cảm ơn ạ.", exp:"ありがとうございます: “Cảm ơn” dạng lịch sự, dùng với người lạ, nhân viên.", wt:[20.38,20.68,20.98]}
-  ];
+  /* Bài mẫu 1 (Ở nhà ga) đã xóa 2026-11-15 theo lệnh user — giữ lại 2 biến rỗng
+     để code player cũ (không còn đường mở) không lỗi tham chiếu. */
+  var SV_ID = "";
+  var SV_SUBS = [];
+
   var svOverlay = document.getElementById("shadowVideoOverlay");
   var svPlayer = null, svReady = false, svTimer = null, svCur = -1, svLoop = false, svShowFuri = true, svShowVi = true, svExpIdx = -1;
   /* Kiểu app mẫu: tự ngắt câu (svAutoPause), karaoke từng cụm từ (svSegs),
@@ -8827,7 +8813,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   /* Video shadowing có sẵn — mỗi video thuộc 1 thể loại (cat) + 1 chuỗi (series).
      Thêm video làm tay: thêm 1 entry với đúng cat + series là tự hiện thành thẻ
      trong hàng lướt ngang của thể loại đó (series mới = hàng mới). lines = số câu
-     phụ đề thật (bài 2 có 24 dòng SV2_SUBS nhưng 1 dòng trống nên tính 23 câu).
+     phụ đề thật.
      Thumb Marigold dùng ảnh YouTube vì ảnh bìa local chưa có trên repo. */
   var SV_VIDEOS = [
     {id: "PFvoDVgrroA", cat: "karaoke", series: "Bài hát tiếng Nhật", channel: "Tiếng Nhật Thực Chiến",
@@ -8934,10 +8920,6 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      name: "浮気 — ngoại tình", level: "", lines: 45, dur: "1:51",
      thumb: "https://i.ytimg.com/vi/5JgUGcicwi8/mqdefault.jpg",
      alt: "Ảnh xem trước video 浮気 — ngoại tình của kênh Em Bé"},
-    {id: "mKPRQF70PvA", cat: "podcast", series: "Easy N5 Japanese Podcast", channel: "OkkeiJapanese",
-     name: "Easy N5 Japanese Podcast: đi Thụy Sĩ", level: "N5", lines: 23, dur: "1:02",
-     thumb: "https://i.ytimg.com/vi/mKPRQF70PvA/mqdefault.jpg",
-     alt: "Ảnh xem trước video Easy N5 Japanese Podcast của kênh OkkeiJapanese"},
     {id: "nyf6i1-71PY", cat: "podcast", series: "Luyện nghe tiếng Nhật", channel: "Em Bé",
      name: "邪悪 — giọng nữ yandere", level: "", lines: 22, dur: "2:08",
      thumb: "https://i.ytimg.com/vi/nyf6i1-71PY/mqdefault.jpg",
@@ -9022,10 +9004,6 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      name: "夢 — giấc mơ lặp lại", level: "", lines: 15, dur: "1:08",
      thumb: "https://i.ytimg.com/vi/rKcgXbcZAog/mqdefault.jpg",
      alt: "Ảnh xem trước video 夢 — giấc mơ lặp lại của kênh Em Bé"},
-    {id: "r_o5gRWkkaA", cat: "daily", series: "Shadowing mẫu N5", channel: "Tiếng Nhật Thực Chiến",
-     name: "Ở nhà ga: hỏi tàu đi Tokyo", level: "N5", lines: 9, dur: "0:22",
-     thumb: "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/sv-thumb-tokyo-station.jpg",
-     alt: "Ảnh xem trước video shadowing: hỏi tàu đi ga Tokyo ở nhà ga"},
     {id: "vbqtAODdI1w", cat: "daily", series: "Japanese with Shun", channel: "Japanese with Shun",
      name: "レストランを探す — Tìm quán ăn ngon", level: "", lines: 30, dur: "0:58",
      thumb: "https://i.ytimg.com/vi/vbqtAODdI1w/mqdefault.jpg",
@@ -9436,7 +9414,6 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     });
   }
   function svOpenCard(id){
-    if(id === SV_ID){ svOpenLesson(); return; }
     if(typeof SVU_DATA !== "undefined" && SVU_DATA[id]){ svuActivate(SVU_DATA[id]); return; }
     /* Bài user tạo ở phiên trước: chưa có trong SVU_DATA, tải lại từ cache server. */
     svuOpenMine(id);
@@ -10040,52 +10017,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     hideOv(svOverlay); svRenderRows(); showOv(listenOverlay);
   });
 
-  /* ---------- Shadowing bằng video (bài 2): Easy N5 Japanese Podcast — kênh OkkeiJapanese ----------
-     Video Shorts của NGƯỜI KHÁC (ID mKPRQF70PvA, 1:01): giữ nguyên video gốc, không tải
-     lại/up lại — nhúng bằng YouTube IFrame API với host youtube-nocookie, facade ảnh bìa
-     lưu trong app (assets/sv2-facade-swiss.jpg), bấm mới nạp trình phát — đúng cơ chế
-     facade của bài 1. Phủ lớp chặn click (sv-shield) nên bấm vào video chỉ phát/dừng.
-     Phụ đề SỬA TAY từ phụ đề tự động của YouTube (bản gốc có 4 lỗi nhận dạng) — dùng đúng
-     danh sách câu đã sửa dưới đây, KHÔNG dùng bản gốc. Câu ở 0:50 phụ đề gốc nghe chưa rõ
-     nên CHỈ hiện ở tab Phụ đề kèm ghi chú, không đưa vào luyện tập (unclear).
-     4 tab: Phụ đề (bấm câu → video nhảy tới mốc đó và phát + hiện bong bóng giải
-     thích của câu đó; câu đang nói được tô sáng, karaoke chạy theo từng cụm từ,
-     khung tự cuộn giữ câu đang đọc ở giữa — cùng cơ chế với bài 1) ·
-     Shadowing (phát đúng đoạn câu trong CHÍNH video, không dùng TTS; ghi âm chấm điểm
-     bằng đúng cơ chế Web Speech miễn phí của v105: scBegin/scStop/scResultFor/scPanelHTML) ·
-     Chính tả (nghe đoạn, gõ lại, so từng ký tự với câu đúng) · Điền từ (một từ nội dung bị
-     che; chấp nhận chữ Hán hoặc hiragana theo cách đọc). fj = furigana dạng "漢字[かんじ]"
-     viết tay theo đúng cách đọc furi đã duyệt. */
-  var SV2_ID = "mKPRQF70PvA";
-  var SV2_DUR = 62;
-  var SV2_SUBS = [
-    {t:0,  ja:"スイスで何をしましたか?", fj:"スイスで何[なに]をしましたか?", furi:"スイスでなにをしましたか?", romaji:"suisu de nani wo shimashita ka?", vi:"Bạn đã làm gì ở Thụy Sĩ?", blank:["何","なに"], exp:"～で: trợ từ chỉ nơi diễn ra hành động — “làm gì Ở đâu” thì dùng で sau nơi chốn. 何 (なに, cái gì) + を + しましたか: câu hỏi quá khứ “đã làm gì?”; しました là quá khứ lịch sự của する (làm).", wt:[0,0.48,0.92,1.38]},
-    {t:2,  ja:"アルプスの山に登ったり、電車で旅行したりしました。", fj:"アルプスの山[やま]に登[のぼ]ったり、電車[でんしゃ]で旅行[りょこう]したりしました。", furi:"アルプスのやまにのぼったり、でんしゃでりょこうしたりしました。", romaji:"arupusu no yama ni nobottari, densha de ryokou shitari shimashita.", vi:"Mình đã leo núi Alps và đi du lịch bằng tàu điện.", blank:["電車","でんしゃ"], exp:"～たり、～たりします: liệt kê một vài việc tiêu biểu trong số nhiều việc đã làm (“nào là leo núi, nào là đi du lịch…”); cách làm: động từ thể た + り. Từ mới: 登る (のぼる, leo), 旅行 (りょこう, du lịch). 電車で: で ở đây chỉ phương tiện — đi BẰNG tàu.", wt:[2.04,2.98,3.16,3.4,3.58,4.68,5.18,5.21,5.28,5.44]},
-    {t:2,  ja:"すごいね。", fj:"すごいね。", furi:"すごいね。", romaji:"sugoi ne.", vi:"Tuyệt nhỉ.", blank:["すごい","すごい"], exp:"すごい: tính từ い “tuyệt vời, ghê thật” — thốt lên khi ấn tượng. ね ở cuối câu: chia sẻ cảm xúc, mong người nghe đồng cảm (“…nhỉ”).", wt:[2.04]},
-    {t:9,  ja:"たくさん色々なことができました。", fj:"たくさん色々[いろいろ]なことができました。", furi:"たくさんいろいろなことができました。", romaji:"takusan iroiro na koto ga dekimashita.", vi:"Mình đã làm được rất nhiều thứ.", blank:["色々","いろいろ"], exp:"～ことができます: “có thể làm…” — こと biến động từ thành danh từ (“việc…”). できました là quá khứ của できる (có thể). Từ mới: たくさん (nhiều), 色々 (いろいろ, đủ loại, nhiều thứ).", wt:[9.34,10.23,10.74,11.1,11.39]},
-    {t:12, ja:"いいですね。", fj:"いいですね。", furi:"いいですね。", romaji:"ii desu ne.", vi:"Hay quá nhỉ.", blank:["いい","いい"], exp:"いい: tính từ “tốt, hay” (dạng gốc là よい). ～ですね: vừa nhận xét vừa chia sẻ cảm nhận với người nghe — “Hay quá nhỉ”.", wt:[12.42,12.89]},
-    {t:12, ja:"いいな。", fj:"いいな。", furi:"いいな。", romaji:"ii na.", vi:"Thích thật.", blank:["いい","いい"], exp:"な ở cuối câu: tự nhủ, cảm thán một mình, thân mật hơn ね — “Thích thật đấy”. Chỉ dùng với người thân, bạn bè; khi nói lịch sự thì dùng ね.", wt:[12.42]},
-    {t:12, ja:"どのぐらいスイスにいましたか?", fj:"どのぐらいスイスにいましたか?", furi:"どのぐらいスイスにいましたか?", romaji:"dono gurai suisu ni imashita ka?", vi:"Bạn ở Thụy Sĩ bao lâu?", blank:["スイス","すいす"], exp:"どのぐらい: “khoảng bao lâu / chừng nào” — hỏi về độ dài thời gian hoặc lượng. いました là quá khứ của います (ở, có mặt — dùng cho người và động vật): “đã ở (bao lâu)”.", wt:[14.68,15.66,16.24,18]},
-    {t:18, ja:"1ヶ月ぐらいいました。", fj:"1ヶ月[いっかげつ]ぐらいいました。", furi:"いっかげつぐらいいました。", romaji:"ikkagetsu gurai imashita.", vi:"Mình ở khoảng một tháng.", blank:["1ヶ月","いっかげつ"], exp:"1ヶ月 (いっかげつ): “1 tháng” — ヶ月 (かげつ) là đơn vị đếm số tháng. ぐらい đặt sau số lượng = “khoảng, chừng”: 1ヶ月ぐらい = “khoảng 1 tháng”.", wt:[18.4,19.04,19.65]},
-    {t:20, ja:"長いですね。", fj:"長[なが]いですね。", furi:"ながいですね。", romaji:"nagai desu ne.", vi:"Dài nhỉ.", blank:["長い","ながい"], exp:"長い (ながい): tính từ い “dài” — dùng được cho cả độ dài và thời gian. Câu cảm thán + ですね: “Dài nhỉ / Lâu nhỉ”.", wt:[20,20.22,20.61]},
-    {t:23, ja:"はい。", fj:"はい。", furi:"はい。", romaji:"hai.", vi:"Vâng.", exp:"はい: “vâng / dạ” — đáp lại lịch sự khi được hỏi, hoặc xác nhận điều người kia vừa nói."},
-    {t:24, ja:"うん。", fj:"うん。", furi:"うん。", romaji:"un.", vi:"Ừ.", exp:"うん: “ừ” — cách đáp thân mật thay cho はい, chỉ dùng với gia đình, bạn bè thân. Không dùng với cấp trên hay người lạ."},
-    {t:25, ja:"実は友達がスイス人なので", fj:"実[じつ]は友達[ともだち]がスイス人[じん]なので", furi:"じつはともだちがスイスじんなので", romaji:"jitsu wa tomodachi ga suisu-jin na node", vi:"Thật ra bạn mình là người Thụy Sĩ nên…", blank:["友達","ともだち"], exp:"実は (じつは): “thật ra là…” — mở đầu khi thổ lộ điều người nghe chưa biết. ～ので: “vì… nên…” — nêu lý do một cách nhẹ nhàng. ～人 (じん) sau tên nước chỉ quốc tịch: スイス人 = người Thụy Sĩ. Từ mới: 友達 (ともだち, bạn bè).", wt:[25,25,25.6,26.46,27.94,28.38]},
-    {t:29, ja:"はい。", fj:"はい。", furi:"はい。", romaji:"hai.", vi:"Vâng.", exp:"はい ở đây là tiếng đệm khi nghe kể (aizuchi): “vâng (cứ nói tiếp đi)” — tỏ ý mình vẫn đang lắng nghe, chứ không phải trả lời câu hỏi."},
-    {t:30, ja:"家に泊まりました。", fj:"家[いえ]に泊[と]まりました。", furi:"いえにとまりました。", romaji:"ie ni tomarimashita.", vi:"Mình đã ở nhờ nhà bạn ấy.", blank:["家","いえ"], exp:"泊まる (とまる): “ở lại qua đêm, trọ”. ～に泊まる: に chỉ nơi mình ở lại (nhà bạn, khách sạn…). 泊まりました là quá khứ lịch sự. Từ mới: 家 (いえ, nhà).", wt:[30.18,30.18,30.74,30.74,31.08]},
-    {t:32, ja:"良かったですね。", fj:"良[よ]かったですね。", furi:"よかったですね。", romaji:"yokatta desu ne.", vi:"Tốt quá nhỉ.", blank:["良かった","よかった"], exp:"良かった (よかった): quá khứ của いい/よい (tốt) — “đã tốt, may quá”. 良かったですね: mừng thay cho người nghe — “Tốt quá nhỉ”.", wt:[33.42,33.52,33.89]},
-    {t:34, ja:"だからお金をあまり使いませんでした。", fj:"だからお金[かね]をあまり使[つか]いませんでした。", furi:"だからおかねをあまりつかいませんでした。", romaji:"dakara okane wo amari tsukaimasen deshita.", vi:"Nên mình không tốn nhiều tiền.", blank:["お金","おかね"], exp:"だから: “vì thế, cho nên” — nối câu chỉ nguyên nhân với kết quả. あまり + câu phủ định: “không … lắm”. 使いませんでした: quá khứ phủ định lịch sự của 使う (つかう, dùng, tiêu). Từ mới: お金 (おかね, tiền).", wt:[35.5,35.87,36.56,36.78,37.36,37.62,38.11]},
-    {t:34, ja:"スイスは物価が高いですよね。", fj:"スイスは物価[ぶっか]が高[たか]いですよね。", furi:"スイスはぶっかはたかいですよね。", romaji:"suisu wa bukka ga takai desu yo ne.", vi:"Vật giá ở Thụy Sĩ đắt đỏ nhỉ.", blank:["物価","ぶっか"], exp:"物価 (ぶっか): “vật giá, mức giá sinh hoạt”. 高い (たかい): tính từ い “đắt; cao”. ～よね ở cuối câu: vừa khẳng định vừa rủ người nghe đồng tình — “…đúng không nhỉ”."},
-    {t:44, ja:"すごく高いです。", fj:"すごく高[たか]いです。", furi:"すごくたかいです。", romaji:"sugoku takai desu.", vi:"Đắt lắm.", blank:["高い","たかい"], exp:"すごく: “rất, cực kỳ” — phó từ chỉ mức độ cao (dạng trạng từ của すごい). すごく高いです: “Đắt lắm (đấy)”.", wt:[44.16,44.74,44.8,44.94]},
-    {t:45, ja:"すごく高いですね。", fj:"すごく高[たか]いですね。", furi:"すごくたかいですね。", romaji:"sugoku takai desu ne.", vi:"Đắt lắm nhỉ.", blank:["すごく","すごく"], exp:"Giống câu “すごく高いです” ngay trước nhưng thêm ね ở cuối: từ chỗ tự khẳng định một mình thành chia sẻ cảm nhận với người nghe — “Đắt lắm nhỉ”.", wt:[45,45,45,45.59]},
-    {t:46, ja:"日本より高いです。", fj:"日本[にほん]より高[たか]いです。", furi:"にほんよりたかいです。", romaji:"nihon yori takai desu.", vi:"Đắt hơn ở Nhật.", blank:["日本","にほん"], exp:"～より: đặt sau mốc đem ra so sánh — 日本より高い = “đắt hơn (so với) Nhật”. Mẫu so sánh hơn: A は B より + tính từ.", wt:[46.76,47,47.4,47.68,47.89]},
-    {t:48, ja:"そうですよね。", fj:"そうですよね。", furi:"そうですよね。", romaji:"sou desu yo ne.", vi:"Đúng vậy nhỉ.", blank:["そう","そう"], exp:"そうです: “đúng vậy” — đồng ý với điều vừa nghe. Thêm よね thành “Đúng vậy nhỉ”: vừa khẳng định vừa tìm sự đồng tình.", wt:[48.28,49.58]},
-    {t:50, unclear:true},
-    {t:59, ja:"高い、高かったですか?", fj:"高[たか]い、高[たか]かったですか?", furi:"たかい、たかかったですか?", romaji:"takai, takakatta desu ka?", vi:"Đắt không, có đắt không?", blank:["高かった","たかかった"], exp:"高かった (たかかった): quá khứ của tính từ い 高い — bỏ い, thêm かった. Hỏi lại bằng ～ですか để xác nhận điều mình vừa nghe: “(Có) đắt không?”.", wt:[59,59.14,59.28,59.42,60.45,61]},
-    {t:61, ja:"はい。", fj:"はい。", furi:"はい。", romaji:"hai.", vi:"Vâng.", exp:"はい: “vâng” — trả lời khẳng định ngắn gọn cho câu hỏi ～ですか ở ngay trước."}
-  ];
-  var SV2_PRACTICE = SV2_SUBS.filter(function(s){ return !s.unclear; });
-  var SV2_FILL = SV2_PRACTICE.filter(function(s){ return !!s.blank; });
+  /* Bài 2 (Easy N5 Japanese Podcast) đã xóa 2026-11-15 theo lệnh user — giữ lại
+     các biến trạng thái rỗng; svuActivate() nạp dữ liệu bài thật trước khi mở. */
+  var SV2_ID = "";
+  var SV2_DUR = 0;
+  var SV2_SUBS = [];
+  var SV2_PRACTICE = [];
+  var SV2_FILL = [];
   /* Cuối đoạn của 1 câu = mốc bắt đầu của câu có mốc LỚN HƠN gần nhất (nhiều câu trùng
      mốc giây nên lấy mốc khác gần nhất phía sau); câu cuối kết thúc ở hết video */
   function sv2EndOf(s){
@@ -10102,18 +10040,6 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      bị câu sau nuốt mất, chưa kịp hiện đã nhảy qua). Nội suy đều như cách
      karaoke bài 1 nội suy theo số ký tự trong câu */
   var SV2_WIN = [];
-  (function(){
-    var i = 0;
-    while(i < SV2_SUBS.length){
-      var j = i;
-      while(j + 1 < SV2_SUBS.length && SV2_SUBS[j + 1].t === SV2_SUBS[i].t) j++;
-      var gS = SV2_SUBS[i].t;
-      var gE = (j + 1 < SV2_SUBS.length) ? SV2_SUBS[j + 1].t : SV2_DUR;
-      var n = j - i + 1, span = (gE - gS) / n;
-      for(var k = i; k <= j; k++) SV2_WIN[k] = {start: gS + span * (k - i), end: gS + span * (k - i + 1)};
-      i = j + 1;
-    }
-  })();
   /* Tách 1 câu thành các cụm từ cho karaoke — cùng thuật toán với svSegments
      của bài 1 (cụm chữ Hán/số/ヶ/々 trước "[" là 1 cụm kèm cách đọc; phần kana
      còn lại cắt nhỏ tại dấu câu, sau trợ từ, tối đa 5 ký tự) */
@@ -11141,20 +11067,8 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     appId: "1:753379492663:web:baff34f2c0bac00e02d0b2"
   };
   var SVU_NOT_READY = "Tính năng chưa sẵn sàng — function chưa được deploy, thử lại sau";
-  /* Bản gốc của bài 2, giữ nguyên không đổi: mỗi lần mở bài 2 (hoặc bài tự tạo)
-     đều nạp lại dữ liệu qua svuActivate() nên các bài không lẫn nhau. SVU_DATA
-     là sổ đăng ký mọi bài mở bằng player sv2*, khóa theo video ID. */
-  var SV2_ORIG = {
-    id: SV2_ID, dur: SV2_DUR, subs: SV2_SUBS, win: SV2_WIN, practice: SV2_PRACTICE, fill: SV2_FILL,
-    headTitle: "Shadowing · Video N5",
-    headSub: "Easy N5 Japanese Podcast · kênh OkkeiJapanese",
-    srcNote: "Phụ đề đã sửa tay từ phụ đề tự động của YouTube; video gốc của kênh OkkeiJapanese.",
-    facadeImg: "https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/sv2-facade-swiss.jpg",
-    facadeAlt: "Ảnh xem trước video Easy N5 Japanese Podcast: người dẫn chương trình của kênh OkkeiJapanese",
-    facadeLabel: "Phát video Easy N5 Japanese Podcast của kênh OkkeiJapanese"
-  };
+  /* SVU_DATA là sổ đăng ký mọi bài mở bằng player sv2*, khóa theo video ID. */
   var SVU_DATA = {};
-  SVU_DATA[SV2_ORIG.id] = SV2_ORIG;
 
   /* ---------- Bài 3: マリーゴールド — học tiếng Nhật qua bài hát (Vietsub + Romaji) ----------
      Video THƯỜNG 16:9 (không phải Shorts), ID PFvoDVgrroA, 5:22, đăng Ẩn trên kênh
@@ -24837,7 +24751,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     return win;
   }
-  /* Nạp 1 bài (bài 2 gốc hoặc bài tự tạo) vào player sv2* rồi mở bằng sv2OpenLesson() */
+  /* Nạp 1 bài (bài có sẵn hoặc bài tự tạo) vào player sv2* rồi mở bằng sv2OpenLesson() */
   function svuActivate(d){
     svPlaysBump(d.id);
     SV2_ID = d.id; SV2_DUR = d.dur; SV2_SUBS = d.subs; SV2_WIN = d.win;
@@ -25075,7 +24989,6 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var parsed = svuExtractId(raw);
     if(parsed.error){ svuShowMsg(parsed.error, true); svuInput.focus(); return; }
     /* Link trùng bài đã có sẵn trong danh sách thì mở luôn bài đó */
-    if(parsed.id === SV_ID){ svuShowMsg("", false); svOpenLesson(); return; }
     if(SVU_DATA[parsed.id]){ svuShowMsg("", false); svuActivate(SVU_DATA[parsed.id]); return; }
     var fn = svuGetFn();
     if(!fn){ svuShowMsg(SVU_NOT_READY, true); return; }

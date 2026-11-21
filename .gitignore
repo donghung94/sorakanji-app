@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Android build outputs + local config (machine-specific SDK path)
+android/build/
+android/.gradle/
+android/app/build/
+android/local.properties
+
+# iOS build outputs
+ios/DerivedData/
+
+# App binaries (built by CI / locally, never committed)
+*.apk
+*.aab
+*.ap_
+*.ipa
+*.xcarchive
+
+# Generated web assets — `npx cap sync` regenerates these from www/
+ios/App/App/public/
+android/app/src/main/assets/public/
+
+# VM-local build tools (Maven workaround, manual APK builder, debug keystore)
+# Not part of the repo. Icon generation: see assets/icon-1024.png (committed).
+tools/

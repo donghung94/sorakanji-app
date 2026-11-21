@@ -1,5 +1,30 @@
 {
   "appId": "com.sorakanji.app",
   "appName": "SoraKanji",
-  "webDir": "www"
+  "webDir": "www",
+  "plugins": {
+    "FirebaseAuthentication": {
+      "providers": [
+        "apple.com",
+        "google.com"
+      ]
+    }
+  },
+  "experimental": {
+    "ios": {
+      "spm": {
+        "packageOptions": {
+          "@capacitor-firebase/authentication": {
+            "symlink": true
+          }
+        },
+        "packageTraits": {
+          "@capacitor-firebase/authentication": [
+            "Google"
+          ]
+        },
+        "swiftToolsVersion": "6.1"
+      }
+    }
+  }
 }

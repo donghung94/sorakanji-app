@@ -1,12 +1,27 @@
 name: Build iOS (unsigned)
 
-# Free unsigned .ipa for AltStore sideloading (free Apple ID, no $99 Developer
-# Program, no certificates). The app fetches YouTube captions on-device via
-# CapacitorHttp, so it must run as a native app — Safari/PWA cannot do this
-# (CORS + datacenter-IP blocks). Nothing here needs signing or paid services.
+# Unsigned .ipa for AltStore sideloading (free Apple ID, no $99 Developer
+# Program, no certificates) and for smoke-testing the store-bound Capacitor
+# wrapper before submission.
+#
+# The committed www/index.html is ALREADY wrapped + transformed on the dev VM
+# (live mobile + asset-URL transform + native-auth transform + BridgePlayer
+# transform) — this workflow only syncs it into the iOS project and builds.
+# Do NOT re-run the transforms here.
+#
+# Notes:
+# - The real store icon (AppIcon-512@2x.png) IS committed in this repo; the
+#   placeholder step below only writes files that are MISSING, it never
+#   overwrites the real icon/splash.
+# - Native login needs GoogleService-Info.plist (Firebase Console, bundle
+#   com.sorakanji.app) in ios/App/App/. WITHOUT it the build still succeeds
+#   and the app still launches — the Firebase plugin logs "GoogleService-
+#   Info.plist is missing" and native Google/Apple sign-in calls fail
+#   gracefully; everything else (incl. the WebView app) works. Add the plist
+#   to test native login.
+# - Trigger is workflow_dispatch ONLY: pushes to main must not burn macOS
+#   minutes or publish a release per commit.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -23,13 +38,14 @@ jobs:
           node-version: 22
           cache: npm
 
-      # The 4 asset-catalog PNGs (app icon + splash) are binary and are not
-      # stored in this repo. Generate solid-red placeholders at the exact
-      # sizes the Contents.json files expect, so actool has files to compile.
-      - name: Generate placeholder images
+      # Only generate placeholder PNGs for asset-catalog files that are
+      # MISSING. The real app icon + splash are committed in this repo and
+      # must never be overwritten (an earlier version of this step wrote
+      # solid-red placeholders unconditionally).
+      - name: Generate placeholder images (only if missing)
         run: |
           python3 - <<'EOF'
-          import struct, zlib
+          import os, struct, zlib
           def png(w, h, rgb):
               def chunk(t, data):
                   c = struct.pack('>I', len(data)) + t + data
@@ -40,22 +56,33 @@ jobs:
                       + chunk(b'IDAT', zlib.compress(raw, 6)) + chunk(b'IEND', b''))
           red = (192, 57, 43)
           base = 'ios/App/App/Assets.xcassets'
-          open(f'{base}/AppIcon.appiconset/AppIcon-512@2x.png', 'wb').write(png(1024, 1024, red))
+          targets = [(f'{base}/AppIcon.appiconset/AppIcon-512@2x.png', 1024, 1024)]
           for n in ('splash-2732x2732.png', 'splash-2732x2732-1.png', 'splash-2732x2732-2.png'):
-              open(f'{base}/Splash.imageset/{n}', 'wb').write(png(2732, 2732, red))
-          print('placeholder PNGs written')
+              targets.append((f'{base}/Splash.imageset/{n}', 2732, 2732))
+          for path, w, h in targets:
+              if os.path.exists(path):
+                  print(f'keep existing {path}')
+              else:
+                  open(path, 'wb').write(png(w, h, red))
+                  print(f'placeholder written {path}')
           EOF
 
       - run: npm ci
 
       - run: npx cap sync ios
 
-      # Fail fast if the sync lost the native caption code.
-      - name: Verify native code synced
+      # Fail fast if the sync lost the wrapped code. Markers of the current
+      # wrap (live mobile + 3 transforms): native-auth helper, Firebase
+      # plugin bridge, BridgePlayer (YouTube error-153 bridge), githack
+      # asset URLs. (The old check grepped svuNativeCaptions, which no
+      # longer exists in the wrapped file.)
+      - name: Verify wrapped code synced
         run: |
-          grep -c svuNativeCaptions ios/App/App/public/index.html
-          grep -c svuCapHttp ios/App/App/public/index.html
-          grep -c CapacitorHttp ios/App/App/public/index.html
+          F=ios/App/App/public/index.html
+          grep -q 'skIsNativeApp' "$F" && echo 'ok: native-auth helper'
+          grep -q 'FirebaseAuthentication' "$F" && echo 'ok: Firebase plugin bridge'
+          grep -q 'BRIDGEPLAYER-TRANSFORM' "$F" && echo 'ok: BridgePlayer'
+          grep -q 'raw.githack.com/donghung94/beta2.0/main/mobile/assets/' "$F" && echo 'ok: githack asset URLs'
 
       - name: Archive (unsigned)
         run: |

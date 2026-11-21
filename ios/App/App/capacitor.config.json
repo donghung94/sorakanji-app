@@ -8,6 +8,9 @@
 				"apple.com",
 				"google.com"
 			]
+		},
+		"NativePurchases": {
+			"autoFinishTransactions": false
 		}
 	},
 	"experimental": {
@@ -28,6 +31,7 @@
 		}
 	},
 	"packageClassList": [
-		"FirebaseAuthenticationPlugin"
+		"FirebaseAuthenticationPlugin",
+		"NativePurchasesPlugin"
 	]
 }

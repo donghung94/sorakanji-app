@@ -872,7 +872,7 @@
     background:var(--card); border:1px solid var(--line); border-radius:22px;
     padding:24px 20px; box-shadow:var(--shadow);}
   .sksession-card h3{margin:0 0 8px; font-size:17px; font-weight:800;}
-  .sksession-detail{font-size:13px; color:var(--ink-2); margin:0 0 8px; line-height:1.55;}
+  .sksession-detail{font-size:13px; color:var(--ink-2); margin:0 0 8px; line-height:1.55; white-space:pre-line;}
   .sksession-detail[hidden]{display:none;}
   .sksession-msg{font-size:13px; color:var(--ink-2); margin:0 0 16px; line-height:1.55;}
   .sksession-card .sheetbtn{width:100%; justify-content:center;}
@@ -930,7 +930,6 @@
   .pw-save{display:inline-block; margin-top:6px; font-size:12.5px; font-weight:800; color:var(--red); background:var(--red-soft); border-radius:99px; padding:3px 10px;}
   .pw-plan ul{margin:8px 0 0; padding-left:18px; font-size:13.5px; color:var(--ink-2); line-height:1.7;}
   .pw-plan ul li{margin-bottom:2px;}
-  .pw-sale{background:var(--red-soft); border:1px solid var(--line); border-radius:14px; padding:12px 14px; font-size:13.5px; line-height:1.6; margin:0 0 14px;}
   .pw-free{margin:0 0 14px;}
   .pw-free ul{margin:8px 0 0; padding-left:18px; font-size:13.5px; color:var(--ink-2); line-height:1.7;}
   .pw-free ul li{margin-bottom:2px;}
@@ -958,10 +957,14 @@
   .pw-guide p{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.6;}
   /* Mua goi bang VietQR tren mobile web (20/11): nut mua trong the goi
      (.pw-buy) + trang thanh toan #skCheckoutOverlay (.ck-*). Trong app boc
-     Capacitor, nut mua bi an bang JS (skCheckoutInit) — chi con huong dan
-     mua bang chu. .cta co display:flex nen [hidden] can rule rieng. */
+     Capacitor, nut mua chay IAP (StoreKit, SK-IAP-V1) thay cho VietQR.
+     .cta co display:flex nen [hidden] can rule rieng. */
   .pw-buy{margin-top:10px; min-height:48px; font-size:15.5px;}
   .pw-buy[hidden]{display:none;}
+  .pw-iap-row{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+  .pw-iap-row .ghostbtn{flex:1; justify-content:center; min-height:44px;}
+  .pw-guide .pw-iap-note{margin:8px 0 0; font-size:13px; color:var(--ink-2); line-height:1.5;}
+  .pw-guide .pw-iap-note:empty{display:none;}
   .pw-buy[disabled]{opacity:.55;}
   .pw-plans-msg{font-size:13.5px; font-weight:700; line-height:1.6; margin:0 0 12px; color:var(--red);}
   .pw-plans-msg:empty{display:none;}
@@ -4098,15 +4101,15 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       </div>
     </div>
 
-    <!-- Single-session (20/11): overlay chan/kick khi tai khoan dang dang nhap
-         o thiet bi khac. z-index 95 — tren cong loi SDK (90) va moi sheet.
+    <!-- Two-session (21/11): overlay chan/kick khi tai khoan dang online o
+         2 thiet bi khac. z-index 95 — tren cong loi SDK (90) va moi sheet.
          1 overlay chung 2 noi dung (chan / kick), dong bang nut + bam nen. -->
     <div id="skSessionOverlay" class="sksession" hidden aria-hidden="true" role="alert">
       <div class="sksession-card">
         <img class="login-mascot" src="https://raw.githack.com/donghung94/beta2.0/main/mobile/assets/chibi.png" alt="">
-        <h3 id="skSessionTitle">Tài khoản đang đăng nhập ở thiết bị khác</h3>
+        <h3 id="skSessionTitle">Tài khoản đang đăng nhập ở 2 thiết bị khác</h3>
         <p class="sksession-detail" id="skSessionDetail" hidden></p>
-        <p class="sksession-msg" id="skSessionMsg">Vui lòng đăng xuất trên thiết bị đó trước khi đăng nhập ở đây.</p>
+        <p class="sksession-msg" id="skSessionMsg">Vui lòng đăng xuất trên một trong 2 thiết bị đó trước khi đăng nhập ở đây.</p>
         <button class="sheetbtn" id="skSessionOk" type="button">Đã hiểu</button>
       </div>
     </div>
@@ -4129,11 +4132,11 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     </div>
 
     <!-- Trang giới thiệu gói Premium (mở từ dialog, nút "Nâng cấp Premium"
-         ở Tokutei, hoặc mục "Nâng cấp Premium" ở Cài đặt): nội dung như
-         trang #/nangcap bản web — 2 gói, quyền lợi từng gói, ghi chú giảm
-         giá. Trên mobile web (PWA) mỗi gói có nút mua mở trang thanh toán
-         VietQR (#skCheckoutOverlay); trong app bọc Capacitor nút mua bị ẩn
-         (quy tắc App Store 3.1.1 — IAP sau), chỉ còn hướng dẫn mua bằng chữ. -->
+         ở Tokutei, hoặc mục "Nâng cấp Premium" ở Cài đặt): 2 gói + quyền lợi
+         từng gói. Trong app bọc Capacitor, mua qua IAP (StoreKit 2,
+         SK-IAP-V1): giá lấy từ App Store, nút Mua + Khôi phục giao dịch +
+         Quản lý gói; KHÔNG có hướng dẫn mua trên web trong app (quy tắc
+         App Store 3.1.1). Bản PWA giữ luồng VietQR (#skCheckoutOverlay). -->
     <div class="overlay front" id="pwPlansOverlay" aria-hidden="true">
       <div class="detailhead">
         <button class="iconbtn" id="closePwPlans" aria-label="Quay lại — đóng trang gói Premium">
@@ -4144,13 +4147,11 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
       <div class="detailbody">
         <h3 class="wvsec">Nâng cấp Premium</h3>
         <p class="wvinfo">Gói miễn phí mở toàn bộ nội dung <b>N5–N4</b> ở mọi mục. Premium mở thêm <b>N3–N1</b> — kanji, từ vựng, ngữ pháp, đề thi JLPT, luyện nghe và đọc hiểu — trên cả web và app điện thoại, đồng bộ theo tài khoản.</p>
-        <div class="pw-sale">🎉 Ưu đãi ra mắt — giảm giá đến <b>06/12/2026</b> (ngày thi JLPT). Sau thời gian này gói về giá gốc.</div>
         <div class="pw-plans">
           <div class="pw-plan">
             <b>Gói Năm</b>
-            <div class="pw-per">Chỉ ~990đ/ngày</div>
-            <span class="pw-price">360.000đ</span><span class="pw-old">799.000đ</span>
-            <span class="pw-save">Tiết kiệm 439.000đ</span>
+            <div class="pw-per">Tự động gia hạn mỗi năm</div>
+            <span class="pw-price" id="pwPriceYear">…</span>
             <ul>
               <li>Mở toàn bộ N3–N1: kanji, từ vựng, ngữ pháp</li>
               <li>Đề thi JLPT N3–N1 Test 1–9, chấm /180</li>
@@ -4164,8 +4165,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <div class="pw-plan hot">
             <b>Gói Trọn đời · Phổ biến nhất</b>
             <div class="pw-per">Mua 1 lần, học mãi mãi</div>
-            <span class="pw-price">999.000đ</span><span class="pw-old">2.499.000đ</span>
-            <span class="pw-save">Tiết kiệm 1.500.000đ</span>
+            <span class="pw-price" id="pwPriceLifetime">…</span>
             <ul>
               <li>Tất cả tính năng của Gói Năm</li>
               <li>Không cần gia hạn, không lo hết hạn</li>
@@ -4189,8 +4189,13 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           </ul>
         </div>
         <div class="pw-guide" id="pwGuide">
-          <b>Cách mua gói</b>
-          <p>Mở trình duyệt Chrome trên điện thoại của bạn, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND. Sau khi chuyển khoản thành công, Premium sẽ được mở cho tài khoản của bạn — thường trong vài phút, tối đa 24 giờ.</p>
+          <b>Mua trong ứng dụng</b>
+          <p>Thanh toán qua Apple (App Store) — giá hiển thị trên từng gói trước khi bạn xác nhận mua. Gói Năm tự động gia hạn mỗi năm; bạn có thể hủy bất cứ lúc nào trong Cài đặt iPhone → Apple ID → Đăng ký.</p>
+          <div class="pw-iap-row">
+            <button class="ghostbtn" id="pwRestoreBtn" type="button">Khôi phục giao dịch</button>
+            <button class="ghostbtn" id="pwManageBtn" type="button">Quản lý gói</button>
+          </div>
+          <p class="pw-iap-note" id="pwIapNote"></p>
         </div>
         <div class="wv-endpad" aria-hidden="true"></div>
       </div>
@@ -4199,7 +4204,7 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
     <!-- Trang thanh toán VietQR (mobile web, 20/11): mở từ nút mua trong
          trang gói; nội dung do skRenderCheckout() vẽ vào #skCheckoutBody.
          KHÔNG mở trong app bọc Capacitor (gate skIsNativeApp — App Store
-         3.1.1, IAP sẽ thay thế sau). Nút "Tôi đã chuyển khoản" chỉ ghi
+         3.1.1, IAP đã thay thế — SK-IAP-V1). Nút "Tôi đã chuyển khoản" chỉ ghi
          nhận phía client; kích hoạt Premium do SePay webhook thực hiện. -->
     <div class="overlay front" id="skCheckoutOverlay" aria-hidden="true">
       <div class="detailhead">
@@ -5673,12 +5678,14 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
             <li><b>Gói Năm:</b> mở toàn bộ nội dung N3–N1 trong 12 tháng kể từ ngày kích hoạt.</li>
             <li><b>Gói Trọn đời:</b> mở toàn bộ nội dung N3–N1 không giới hạn thời gian.</li>
           </ul>
-          <p>Giá gói theo bảng giá tại thời điểm mua (giá hiện tại: Gói Năm 360.000đ, Gói Trọn đời 999.000đ). SoraKanji có thể điều chỉnh bảng giá; giá đã thanh toán không thay đổi.</p>
+          <p>Giá gói theo bảng giá tại thời điểm mua, hiển thị trên trang gói trước khi bạn xác nhận mua. SoraKanji có thể điều chỉnh bảng giá; giá đã thanh toán không thay đổi.</p>
           <h3>4. Thanh toán và kích hoạt</h3>
           <ul>
             <li>Thanh toán bằng chuyển khoản ngân hàng thủ công theo hướng dẫn hiển thị tại trang thanh toán (số tiền, nội dung chuyển khoản và mã đơn hàng riêng cho mỗi đơn).</li>
             <li>Gói được kích hoạt sau khi SoraKanji xác nhận đã nhận được tiền chuyển khoản, thường trong vài phút và tối đa 24 giờ.</li>
-            <li>Gói trả phí <b>không tự động gia hạn</b>. Khi Gói Năm hết hạn, bạn có thể mua lại nếu muốn tiếp tục sử dụng.</li>
+            <li>Gói mua bằng chuyển khoản trên web <b>không tự động gia hạn</b>. Khi Gói Năm hết hạn, bạn có thể mua lại nếu muốn tiếp tục sử dụng.</li>
+            <li>Mua trong ứng dụng iOS: thanh toán qua Apple (App Store) — giá hiển thị trên trang gói trước khi bạn xác nhận mua. Gói Năm mua trong ứng dụng <b>tự động gia hạn mỗi năm</b> trừ khi bạn hủy ít nhất 24 giờ trước khi hết hạn; bạn quản lý và hủy gói trong Cài đặt iPhone → Apple ID → Đăng ký, hoặc qua liên kết “Quản lý gói” trong trang gói. Gói Trọn đời chỉ thanh toán một lần, không gia hạn.</li>
+            <li>Hoàn tiền cho gói mua trong ứng dụng iOS do Apple quyết định theo chính sách của Apple (yêu cầu tại reportaproblem.apple.com); SoraKanji không tự hoàn tiền các giao dịch qua App Store.</li>
             <li>Mỗi đơn hàng gắn với tài khoản đã đăng nhập lúc mua; gói đã kích hoạt không chuyển sang tài khoản khác.</li>
           </ul>
           <h3>5. Chính sách hoàn tiền</h3>
@@ -5983,6 +5990,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var body = ov.querySelector(".detailbody");
     if(body) body.scrollTop = 0;
     showOv(ov);
+    if(skIsNativeApp()) skIapLoadProducts(); /* IAP: tai gia tu StoreKit moi lan mo trang goi */
   }
   function closePwPlans(){
     var ov = document.getElementById("pwPlansOverlay");
@@ -6276,11 +6284,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
          ?amount=<amount>&addInfo=<memo, encodeURIComponent>
          &accountName=DONG%20THANH%20HUNG
      GATE NATIVE (App Store 3.1.1): trong app bọc Capacitor, KHÔNG hiện
-     luồng VietQR — nút mua ẩn (skCheckoutInit), chỉ còn hướng dẫn mua bằng
-     chữ; IAP sẽ thay thế sau theo plan riêng. Phát hiện native qua
-     window.Capacitor, an toàn khi Capacitor vắng mặt (PWA).
-     Giá: Năm 360.000đ, Trọn đời 999.000đ (giảm đến 06/12/2026, sau đó về
-     giá gốc 799.000đ / 2.499.000đ — cùng luật skPrice của web). */
+     luồng VietQR — nút mua chạy IAP (StoreKit, SK-IAP-V1) thay cho VietQR.
+     Phát hiện native qua window.Capacitor, an toàn khi Capacitor vắng mặt
+     (PWA). Giá web lấy từ SK_PACKAGES + luật skPrice (sale đến 06/12/2026,
+     sau đó về giá gốc) — chỉ dùng cho luồng VietQR trên PWA; trong app
+     bọc, giá lấy từ StoreKit, không dùng các hằng này. */
   var SK_SALE_END = new Date("2026-12-06T23:59:59+07:00").getTime(); /* hết 06/12/2026 */
   var SK_PACKAGES = {
     year: {label: "Gói Năm", dur: "12 tháng", sale: 360000, full: 799000, save: 439000},
@@ -6433,11 +6441,11 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   /* Luồng mua gói (mở từ nút mua trong trang gói, hoặc nối tiếp sau khi
      đăng nhập — xem skResumePendingGate). Thứ tự kiểm tra:
-     native → đang tạo đơn → đã Premium → chưa đăng nhập → chưa có email →
+     native (IAP) → đang tạo đơn → đã Premium → chưa đăng nhập → chưa có email →
      đã có đơn chờ (mở lại, không tạo mới) → tạo đơn mới. */
   function skStartCheckout(pkg){
     pkg = (pkg === "lifetime") ? "lifetime" : "year";
-    if(skIsNativeApp()) return; /* GATE NATIVE: không tạo đơn trong app bọc */
+    if(skIsNativeApp()){ skIapBuy(pkg); return; } /* GATE NATIVE: mua trong app qua IAP (StoreKit) thay cho VietQR */
     if(skCheckoutInFlight) return;
     if(isPremium()){
       /* Đã Premium rồi thì không tạo đơn mới — đúng luật web
@@ -6587,22 +6595,31 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   /* Khởi tạo luồng mua (gọi trong setTimeout init của paywall): wire nút
      mua + nút đóng trang thanh toán + mục "Nâng cấp Premium" ở Cài đặt.
-     GATE NATIVE — trong app bọc thì ẨN nút mua (chỉ còn hướng dẫn mua bằng
-     chữ), trên mobile web thì ẨN hướng dẫn mua bằng chữ (mua ngay tại đây). */
+     Trong app bọc native, nút mua chạy IAP (StoreKit, SK-IAP-V1) thay cho
+     VietQR (skStartCheckout tự rẽ nhánh theo skIsNativeApp); khối IAP dưới
+     trang gói có nút Khôi phục giao dịch + Quản lý gói. Trên mobile web
+     thì nút mua mở trang thanh toán VietQR như cũ. */
   function skCheckoutInit(){
     var native = skIsNativeApp();
     var by = document.getElementById("pwBuyYear");
     var bl = document.getElementById("pwBuyLifetime");
     var guide = document.getElementById("pwGuide");
     if(by){
-      by.hidden = native;
-      if(!native) by.addEventListener("click", function(){ skStartCheckout("year"); });
+      by.hidden = false;
+      by.addEventListener("click", function(){ skStartCheckout("year"); });
     }
     if(bl){
-      bl.hidden = native;
-      if(!native) bl.addEventListener("click", function(){ skStartCheckout("lifetime"); });
+      bl.hidden = false;
+      bl.addEventListener("click", function(){ skStartCheckout("lifetime"); });
     }
     if(guide) guide.hidden = !native;
+    if(native){
+      var rb = document.getElementById("pwRestoreBtn");
+      if(rb) rb.addEventListener("click", skIapRestore);
+      var mb = document.getElementById("pwManageBtn");
+      if(mb) mb.addEventListener("click", skIapManage);
+      try{ skIapInit(); }catch(_){}
+    }
     var back = document.getElementById("closeSkCheckout");
     if(back) back.addEventListener("click", closeSkCheckout);
     var sp = document.getElementById("setPremiumBtn");
@@ -21004,6 +21021,316 @@ function furiHTML(text){
       if(skAppleBtn) skAppleBtn.hidden = false;
     }
   }catch(_){}
+  /* ---------- Mua goi trong app (IAP, StoreKit 2) — SK-IAP-V1 ----------
+     Chi chay trong app boc native (skIsNativeApp()). PWA/web giu nguyen:
+     mua bang chuyen khoan VietQR. Plugin @capgo/native-purchases v8.x
+     (StoreKit 2, iOS 15+) — lazy-load qua Capacitor.registerPlugin.
+     Nguyen tac: server la nguon su that duy nhat — client KHONG BAO GIO
+     tu mo Premium dua tren ket qua StoreKit; giao dich chi duoc finish
+     SAU KHI server appleVerifyPurchase xac thuc xong (autoFinishTransactions
+     = false trong capacitor.config + configure() + autoAcknowledgePurchases
+     = false tung lan mua). Premium mo qua listener onSnapshot co san.
+     Gia hien thi lay tu StoreKit (priceString) — KHONG hardcode gia. */
+  var SK_IAP_PRODUCTS = {
+    year: "com.sorakanji.app.premium.year",
+    lifetime: "com.sorakanji.app.premium.lifetime"
+  };
+  var SK_IAP_FN_URL = "https://asia-northeast1-donghung-3208d.cloudfunctions.net/appleVerifyPurchase";
+  var skIapPluginCache = null, skIapPluginTried = false;
+  function skIapPlugin(){
+    if(skIapPluginTried) return skIapPluginCache;
+    skIapPluginTried = true;
+    try{
+      if(!skIsNativeApp()) return null;
+      var cap = window.Capacitor;
+      if(cap.isPluginAvailable && !cap.isPluginAvailable("NativePurchases")) return null;
+      if(typeof cap.registerPlugin === "function"){
+        skIapPluginCache = cap.registerPlugin("NativePurchases");
+      }else if(cap.Plugins && cap.Plugins.NativePurchases){
+        skIapPluginCache = cap.Plugins.NativePurchases;
+      }
+    }catch(_){ skIapPluginCache = null; }
+    return skIapPluginCache;
+  }
+  /* Tat auto-finish o tang plugin (them lop bao hiem ngoai
+     capacitor.config): giao dich chi finish sau khi server verify xong. */
+  var skIapConfigured = false;
+  function skIapConfigure(){
+    if(skIapConfigured) return Promise.resolve();
+    var p = skIapPlugin();
+    if(!p || typeof p.configure !== "function"){ skIapConfigured = true; return Promise.resolve(); }
+    return p.configure({autoFinishTransactions: false}).then(function(){ skIapConfigured = true; }).catch(function(){ skIapConfigured = true; });
+  }
+  /* Goi appleVerifyPurchase (onCall) — cung giao thuc fetch nhu svuFetchFn:
+     POST {"data": {jws}} + Bearer ID token -> {"result": {...}}. */
+  function skIapVerify(jws){
+    var auth = null;
+    try{ auth = skAuth(); }catch(_){ auth = null; }
+    var user = auth && auth.currentUser;
+    if(!user) return Promise.reject({code: "iap/login-required", message: ""});
+    return Promise.resolve().then(function(){ return user.getIdToken(); }).then(function(token){
+      return fetch(SK_IAP_FN_URL, {
+        method: "POST",
+        headers: {"Content-Type": "application/json", "Authorization": "Bearer " + token},
+        body: JSON.stringify({data: {jws: jws}})
+      });
+    }).then(function(r){
+      return r.json().then(function(j){
+        if(j && j.result) return j.result;
+        var e = (j && j.error) || {};
+        var st = String(e.status || "INTERNAL").toLowerCase().replace(/_/g, "-");
+        throw {code: "functions/" + st, message: e.message || ""};
+      });
+    });
+  }
+  /* Finish giao dich SAU KHI verify xong. Loi finish thi bo qua — giao dich
+     o lai queue, lan mo app sau doi chieu lai. */
+  function skIapFinish(txId){
+    var p = skIapPlugin();
+    if(!p || typeof p.finishTransaction !== "function" || !txId) return Promise.resolve();
+    return p.finishTransaction({transactionId: txId}).catch(function(){});
+  }
+  /* Dich loi IAP sang tieng Viet. */
+  function skIapIsCancel(err){
+    var s = ((err && err.code) || "") + " " + ((err && err.message) || "");
+    return /cancel/i.test(s);
+  }
+  function skIapErrVI(err){
+    if(!err) return "Chưa mua được gói — kiểm tra kết nối rồi thử lại.";
+    var code = err.code || "";
+    var msg = err.message || "";
+    if(code === "iap/no-jws") return "Chưa nhận được giao dịch từ App Store — bạn thử mua lại nhé.";
+    if(code === "iap/login-required") return "Bạn cần đăng nhập trước khi mua gói.";
+    if(code.indexOf("functions/unauthenticated") === 0) return "Phiên đăng nhập đã hết — đăng nhập lại rồi thử mua lại nhé.";
+    if(code.indexOf("functions/") === 0){
+      if(msg) return msg;
+      return "Máy chủ chưa xác thực được giao dịch — bạn thử lại sau nhé.";
+    }
+    if(/Failed to fetch|NetworkError|network|TypeError/i.test(code + " " + msg)) return "Mất kết nối mạng — kiểm tra mạng rồi thử lại.";
+    if(msg && msg.length < 160) return msg;
+    return "Chưa mua được gói — kiểm tra kết nối rồi thử lại." + (code ? " (" + code + ")" : "");
+  }
+  /* Verify 1 giao dich roi finish neu server da grant. Tra Promise<boolean>
+     (true = server da grant). Sandbox / het han / da hoan: chi ghi nhan,
+     khong grant, khong finish. Loi mang/verify: false, khong finish. */
+  function skIapHandleTransaction(tx){
+    if(!tx || !tx.jwsRepresentation) return Promise.resolve(false);
+    return skIapVerify(tx.jwsRepresentation).then(function(res){
+      if(res && res.ok){
+        return skIapFinish(tx.transactionId).then(function(){ return true; });
+      }
+      return false;
+    }).catch(function(){ return false; });
+  }
+  /* Ghi chu trong khoi IAP cua trang goi (#pwIapNote). */
+  function skIapNote(t){
+    var el = document.getElementById("pwIapNote");
+    if(el) el.textContent = t || "";
+  }
+  /* Tai gia tu StoreKit + dien vao the goi. Goi moi lan mo trang goi;
+     cache sau lan thanh cong dau tien. */
+  var skIapProductsCache = null, skIapProductsLoading = false;
+  function skIapRenderPrices(prods){
+    var map = {};
+    (prods || []).forEach(function(p){ if(p && p.identifier) map[p.identifier] = p; });
+    var y = map[SK_IAP_PRODUCTS.year], l = map[SK_IAP_PRODUCTS.lifetime];
+    var yEl = document.getElementById("pwPriceYear");
+    var lEl = document.getElementById("pwPriceLifetime");
+    if(yEl) yEl.textContent = (y && y.priceString) ? y.priceString : "—";
+    if(lEl) lEl.textContent = (l && l.priceString) ? l.priceString : "—";
+  }
+  function skIapLoadProducts(){
+    if(!skIsNativeApp()) return;
+    var plugin = skIapPlugin();
+    var yEl = document.getElementById("pwPriceYear");
+    var lEl = document.getElementById("pwPriceLifetime");
+    if(!plugin){
+      if(yEl) yEl.textContent = "—";
+      if(lEl) lEl.textContent = "—";
+      skShowPlansMsg("Chưa tải được bảng giá từ App Store — kiểm tra mạng rồi mở lại trang này nhé.");
+      return;
+    }
+    if(skIapProductsCache){ skIapRenderPrices(skIapProductsCache); return; }
+    if(skIapProductsLoading) return;
+    skIapProductsLoading = true;
+    plugin.getProducts({productIdentifiers: [SK_IAP_PRODUCTS.year, SK_IAP_PRODUCTS.lifetime]}).then(function(res){
+      skIapProductsLoading = false;
+      skIapProductsCache = (res && res.products) || [];
+      skIapRenderPrices(skIapProductsCache);
+    }).catch(function(){
+      skIapProductsLoading = false;
+      if(yEl) yEl.textContent = "—";
+      if(lEl) lEl.textContent = "—";
+      skShowPlansMsg("Chưa tải được bảng giá từ App Store — kiểm tra mạng rồi mở lại trang này nhé.");
+    });
+  }
+  /* Mua goi qua StoreKit: purchase -> verify server -> finish.
+     Chua dang nhap thi mo bang dang nhap truoc, y dinh mua song sot qua
+     lan dang nhap (skPendingBuyPkg + skResumePendingGate -> skStartCheckout). */
+  var skIapBuyBusy = false;
+  function skIapBuy(pkg){
+    pkg = (pkg === "lifetime") ? "lifetime" : "year";
+    if(skIapBuyBusy) return;
+    if(isPremium()){
+      skShowPlansMsg("Bạn đang dùng Premium rồi — toàn bộ nội dung N3–N1 đã mở cho tài khoản của bạn.", true);
+      return;
+    }
+    var u = skCheckoutUser();
+    if(!u){
+      skPendingBuyPkg = pkg;
+      skPendingGate = true;
+      if(!skAuth()){ skAuthGateShow(false); return; }
+      openLogin();
+      return;
+    }
+    var plugin = skIapPlugin();
+    if(!plugin){
+      skShowPlansError("Chưa kết nối được App Store trên máy này — kiểm tra mạng rồi thử lại.", pkg);
+      return;
+    }
+    skIapBuyBusy = true;
+    skClearPlansMsg();
+    var btn = skBuyBtn(pkg);
+    var btnLabel = btn ? btn.textContent : "";
+    if(btn){ btn.disabled = true; btn.textContent = "Đang xử lý…"; }
+    function done(){
+      skIapBuyBusy = false;
+      if(btn){ btn.disabled = false; btn.textContent = btnLabel; }
+    }
+    skIapConfigure().then(function(){
+      return plugin.purchaseProduct({productIdentifier: SK_IAP_PRODUCTS[pkg], autoAcknowledgePurchases: false});
+    }).then(function(tx){
+      if(!tx || !tx.jwsRepresentation) throw {code: "iap/no-jws", message: ""};
+      return skIapVerify(tx.jwsRepresentation).then(function(res){
+        if(res && res.ok){
+          return skIapFinish(tx.transactionId).then(function(){
+            done();
+            skShowPlansMsg("Mua thành công! Premium đã mở cho tài khoản của bạn.", true);
+            try{ premiumRefresh(function(){}); }catch(_){}
+          });
+        }
+        if(res && res.sandbox){
+          done();
+          skShowPlansMsg("Đây là giao dịch thử (sandbox) — không mở Premium thật. Bạn cần bản TestFlight hoặc bản chính thức để mua thật.", false);
+          return;
+        }
+        done();
+        skShowPlansError("Chưa xác thực được giao dịch — giao dịch vẫn còn trong hàng đợi App Store, bạn mở lại app để thử lại.", pkg);
+      });
+    }).catch(function(err){
+      done();
+      if(skIapIsCancel(err)){
+        skShowPlansMsg("Bạn đã hủy mua — thử lại khi cần nhé.");
+        return;
+      }
+      skShowPlansError(skIapErrVI(err), pkg);
+    });
+  }
+  /* Khoi phuc giao dich (nut bat buoc theo App Store Review Guidelines):
+     restorePurchases -> getPurchases -> verify tung giao dich (server
+     idempotent). */
+  var skIapRestoreBusy = false;
+  function skIapRestore(){
+    if(skIapRestoreBusy) return;
+    var plugin = skIapPlugin();
+    if(!plugin){ skIapNote("Chưa kết nối được App Store trên máy này — kiểm tra mạng rồi thử lại."); return; }
+    var u = skCheckoutUser();
+    if(!u){
+      skPendingGate = true;
+      if(!skAuth()){ skAuthGateShow(false); return; }
+      openLogin();
+      return;
+    }
+    skIapRestoreBusy = true;
+    skIapNote("Đang khôi phục giao dịch…");
+    skIapConfigure().then(function(){
+      return plugin.restorePurchases();
+    }).then(function(){
+      return plugin.getPurchases({onlyCurrentEntitlements: true});
+    }).then(function(res){
+      var list = (res && res.purchases) || [];
+      var withJws = list.filter(function(tx){ return tx && tx.jwsRepresentation; });
+      if(!withJws.length){
+        skIapRestoreBusy = false;
+        skIapNote("Không tìm thấy giao dịch nào để khôi phục trên tài khoản Apple này.");
+        return;
+      }
+      var chain = Promise.resolve();
+      var granted = 0;
+      withJws.forEach(function(tx){
+        chain = chain.then(function(){
+          return skIapHandleTransaction(tx).then(function(ok){ if(ok) granted++; });
+        });
+      });
+      return chain.then(function(){
+        skIapRestoreBusy = false;
+        if(granted > 0){
+          skIapNote("Đã khôi phục Premium cho tài khoản của bạn.");
+          try{ premiumRefresh(function(){}); }catch(_){}
+        }else{
+          skIapNote("Đã kiểm tra xong — không có gói nào cần khôi phục (có thể bạn chưa từng mua, hoặc Premium đã mở sẵn).");
+        }
+      });
+    }).catch(function(err){
+      skIapRestoreBusy = false;
+      skIapNote(skIapErrVI(err));
+    });
+  }
+  /* Mo trang quan ly goi cua he thong (huy/tu gia han) — khong co nut huy
+     trong app, dung chuan Apple. */
+  function skIapManage(){
+    var plugin = skIapPlugin();
+    if(!plugin || typeof plugin.manageSubscriptions !== "function"){
+      skIapNote("Chưa mở được trang quản lý gói — bạn vào Cài đặt iPhone → Apple ID → Đăng ký để quản lý gói nhé.");
+      return;
+    }
+    plugin.manageSubscriptions().catch(function(){
+      skIapNote("Chưa mở được trang quản lý gói — bạn vào Cài đặt iPhone → Apple ID → Đăng ký để quản lý gói nhé.");
+    });
+  }
+  /* Doi chieu khi mo app (native + da dang nhap): getPurchases -> verify
+     tung giao dich chua verify (bat truong hop mua xong nhung app crash /
+     mat mang truoc khi verify). Chi chay 1 lan/phien; chua dang nhap thi
+     doi applyAuthUser goi lai sau khi dang nhap. */
+  var skIapReconciled = false;
+  function skIapReconcile(){
+    if(!skIsNativeApp() || skIapReconciled) return;
+    var plugin = skIapPlugin();
+    if(!plugin) return;
+    var auth = null;
+    try{ auth = skAuth(); }catch(_){ auth = null; }
+    if(!auth || !auth.currentUser) return;
+    skIapReconciled = true;
+    plugin.getPurchases({onlyCurrentEntitlements: true}).then(function(res){
+      var list = (res && res.purchases) || [];
+      var chain = Promise.resolve();
+      list.forEach(function(tx){
+        if(tx && tx.jwsRepresentation){
+          chain = chain.then(function(){ return skIapHandleTransaction(tx); });
+        }
+      });
+      return chain;
+    }).catch(function(){ skIapReconciled = false; });
+  }
+  /* Khoi tao IAP 1 lan khi app mo (goi tu skCheckoutInit): tat auto-finish,
+     dang ky listener transactionUpdated (gia han / khoi phuc tu StoreKit),
+     doi chieu giao dich ton. */
+  var skIapInited = false;
+  function skIapInit(){
+    if(skIapInited || !skIsNativeApp()) return;
+    skIapInited = true;
+    var plugin = skIapPlugin();
+    if(!plugin) return;
+    skIapConfigure();
+    try{
+      if(typeof plugin.addListener === "function"){
+        plugin.addListener("transactionUpdated", function(tx){
+          skIapHandleTransaction(tx);
+        });
+      }
+    }catch(_){}
+    skIapReconcile();
+  }
   function doGoogleLogin(){
     var auth = skAuth();
     if(!auth){ loginShowErr("Chưa kết nối được máy chủ đăng nhập — kiểm tra mạng rồi thử lại nhé."); return; }
@@ -21112,9 +21439,10 @@ function furiHTML(text){
   function doLogout(){
     var auth = skAuth();
     closeLogin();
-    /* Single-session: dừng heartbeat/listener + xóa session doc của thiết bị
-       này (fire-and-forget, song song với đồng bộ cuối — không await, không
-       kéo dài timeout 2s). Chỉ xóa khi thiết bị này đang giữ session. */
+    /* Two-session: dừng heartbeat/listener + xóa doc sessions/{deviceId}
+       của thiết bị này (fire-and-forget, song song với đồng bộ cuối — không
+       await, không kéo dài timeout 2s). Chỉ xóa khi thiết bị này đang giữ
+       session; doc của thiết bị khác không bị đụng tới. */
     try{ skSessionLogout(); }catch(_){}
     function doSignOut(){
       if(skIsNativeApp()){
@@ -21200,10 +21528,17 @@ function furiHTML(text){
       snap.forEach(function(d){ dels.push(d.ref.delete()); });
       return Promise.all(dels);
     }).then(function(){
-      /* Single-session: xóa session doc cùng đợt (best-effort — xóa tài khoản
-         xong thì session mồ côi cũng vô hại nên lỗi ở đây không chặn). */
-      var sessDel = db.collection("kanji_progress").doc(uid).collection("session").doc("active").delete();
-      return Promise.all([sessDel.catch(function(){}), db.collection("kanji_progress").doc(uid).delete()]);
+      /* Two-session: xóa hết doc sessions/* + doc legacy session/active cùng
+         đợt (best-effort — xóa tài khoản xong thì session mồ côi cũng vô hại
+         nên lỗi ở đây không chặn). */
+      var sessCol = db.collection("kanji_progress").doc(uid).collection("sessions");
+      var sessDel = sessCol.get().then(function(qs){
+        var dels = [];
+        qs.forEach(function(d){ dels.push(d.ref.delete()); });
+        dels.push(db.collection("kanji_progress").doc(uid).collection("session").doc("active").delete());
+        return Promise.all(dels);
+      }).catch(function(){});
+      return Promise.all([sessDel, db.collection("kanji_progress").doc(uid).delete()]);
     }).then(function(){
       /* Xóa Auth user CUỐI CÙNG. Listener onAuthStateChanged sẽ bắn null
          → applyAuthUser thấy cờ skDeletingAccount thì dọn sạch
@@ -21253,23 +21588,30 @@ function furiHTML(text){
       fetch(SK_LOG_VISIT_URL, {method: "POST", mode: "no-cors", keepalive: true}).catch(function(){});
     }catch(_){}
   }
-  /* ================= SINGLE-SESSION: 1 tài khoản = 1 thiết bị (20/11) ================
-     User ra lệnh 20/11: một tài khoản chỉ đăng nhập được 1 thiết bị cùng lúc;
-     muốn đăng nhập thiết bị khác phải đăng xuất trước.
-     Cơ chế: 1 doc Firestore kanji_progress/{uid}/session/active = session đang
-     giữ tài khoản. Đăng nhập → claim bằng transaction (doc khác deviceId mà
-     còn fresh (<5') thì bị chặn + signOut); giữ session → heartbeat 60s +
-     listener onSnapshot (doc đổi sang deviceId khác + fresh → kick + signOut).
+  /* ================= TWO-SESSION: 1 tài khoản = tối đa 2 thiết bị online (21/11) ================
+     User đính chính 21/11: không phải khóa 1 máy — mục đích là chống chia sẻ
+     tài khoản, giới hạn ONLINE ĐỒNG THỜI: tối đa 2 thiết bị cùng lúc, thiết
+     bị thứ 3 bị chặn.
+     Cơ chế: subcollection Firestore kanji_progress/{uid}/sessions/{deviceId}
+     = 1 doc mỗi thiết bị {deviceId, deviceLabel, platform, loginAt, lastSeen}.
+     Đăng nhập → claim bằng transaction trên collection (đếm doc FRESH <5':
+     <2 thì ghi doc của mình + xóa doc stale + xóa doc legacy session/active;
+     ≥2 mà không có doc của mình thì bị chặn + signOut, overlay liệt kê cả 2
+     thiết bị). Giữ session → heartbeat 60s (chỉ ghi lastSeen) + listener
+     onSnapshot trên doc của mình (doc bị xóa → re-check: còn session fresh
+     khác thì kick + signOut, không còn thì claim lại).
      deviceId TÁI DÙNG exRepDeviceId() (key sk_device_id) — 2 tab cùng browser
      cùng deviceId nên không kick nhau. Admin (ADMIN_UIDS) MIỄN toàn bộ.
      Lỗi claim (mất mạng/rules) → FAIL-OPEN: cho vào app, heartbeat thử lại.
      KHÔNG xóa session khi đóng app (đa-tab race) — stale 5' là đường phục hồi. */
   var SK_SESSION_STALE_MS = 5*60*1000; /* session quá 5' không heartbeat coi như chết */
   var SK_SESSION_HB_MS = 60*1000; /* heartbeat mỗi 60s */
+  var SK_SESSION_MAX = 2; /* tối đa 2 thiết bị online cùng lúc (21/11) */
   var skSessUid = ""; /* uid đang giữ/đang claim session */
   var skSessHeld = false; /* thiết bị này đang giữ session */
   var skSessClaiming = false; /* đang có transaction claim chạy */
-  var skSessRef = null; /* DocumentReference session/active */
+  var skSessRef = null; /* DocumentReference sessions/{deviceId} của thiết bị này */
+  var skSessDocExists = false; /* listener xác nhận doc của mình còn tồn tại (chống hồi sinh sau kick) */
   var skSessDeviceId = ""; /* deviceId của thiết bị này (đã claim) */
   var skSessTimer = null; /* interval heartbeat */
   var skSessUnsub = null; /* unsubscribe listener kick */
@@ -21326,11 +21668,12 @@ function furiHTML(text){
     function p(n){ return (n < 10 ? "0" : "") + n; }
     return p(d.getHours()) + ":" + p(d.getMinutes()) + " " + p(d.getDate()) + "/" + p(d.getMonth() + 1);
   }
-  /* Claim session bằng transaction — chạy từ nhánh user của applyAuthUser
-     (điểm ghi duy nhất của phiên). Lũy đẳng theo (uid, deviceId): đã giữ thì
-     không claim lại; claim đang chạy thì không chạy chồng (listener +
-     safety-check 4s có thể gọi applyAuthUser lại). Trả về promise (resolve
-     khi claim xong — applyAuthUser chờ để nối tiếp cổng chờ, xem m-29). */
+  /* Claim session bằng transaction trên collection sessions — chạy từ nhánh
+     user của applyAuthUser (điểm ghi duy nhất của phiên). Lũy đẳng theo
+     (uid, deviceId): đã giữ thì không claim lại; claim đang chạy thì không
+     chạy chồng (listener + safety-check 4s có thể gọi applyAuthUser lại).
+     Trả về promise (resolve khi claim xong — applyAuthUser chờ để nối tiếp
+     cổng chờ, xem m-29). */
   function skSessionClaim(user){
     if(!user || !user.uid) return Promise.resolve();
     var uid = user.uid;
@@ -21346,26 +21689,46 @@ function furiHTML(text){
       skSessionHeartbeatStart();
       return Promise.resolve();
     }
-    var ref = db.collection("kanji_progress").doc(uid).collection("session").doc("active");
     var myId = "dev-unknown";
     try{ myId = exRepDeviceId() || "dev-unknown"; }catch(_){}
     var label = skSessionDeviceLabel();
+    var col = db.collection("kanji_progress").doc(uid).collection("sessions");
+    var ref = col.doc(myId);
+    var legacyRef = db.collection("kanji_progress").doc(uid).collection("session").doc("active");
     skSessClaiming = true;
     skSessUid = uid;
     skSessRef = ref;
     try{
       return db.runTransaction(function(tx){
-        return tx.get(ref).then(function(snap){
-          if(snap && snap.exists){
-            var d = snap.data() || {};
-            if(d.deviceId && d.deviceId !== myId && skSessionFresh(d.lastSeen)){
-              var err = new Error("sk-session-blocked");
-              err.skSessionBlocked = d;
-              throw err;
-            }
+        return tx.get(col).then(function(qs){
+          var fresh = []; /* thiết bị KHÁC còn fresh */
+          var staleRefs = [];
+          var ownExists = false;
+          qs.forEach(function(docSnap){
+            var d = docSnap.data() || {};
+            if(docSnap.id === myId){ ownExists = true; return; }
+            if(skSessionFresh(d.lastSeen)) fresh.push({deviceId: docSnap.id,
+              deviceLabel: d.deviceLabel || "", lastSeen: d.lastSeen});
+            else if(docSnap.ref) staleRefs.push(docSnap.ref);
+          });
+          if(!ownExists && fresh.length >= SK_SESSION_MAX){
+            var err = new Error("sk-session-blocked");
+            err.skSessionBlocked = fresh; /* MẢNG 2 thiết bị — overlay liệt kê cả 2 */
+            throw err;
           }
-          tx.set(ref, {deviceId: myId, deviceLabel: label, platform: "mobile",
-            loginAt: skSessionServerTs(), lastSeen: skSessionServerTs()}, {merge: true});
+          if(ownExists){
+            /* Đăng nhập lại cùng thiết bị: chỉ làm mới lastSeen/label,
+               KHÔNG tạo doc mới, KHÔNG đếm trùng (D4/D6). */
+            tx.set(ref, {deviceLabel: label, platform: "mobile",
+              lastSeen: skSessionServerTs()}, {merge: true});
+          }else{
+            tx.set(ref, {deviceId: myId, deviceLabel: label, platform: "mobile",
+              loginAt: skSessionServerTs(), lastSeen: skSessionServerTs()}, {merge: true});
+          }
+          /* Dọn doc stale + doc legacy session/active (migration best-effort:
+             delete doc không tồn tại là no-op). */
+          staleRefs.forEach(function(r){ tx.delete(r); });
+          tx.delete(legacyRef);
         });
       }).then(function(){
         skSessClaiming = false;
@@ -21373,6 +21736,7 @@ function furiHTML(text){
         if(skSessUid !== uid) return; /* đã đổi tài khoản trong lúc claim */
         skSessHeld = true;
         skSessDeviceId = myId;
+        skSessDocExists = true; /* vừa ghi doc trong transaction */
         skSessionListenerStart(ref, myId);
         skSessionHeartbeatStart();
       }).catch(function(err){
@@ -21380,7 +21744,7 @@ function furiHTML(text){
         if(err && err.skSessionBlocked){ skSessionOnBlocked(err.skSessionBlocked); return; }
         /* Lỗi khác (mất mạng, rules, retry hết): FAIL-OPEN — cho vào app,
            heartbeat thử claim lại. Hệ quả chấp nhận được: lúc offline có
-           thể có 2 session song song tạm thời; mạng về thì luật thường
+           thể có quá 2 session song song tạm thời; mạng về thì luật thường
            áp dụng. */
         skSessHeld = false;
         skSessionHeartbeatStart();
@@ -21393,30 +21757,70 @@ function furiHTML(text){
       return Promise.resolve();
     }
   }
-  /* Listener kick — chỉ kick khi doc tồn tại + deviceId KHÁC mình + fresh.
-     Bỏ qua: doc bị xóa (đăng xuất cùng thiết bị / race), doc stale, doc của
-     chính mình (kể cả heartbeat của tab khác cùng browser — cùng deviceId). */
+  /* Listener trên doc CỦA MÌNH (sessions/{myId}): chỉ theo dõi sự TỒN TẠI
+     của doc — doc còn (kể cả stale) thì resume bình thường, không kick;
+     doc bị XÓA thì re-check 1 lần (xem skSessionRecheck). Heartbeat của tab
+     khác cùng browser (cùng deviceId) chỉ ghi lastSeen nên listener này
+     không kick nhầm. */
   function skSessionListenerStart(ref, myId){
     try{
       if(skSessUnsub){ try{ skSessUnsub(); }catch(_){} skSessUnsub = null; }
       skSessUnsub = ref.onSnapshot(function(snap){
         try{
-          if(!snap || !snap.exists) return;
-          var d = snap.data() || {};
-          if(!d.deviceId || d.deviceId === myId) return;
-          if(!skSessionFresh(d.lastSeen)) return;
-          skSessionOnKicked(d);
+          if(!snap || !snap.exists){
+            /* Doc của mình đã bị xóa (đăng xuất ở máy khác / admin xóa /
+               race): đánh dấu mất + re-check ngay, KHÔNG ghi lại. */
+            skSessDocExists = false;
+            skSessionRecheck();
+            return;
+          }
+          skSessDocExists = true;
         }catch(_){}
       });
     }catch(_){ /* listener lỗi: fail-open, không có kick detection */ }
+  }
+  /* Re-check sau khi doc của mình bị xóa: đọc lại collection sessions 1 lần.
+     Còn ≥1 session KHÁC fresh → bị kick (thiết bị khác đang giữ tài khoản).
+     Không còn session nào → claim lại bình thường (doc bị xóa do race /
+     đăng xuất nhầm, không phải kick). Lỗi đọc → fail-open, giữ nguyên. */
+  function skSessionRecheck(){
+    try{
+      if(skSessionKicked || skSessionBlocked) return;
+      if(!skSessHeld || !skSessUid) return;
+      var db = null;
+      try{ db = exRepDb(); }catch(_){ db = null; }
+      if(!db) return;
+      var uid = skSessUid, myId = skSessDeviceId;
+      var p = db.collection("kanji_progress").doc(uid).collection("sessions").get();
+      if(!p || !p.then) return;
+      p.then(function(qs){
+        try{
+          if(skSessionKicked || skSessionBlocked) return;
+          if(!skSessHeld || skSessUid !== uid) return;
+          var otherFresh = false;
+          qs.forEach(function(docSnap){
+            if(docSnap.id === myId) return;
+            if(skSessionFresh((docSnap.data() || {}).lastSeen)) otherFresh = true;
+          });
+          if(otherFresh){ skSessionOnKicked(null); return; }
+          /* Không còn ai: doc bị xóa oan → claim lại (lũy đẳng theo deviceId). */
+          skSessHeld = false;
+          var auth = null, u = null;
+          try{ auth = skAuth(); u = auth ? auth.currentUser : null; }catch(_){}
+          if(u && u.uid === uid) skSessionClaim(u);
+        }catch(_){}
+      }).catch(function(){});
+    }catch(_){}
   }
   /* Heartbeat: interval 60s + visibilitychange về visible + focus + online.
      Đã giữ session → CHỈ ghi lastSeen, KHÔNG ghi deviceId/label/platform —
      heartbeat không bao giờ khẳng định lại deviceId ngoài transaction claim
      (M-08: thiết bị stale quay lại online mà ghi deviceId của mình sẽ cướp
-     lại session hợp lệ của thiết bị khác). Chưa giữ (fail-open lúc đầu) →
-     THỬ CLAIM LẠI bằng transaction, KHÔNG ghi mù — không bao giờ ghi đè
-     session thiết bị khác. */
+     lại session hợp lệ của thiết bị khác). Doc của mình đã bị xóa (cờ
+     skSessDocExists do listener cập nhật) → chạy re-check, KHÔNG ghi lại
+     lastSeen — ghi mù sẽ hồi sinh doc vừa bị xóa, phá cơ chế kick.
+     Chưa giữ (fail-open lúc đầu) → THỬ CLAIM LẠI bằng transaction, KHÔNG
+     ghi mù — không bao giờ ghi đè session thiết bị khác. */
   function skSessionHeartbeatStart(){
     if(skSessTimer) return;
     try{ skSessTimer = setInterval(skSessionHeartbeatTick, SK_SESSION_HB_MS); }catch(_){}
@@ -21438,6 +21842,8 @@ function furiHTML(text){
       if(!skSessUid || !signedInUid || skSessUid !== signedInUid) return;
       if(skSessHeld){
         if(!skSessRef) return;
+        /* Doc đã bị xóa → re-check thay vì ghi (KHÔNG hồi sinh doc đã xóa). */
+        if(!skSessDocExists){ skSessionRecheck(); return; }
         var p = skSessRef.set({lastSeen: skSessionServerTs()}, {merge: true});
         if(p && p.catch) p.catch(function(){});
       }else{
@@ -21458,11 +21864,13 @@ function furiHTML(text){
     skSessUid = "";
     skSessRef = null;
     skSessDeviceId = "";
+    skSessDocExists = false;
     skSessClaiming = false;
   }
-  /* Đăng xuất: dừng local + xóa session doc (fire-and-forget). CHỈ xóa khi
-     thiết bị này đang giữ session — thiết bị fail-open (chưa giữ) mà xóa mù
-     sẽ giết session của thiết bị khác. Admin không tạo session nên không xóa.
+  /* Đăng xuất: dừng local + xóa doc sessions/{deviceId} CỦA MÌNH
+     (fire-and-forget). CHỈ xóa khi thiết bị này đang giữ session — thiết bị
+     fail-open (chưa giữ) mà xóa mù sẽ giết session của thiết bị khác. Doc
+     của thiết bị khác KHÔNG bị đụng tới. Admin không tạo session nên không xóa.
      m-28: xác minh deviceId trên server trước khi xóa (cờ held trong RAM có
      thể đã stale sau khi thiết bị khác claim). */
   function skSessionLogout(){
@@ -21473,7 +21881,7 @@ function furiHTML(text){
     try{
       var db = exRepDb();
       if(!db) return;
-      var ref = db.collection("kanji_progress").doc(uid).collection("session").doc("active");
+      var ref = db.collection("kanji_progress").doc(uid).collection("sessions").doc(myId);
       /* m-28: chỉ xóa khi doc vẫn thuộc thiết bị này — cờ held trong RAM có
          thể đã stale (thiết bị khác đã claim trong lúc máy này offline, xem
          M-08); xóa mù sẽ giết session hợp lệ của thiết bị đang giữ. Đọc thất
@@ -21496,12 +21904,20 @@ function furiHTML(text){
     var detail = document.getElementById("skSessionDetail");
     if(!ov) return;
     if(kind === "block"){
-      if(title) title.textContent = "Tài khoản đang đăng nhập ở thiết bị khác";
-      if(msg) msg.textContent = "Vui lòng đăng xuất trên thiết bị đó trước khi đăng nhập ở đây.";
+      /* d = MẢNG 2 thiết bị đang giữ (claim chỉ chặn khi đủ 2 fresh). Dùng
+         textContent (không innerHTML) nên label độc hại không chèn được HTML. */
+      if(title) title.textContent = "Tài khoản đang đăng nhập ở 2 thiết bị khác";
+      if(msg) msg.textContent = "Vui lòng đăng xuất trên một trong 2 thiết bị đó trước khi đăng nhập ở đây.";
       if(detail){
-        var lbl = (d && d.deviceLabel) || "Thiết bị khác";
-        detail.textContent = "Thiết bị: " + lbl + " · Hoạt động gần nhất: " + skSessionFmtTime(skSessionTsMillis(d && d.lastSeen));
-        detail.hidden = false;
+        var list = Array.isArray(d) ? d : (d ? [d] : []);
+        var lines = [];
+        for(var i = 0; i < list.length; i++){
+          var one = list[i] || {};
+          var lbl = one.deviceLabel || "Thiết bị khác";
+          lines.push("Thiết bị " + (i + 1) + ": " + lbl + " · Hoạt động gần nhất: " + skSessionFmtTime(skSessionTsMillis(one.lastSeen)));
+        }
+        detail.textContent = lines.join("\n");
+        detail.hidden = lines.length === 0;
       }
     }else{
       if(title) title.textContent = "Đã đăng xuất khỏi thiết bị này";
@@ -21585,8 +22001,9 @@ function furiHTML(text){
       /* Đồng bộ tiến độ khi đăng nhập thành công (kéo dữ liệu của tài
          khoản này về + đẩy thay đổi local chưa kịp đẩy). */
       skSyncOnLogin(user.uid);
-      /* Single-session (20/11): claim phiên 1-thiết-bị — chặn đăng nhập
-         khi tài khoản đang mở ở thiết bị khác (fail-open khi lỗi mạng). */
+      try{ skIapReconcile(); }catch(_){} /* IAP: doi chieu giao dich chua verify sau khi dang nhap */
+      /* Two-session (21/11): claim phiên 2-thiết-bị — chặn đăng nhập khi
+         tài khoản đang online ở 2 thiết bị khác (fail-open khi lỗi mạng). */
       var skClaimP = null;
       try{ skClaimP = skSessionClaim(user); }catch(_){ skClaimP = null; }
       /* Phiên đã về (kể cả vừa quay lại từ Google): đóng bảng đăng nhập —
@@ -24788,7 +25205,7 @@ function furiHTML(text){
       actions:[{label:"Khai trình độ ngay", action:"path"},{label:"Mở Bảng kana", action:"kana"},{label:"Về Home", action:"home"}] },
     { id:"premium", label:"Gói miễn phí có gì? Premium là gì?",
       keywords:["goi mien phi","mien phi","premium","goi tra phi","nang cap","mua goi","gia goi","xem thu","goi nam","goi tron doi"],
-      answer:"Gói miễn phí gồm toàn bộ nội dung N5–N4 ở mọi mục, 1 video Shadowing đầu tiên mỗi mục (xem trọn vẹn) và 1 video tự tạo bằng cách dán link YouTube; các video Shadowing còn lại chỉ xem thử 30 giây rồi app mời nâng cấp.\n\nGói Premium mở toàn bộ nội dung N3–N1, ôn thi Tokutei xây dựng, xem trọn vẹn mọi video Shadowing và tạo video không giới hạn: Gói Năm 360.000đ (giá gốc 799.000đ, dùng 12 tháng), Gói Trọn đời 999.000đ (giá gốc 2.499.000đ, dùng vĩnh viễn). Giá giảm đến 06/12/2026.\n\nCách mua: mở trình duyệt Chrome trên điện thoại, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND. Premium mở sau khi chuyển khoản thành công — thường trong vài phút, tối đa 24 giờ.",
+      answer:"Gói miễn phí gồm toàn bộ nội dung N5–N4 ở mọi mục, 1 video Shadowing đầu tiên mỗi mục (xem trọn vẹn) và 1 video tự tạo bằng cách dán link YouTube; các video Shadowing còn lại chỉ xem thử 30 giây rồi app mời nâng cấp.\n\nGói Premium mở toàn bộ nội dung N3–N1, ôn thi Tokutei xây dựng, xem trọn vẹn mọi video Shadowing và tạo video không giới hạn: Gói Năm (dùng 12 tháng) và Gói Trọn đời (dùng vĩnh viễn) — giá hiển thị trên trang gói.\n\nCách mua: mở trang Nâng cấp Premium trong app (Cài đặt → Nâng cấp Premium), chọn gói và thanh toán qua Apple — giá hiển thị trên từng gói trước khi bạn xác nhận. Gói Năm tự động gia hạn mỗi năm, hủy được bất cứ lúc nào trong Cài đặt iPhone → Apple ID → Đăng ký. Premium mở ngay sau khi thanh toán thành công.",
       actions:[] }
   ];
   var FALLBACK = {
@@ -24868,13 +25285,8 @@ function furiHTML(text){
       answering = false;
       if(t){
         var ans = t.answer;
-        /* m-32: câu trả lời cách mua theo ngữ cảnh — mobile web/PWA đã mua
-           trực tiếp trong app bằng VietQR (20/11), chỉ app bọc native mới
-           phải mua qua trình duyệt (chưa có IAP). */
-        if(t.id === "premium" && typeof skIsNativeApp === "function" && !skIsNativeApp()){
-          ans = ans.replace("Cách mua: mở trình duyệt Chrome trên điện thoại, đăng nhập tài khoản SoraKanji tại sorakanji.com, chọn gói và thanh toán bằng VND.",
-            "Cách mua: mua trực tiếp trong app — mở tab Cài đặt → Nâng cấp Premium, chọn gói rồi chuyển khoản qua mã VietQR hiện trong app.");
-        }
+        /* IAP: câu trả lời premium đã là bản native (mua qua Apple) —
+           không cần viết lại theo ngữ cảnh như m-32 trên PWA. */
         addMsg(ans, "bot", t.actions);
       }
       else addMsg(FALLBACK.answer, "bot", FALLBACK.actions);

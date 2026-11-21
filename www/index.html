@@ -9109,9 +9109,10 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   /* ---------- Báo lỗi câu hỏi đề thi (18/11) ----------
      Nút "🚩 Báo lỗi" ở mỗi câu (lúc làm bài + màn xem lại) mở overlay này.
      Overlay là DOM thuần trên phòng thi: không đổi EXS.state nên timer vẫn
-     chạy, không gọi renderQ() nên đáp án đã chọn còn nguyên. Ghi Firestore
-     collection sk_reports (public create-only theo rules; ẩn danh được).
-     Chống spam theo thiết bị: 5/giờ + 20/ngày (localStorage). */
+     chạy, không gọi renderQ() nên đáp án đã chọn còn nguyên. Gửi qua Cloud
+     Function submitInbox (m-51, 21/11 — thay ghi trực tiếp Firestore
+     collection sk_reports; ẩn danh được). Chống spam theo thiết bị:
+     5/giờ + 20/ngày (localStorage) + throttle phía server. */
   var exRepOverlay = document.getElementById("exReportOverlay");
   var exRepCur = -1; /* index toàn cục của câu đang báo */
   var exRepSending = false;
@@ -9122,6 +9123,16 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       var app = premiumFbApp();
       return (app && typeof firebase !== "undefined" && firebase.firestore) ? firebase.firestore() : null;
     }catch(_){ return null; }
+  }
+  /* W21-7: id RAM du phong khi localStorage loi — MOI LAN LOAD 1 id ngau
+     nhien rieng, CACHE trong bien module de moi lan goi trong cung 1 lan
+     load (session claim, heartbeat, report) tra CUNG id. Truoc day catch
+     tra chuoi dev-unknown dung chung cho moi may loi localStorage nen cac may
+     do de len cung 1 session doc. Duong thuong (localStorage OK) khong doi. */
+  var exRepRamId = null;
+  function exRepRamDeviceId(){
+    if(!exRepRamId) exRepRamId = "ram-" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+    return exRepRamId;
   }
   function exRepDeviceId(){
     try{
@@ -9134,7 +9145,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
         window.localStorage.setItem("sk_device_id", id);
       }
       return id;
-    }catch(_){ return "dev-unknown"; }
+    }catch(_){ return exRepRamDeviceId(); }
   }
   function exRepPlainQ(q){
     if(q.star) return exStrip(q.fullSent);
@@ -9217,6 +9228,27 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     if(log.length >= EX_REP_DAY_MAX) return "Bạn đã gửi đủ 20 báo cáo trong hôm nay — thử lại vào ngày mai nhé.";
     return "";
   }
+  /* Gui bao loi/gop y qua Cloud Function submitInbox (m-51, 21/11): client
+     khong ghi truc tiep sk_reports/sk_feedback nua — function kiem tra
+     payload + throttle phia server. Gui doc NGUYEN nhu cu (ke ca
+     createdAt + uid — server tu strip uid va tu dong createdAt).
+     Fetch cors mac dinh (backend CO CORS cho origin app — KHONG dung
+     no-cors). Tra Promise cung hinh dang .add(): resolve khi {ok:true},
+     reject khi throttle (200 {ok:false})/400/loi mang de nhanh
+     .then/.catch cu chay nhu truoc. */
+  var SK_INBOX_URL = "https://asia-northeast1-donghung-3208d.cloudfunctions.net/submitInbox";
+  function skSubmitInbox(kind, doc){
+    return fetch(SK_INBOX_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({kind: kind, doc: doc})
+    }).then(function(r){
+      if(!r.ok) throw new Error("submitInbox HTTP " + r.status);
+      return r.json();
+    }).then(function(j){
+      if(!j || !j.ok) throw new Error((j && j.error) || "submitInbox failed");
+    });
+  }
   function exRepSend(){
     if(exRepSending) return;
     if(!EXS || exRepCur < 0 || !EXS.qs[exRepCur]){
@@ -9232,11 +9264,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     }
     var lim = exRepCheckLimit();
     if(lim){ exRepErr(lim); return; }
-    var db = exRepDb();
-    if(!db){
-      exRepErr("Chưa kết nối được máy chủ — kiểm tra mạng rồi thử lại.");
-      return;
-    }
+    /* m-51: ghi qua submitInbox (fetch) — khong can Firestore client nua. */
     var q = EXS.qs[exRepCur];
     var doc = {
       level: EXS.lv,
@@ -9259,7 +9287,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     var btn = document.getElementById("exRepSend");
     if(btn) btn.disabled = true;
     exRepErr("");
-    db.collection("sk_reports").add(doc).then(function(){
+    skSubmitInbox("report", doc).then(function(){
       exRepSending = false;
       var log = exRepLogLoad();
       log.push(Date.now());
@@ -15362,13 +15390,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      Minna no Nihongo, chia 9 nhóm hiển thị (trường group của từng từ).
      Bài này có hình minh họa như các bài N5 khác (thư mục n5-num). */
   var WV_INTRO_GROUPS = [
-    ["Số 0–10", [["ゼロ","zero","Số 0",[["日本語はゼロから始めました。","Tôi bắt đầu học tiếng Nhật từ con số 0."],["今日はゼロ円で映画を見ました。","Hôm nay tôi xem phim với giá 0 yên."],["ゼロからピアノを習います。","Tôi học đàn piano từ con số 0."],["弟はゼロ歳です。","Em trai tôi 0 tuổi."],["ゼロから英語を勉強します。","Tôi học tiếng Anh từ con số 0."]]],["いち","ichi","Số 1",[["一時に来ます。","Tôi đến lúc 1 giờ."],["わたしは一時間日本語を勉強します。","Tôi học tiếng Nhật một tiếng đồng hồ."],["この本は一冊千円です。","Quyển sách này giá 1000 yên một quyển."],["一月一日に日本へ行きます。","Ngày 1 tháng 1 tôi đi Nhật Bản."],["机の上にりんごが一つあります。","Trên bàn có một quả táo."]]],["に","ni","Số 2",[["二時に帰ります。","Tôi về lúc 2 giờ."],["私は二時間テレビを見ます。","Tôi xem tivi hai tiếng đồng hồ."],["弟は二歳です。","Em trai tôi hai tuổi."],["二日に友だちが来ます。","Ngày 2 bạn tôi đến."],["二時に会社へ行きます。","Tôi đi làm lúc 2 giờ."]]],["さん","san","Số 3",[["三時に友だちに会います。","Tôi gặp bạn lúc 3 giờ."],["三月に桜を見ます。","Tháng 3 tôi ngắm hoa anh đào."],["三時に学校へ行きます。","Tôi đến trường lúc 3 giờ."],["本を三冊読みました。","Tôi đã đọc ba quyển sách."],["三日は私の誕生日です。","Ngày 3 là sinh nhật của tôi."]]],["よん","yon","Số 4",[["四時半に起きます。","Tôi dậy lúc 4 giờ rưỡi."],["四月に花見をします。","Tháng 4 tôi đi ngắm hoa."],["四時にうちへ帰ります。","Tôi về nhà lúc 4 giờ."],["四日は木曜日です。","Ngày 4 là thứ năm."],["一週間に四回泳ぎます。","Tôi bơi bốn lần một tuần."]]],["ご","go","Số 5",[["五時に帰ります。","Tôi về lúc 5 giờ."],["五月に母の日があります。","Tháng 5 có Ngày của Mẹ."],["五時に晩ごはんを食べます。","Tôi ăn tối lúc 5 giờ."],["五日に友達が来ます。","Ngày 5 bạn tôi đến."],["毎日五時に起きます。","Mỗi ngày tôi dậy lúc 5 giờ."]]],["ろく","roku","Số 6",[["六時半に朝ごはんを食べます。","Tôi ăn sáng lúc 6 giờ rưỡi."],["六月に雨がよく降ります。","Tháng 6 trời thường mưa."],["六時に起きます。","Tôi dậy lúc 6 giờ."],["六日に友達と会います。","Ngày 6 tôi gặp bạn."],["一か月に六回テニスをします。","Tôi chơi tennis sáu lần một tháng."]]],["なな","nana","Số 7",[["七時に出かけます。","Tôi ra ngoài lúc 7 giờ."],["七月に旅行します。","Tháng 7 tôi đi du lịch."],["七時に晩ごはんを食べます。","Tôi ăn tối lúc 7 giờ."],["七日に友だちが来ます。","Ngày 7 bạn tôi đến."],["七人で旅行します。","Bảy người chúng tôi đi du lịch."]]],["はち","hachi","Số 8",[["八時から勉強します。","Tôi học từ 8 giờ."],["八月に山へ行きます。","Tháng 8 tôi đi núi."],["八時に会社へ行きます。","Tôi đi làm lúc 8 giờ."],["八日は月曜日です。","Ngày 8 là thứ hai."],["本が八冊あります。","Có tám quyển sách."]]],["きゅう","kyū","Số 9",[["九時に寝ます。","Tôi ngủ lúc 9 giờ."],["九月に新しい仕事を始めます。","Tháng 9 tôi bắt đầu công việc mới."],["九時にうちへ帰ります。","Tôi về nhà lúc 9 giờ."],["九日は火曜日です。","Ngày 9 là thứ ba."],["九人でサッカーをします。","Chín người chúng tôi chơi bóng đá."]]],["じゅう","jū","Số 10",[["十時にテレビを見ます。","Tôi xem tivi lúc 10 giờ."],["十月に紅葉がきれいです。","Tháng 10 lá đỏ đẹp."],["十時に寝ます。","Tôi ngủ lúc 10 giờ."],["十日は水曜日です。","Ngày 10 là thứ tư."],["十人でパーティーをします。","Mười người chúng tôi tổ chức tiệc."]]]]],
-    ["Số lớn", [["にじゅう","nijū","Số 20",[["二十時に電話します。","Tôi gọi điện lúc 20 giờ."],["二十日に試験があります。","Ngày 20 có kỳ thi."],["この鉛筆は二十円です。","Cây bút chì này giá 20 yên."],["二十時に寝ます。","Tôi ngủ lúc 20 giờ."],["私は二十歳の学生です。","Tôi là sinh viên 20 tuổi."]]],["さんじゅう","sanjū","Số 30",[["三十日に試験があります。","Ngày 30 có kỳ thi."],["三十日に友だちに会います。","Ngày 30 tôi gặp bạn."],["社長は三十歳です。","Giám đốc 30 tuổi."],["三十分日本語を勉強します。","Tôi học tiếng Nhật 30 phút."],["会社に三十人の社員がいます。","Trong công ty có 30 nhân viên."]]],["ひゃく","hyaku","Số 100",[["りんごは百円です。","Quả táo giá 100 yên."],["百円でりんごを買います。","Tôi mua táo với 100 yên."],["学校に百人の学生がいます。","Trong trường có 100 học sinh."],["百円の切手を買います。","Tôi mua tem 100 yên."],["漢字を百回練習します。","Tôi luyện chữ Hán 100 lần."]]],["せん","sen","Số 1000",[["このかばんは千円です。","Cái cặp này giá 1000 yên."],["このかばんは二千円です。","Cái cặp này giá 2000 yên."],["千人の人が公園にいます。","Có 1000 người trong công viên."],["千円を母にもらいました。","Tôi đã nhận 1000 yên từ mẹ."],["千円の切手を二枚買います。","Tôi mua hai con tem 1000 yên."]]],["いちまん","ichiman","Số 10000",[["この時計は一万円です。","Chiếc đồng hồ này giá 10.000 yên."],["一万円で時計を買いました。","Tôi đã mua đồng hồ với 10.000 yên."],["一万円を母に借りました。","Tôi đã vay mẹ 10.000 yên."],["一万円のカメラを買います。","Tôi mua máy ảnh 10.000 yên."],["旅行に一万円使います。","Tôi dùng 10.000 yên cho chuyến du lịch."]]]]],
-    ["Đếm đồ vật", [["ひとつ","hitotsu","1 cái",[["りんごをひとつください。","Cho tôi một quả táo."],["りんごをひとつ食べます。","Tôi ăn một quả táo."],["冷蔵庫にケーキがひとつあります。","Trong tủ lạnh có một cái bánh ngọt."],["りんごはひとつだけ食べます。","Tôi chỉ ăn một quả táo."],["サンドイッチをひとつ買います。","Tôi mua một cái sandwich."]]],["ふたつ","futatsu","2 cái",[["みかんをふたつください。","Cho tôi hai quả quýt."],["りんごをふたつ食べます。","Tôi ăn hai quả táo."],["テーブルにみかんがふたつあります。","Trên bàn có hai quả quýt."],["ケーキをふたつ買いました。","Tôi đã mua hai cái bánh ngọt."],["パンをふたつ食べました。","Tôi đã ăn hai cái bánh mì."]]],["みっつ","mittsu","3 cái",[["ケーキをみっつください。","Cho tôi ba cái bánh ngọt."],["りんごをみっつ食べました。","Tôi đã ăn ba quả táo."],["みかんをみっつ買います。","Tôi mua ba quả quýt."],["冷蔵庫に卵がみっつあります。","Trong tủ lạnh có ba quả trứng."],["パンをみっつ食べます。","Tôi ăn ba cái bánh mì."]]],["よっつ","yottsu","4 cái",[["卵をよっつ買います。","Tôi mua bốn quả trứng."],["りんごをよっつ買いました。","Tôi đã mua bốn quả táo."],["みかんをよっつ食べます。","Tôi ăn bốn quả quýt."],["テーブルにケーキがよっつあります。","Trên bàn có bốn cái bánh ngọt."],["おにぎりをよっつ食べました。","Tôi đã ăn bốn cái cơm nắm."]]],["いつつ","itsutsu","5 cái",[["パンをいつつ買います。","Tôi mua năm cái bánh mì."],["りんごをいつつ食べます。","Tôi ăn năm quả táo."],["みかんをいつつ買いました。","Tôi đã mua năm quả quýt."],["冷蔵庫に卵がいつつあります。","Trong tủ lạnh có năm quả trứng."],["お菓子をいつつ食べました。","Tôi đã ăn năm cái bánh kẹo."]]],["むっつ","muttsu","6 cái",[["りんごをむっつ食べました。","Tôi đã ăn sáu quả táo."],["みかんをむっつ買います。","Tôi mua sáu quả quýt."],["りんごをむっつ買いました。","Tôi đã mua sáu quả táo."],["テーブルにパンがむっつあります。","Trên bàn có sáu cái bánh mì."],["チョコレートをむっつ食べます。","Tôi ăn sáu viên sô-cô-la."]]],["ななつ","nanatsu","7 cái",[["みかんをななつ食べました。","Tôi đã ăn bảy quả quýt."],["りんごをななつ買います。","Tôi mua bảy quả táo."],["みかんをななつ買いました。","Tôi đã mua bảy quả quýt."],["机の上にお菓子がななつあります。","Trên bàn có bảy cái bánh kẹo."],["アイスクリームをななつ食べました。","Tôi đã ăn bảy cây kem."]]],["やっつ","yattsu","8 cái",[["お菓子をやっつください。","Cho tôi tám cái bánh kẹo."],["りんごをやっつ食べます。","Tôi ăn tám quả táo."],["みかんをやっつ買います。","Tôi mua tám quả quýt."],["冷蔵庫に卵がやっつあります。","Trong tủ lạnh có tám quả trứng."],["ケーキをやっつ買いました。","Tôi đã mua tám cái bánh ngọt."]]],["ここのつ","kokonotsu","9 cái",[["りんごをここのつください。","Cho tôi chín quả táo."],["りんごをここのつ食べました。","Tôi đã ăn chín quả táo."],["みかんをここのつ買います。","Tôi mua chín quả quýt."],["テーブルにパンがここのつあります。","Trên bàn có chín cái bánh mì."],["サンドイッチをここのつ買いました。","Tôi đã mua chín cái sandwich."]]],["とお","tō","10 cái",[["みかんをとおください。","Cho tôi mười quả quýt."],["りんごをとお食べました。","Tôi đã ăn mười quả táo."],["みかんをとお買います。","Tôi mua mười quả quýt."],["冷蔵庫に卵がとおあります。","Trong tủ lạnh có mười quả trứng."],["おにぎりをとお作ります。","Tôi làm mười cái cơm nắm."]]],["いくつ","ikutsu","Mấy cái",[["りんごはいくつありますか。","Có mấy quả táo?"],["みかんはいくつありますか。","Có mấy quả quýt?"],["りんごはいくつ食べましたか。","Bạn đã ăn mấy quả táo?"],["ケーキはいくつ買いますか。","Bạn mua mấy cái bánh ngọt?"],["りんごはいくつ買いましたか。","Bạn đã mua mấy quả táo?"]]]]],
-    ["Đếm người", [["ひとり","hitori","1 người",[["一人で勉強します。","Tôi học một mình."],["一人で図書館へ行きます。","Tôi đi thư viện một mình."],["一人で旅行します。","Tôi đi du lịch một mình."],["一人でレストランへ行きます。","Tôi đi nhà hàng một mình."],["教室に学生が一人います。","Trong lớp học có một học sinh."]]],["ふたり","futari","2 người",[["二人で映画を見ます。","Hai người chúng tôi xem phim."],["二人で勉強します。","Hai người chúng tôi học cùng nhau."],["二人でごはんを食べます。","Hai người chúng tôi ăn cơm cùng nhau."],["二人で旅行に行きます。","Hai người chúng tôi đi du lịch."],["教室に先生が二人います。","Trong lớp học có hai thầy giáo."]]],["～にん","~nin","~người",[["教室に三人がいます。","Trong lớp học có ba người."],["私のクラスに学生が二十五人います。","Lớp tôi có hai mươi lăm học sinh."],["会社に十人の社員がいます。","Trong công ty có mười nhân viên."],["パーティーに二十人が来ました。","Có hai mươi người đến bữa tiệc."],["二人の子どもがいます。","Tôi có hai đứa con."]]]]],
-    ["Đếm khác", [["～まい","~mai","~tờ (giấy)",[["紙を三枚ください。","Cho tôi ba tờ giấy."],["切手を五枚買います。","Tôi mua năm con tem."],["写真を二枚撮りました。","Tôi đã chụp hai tấm ảnh."],["紙を四枚使います。","Tôi dùng bốn tờ giấy."],["はがきを三枚書きました。","Tôi đã viết ba tấm bưu thiếp."]]],["～さつ","~satsu","~quyển (sách)",[["本を二冊買います。","Tôi mua hai quyển sách."],["本を三冊買いました。","Tôi đã mua ba quyển sách."],["辞書を一冊買います。","Tôi mua một quyển từ điển."],["雑誌を二冊読みます。","Tôi đọc hai quyển tạp chí."],["本を五冊持っています。","Tôi có năm quyển sách."]]],["～ひき","~hiki","~con (động vật nhỏ)",[["犬が二匹います。","Có hai con chó."],["猫が三匹います。","Có ba con mèo."],["私のうちに猫が二匹います。","Nhà tôi có hai con mèo."],["うちに猫が三匹います。","Nhà tôi có ba con mèo."],["公園に犬が五匹います。","Trong công viên có năm con chó."]]],["～ほん","~hon","~cái (đồ dài)",[["鉛筆を三本買います。","Tôi mua ba cây bút chì."],["ボールペンを二本買います。","Tôi mua hai cây bút bi."],["傘を一本買いました。","Tôi đã mua một cái ô."],["ビールを三本飲みました。","Tôi đã uống ba chai bia."],["机の上に鉛筆が五本あります。","Trên bàn có năm cây bút chì."]]],["～かい","~kai","~lần",[["一か月に二回映画を見ます。","Tôi xem phim hai lần một tháng."],["一週間に三回日本語を勉強します。","Tôi học tiếng Nhật ba lần một tuần."],["一週間に二回プールへ行きます。","Một tuần tôi đi bể bơi hai lần."],["一年に一回旅行します。","Tôi đi du lịch một lần một năm."],["日本へ二回行きました。","Tôi đã đi Nhật hai lần."]]],["～さい","~sai","~tuổi",[["弟は五歳です。","Em trai tôi năm tuổi."],["田中さんは二十五歳です。","Anh Tanaka 25 tuổi."],["先生は三十五歳です。","Thầy giáo 35 tuổi."],["子どもは三歳です。","Đứa trẻ ba tuổi."],["お父さんは五十歳です。","Bố tôi năm mươi tuổi."]]]]],
+    ["Số 0–10", [["ゼロ","ゼロ","Số 0",[["日本語はゼロから始めました。","Tôi bắt đầu học tiếng Nhật từ con số 0."],["今日はゼロ円で映画を見ました。","Hôm nay tôi xem phim với giá 0 yên."],["ゼロからピアノを習います。","Tôi học đàn piano từ con số 0."],["弟はゼロ歳です。","Em trai tôi 0 tuổi."],["ゼロから英語を勉強します。","Tôi học tiếng Anh từ con số 0."]]],["いち","いち","Số 1",[["一時に来ます。","Tôi đến lúc 1 giờ."],["わたしは一時間日本語を勉強します。","Tôi học tiếng Nhật một tiếng đồng hồ."],["この本は一冊千円です。","Quyển sách này giá 1000 yên một quyển."],["一月一日に日本へ行きます。","Ngày 1 tháng 1 tôi đi Nhật Bản."],["机の上にりんごが一つあります。","Trên bàn có một quả táo."]]],["に","に","Số 2",[["二時に帰ります。","Tôi về lúc 2 giờ."],["私は二時間テレビを見ます。","Tôi xem tivi hai tiếng đồng hồ."],["弟は二歳です。","Em trai tôi hai tuổi."],["二日に友だちが来ます。","Ngày 2 bạn tôi đến."],["二時に会社へ行きます。","Tôi đi làm lúc 2 giờ."]]],["さん","さん","Số 3",[["三時に友だちに会います。","Tôi gặp bạn lúc 3 giờ."],["三月に桜を見ます。","Tháng 3 tôi ngắm hoa anh đào."],["三時に学校へ行きます。","Tôi đến trường lúc 3 giờ."],["本を三冊読みました。","Tôi đã đọc ba quyển sách."],["三日は私の誕生日です。","Ngày 3 là sinh nhật của tôi."]]],["よん","よん","Số 4",[["四時半に起きます。","Tôi dậy lúc 4 giờ rưỡi."],["四月に花見をします。","Tháng 4 tôi đi ngắm hoa."],["四時にうちへ帰ります。","Tôi về nhà lúc 4 giờ."],["四日は木曜日です。","Ngày 4 là thứ năm."],["一週間に四回泳ぎます。","Tôi bơi bốn lần một tuần."]]],["ご","ご","Số 5",[["五時に帰ります。","Tôi về lúc 5 giờ."],["五月に母の日があります。","Tháng 5 có Ngày của Mẹ."],["五時に晩ごはんを食べます。","Tôi ăn tối lúc 5 giờ."],["五日に友達が来ます。","Ngày 5 bạn tôi đến."],["毎日五時に起きます。","Mỗi ngày tôi dậy lúc 5 giờ."]]],["ろく","ろく","Số 6",[["六時半に朝ごはんを食べます。","Tôi ăn sáng lúc 6 giờ rưỡi."],["六月に雨がよく降ります。","Tháng 6 trời thường mưa."],["六時に起きます。","Tôi dậy lúc 6 giờ."],["六日に友達と会います。","Ngày 6 tôi gặp bạn."],["一か月に六回テニスをします。","Tôi chơi tennis sáu lần một tháng."]]],["なな","なな","Số 7",[["七時に出かけます。","Tôi ra ngoài lúc 7 giờ."],["七月に旅行します。","Tháng 7 tôi đi du lịch."],["七時に晩ごはんを食べます。","Tôi ăn tối lúc 7 giờ."],["七日に友だちが来ます。","Ngày 7 bạn tôi đến."],["七人で旅行します。","Bảy người chúng tôi đi du lịch."]]],["はち","はち","Số 8",[["八時から勉強します。","Tôi học từ 8 giờ."],["八月に山へ行きます。","Tháng 8 tôi đi núi."],["八時に会社へ行きます。","Tôi đi làm lúc 8 giờ."],["八日は月曜日です。","Ngày 8 là thứ hai."],["本が八冊あります。","Có tám quyển sách."]]],["きゅう","きゅう","Số 9",[["九時に寝ます。","Tôi ngủ lúc 9 giờ."],["九月に新しい仕事を始めます。","Tháng 9 tôi bắt đầu công việc mới."],["九時にうちへ帰ります。","Tôi về nhà lúc 9 giờ."],["九日は火曜日です。","Ngày 9 là thứ ba."],["九人でサッカーをします。","Chín người chúng tôi chơi bóng đá."]]],["じゅう","じゅう","Số 10",[["十時にテレビを見ます。","Tôi xem tivi lúc 10 giờ."],["十月に紅葉がきれいです。","Tháng 10 lá đỏ đẹp."],["十時に寝ます。","Tôi ngủ lúc 10 giờ."],["十日は水曜日です。","Ngày 10 là thứ tư."],["十人でパーティーをします。","Mười người chúng tôi tổ chức tiệc."]]]]],
+    ["Số lớn", [["にじゅう","にじゅう","Số 20",[["二十時に電話します。","Tôi gọi điện lúc 20 giờ."],["二十日に試験があります。","Ngày 20 có kỳ thi."],["この鉛筆は二十円です。","Cây bút chì này giá 20 yên."],["二十時に寝ます。","Tôi ngủ lúc 20 giờ."],["私は二十歳の学生です。","Tôi là sinh viên 20 tuổi."]]],["さんじゅう","さんじゅう","Số 30",[["三十日に試験があります。","Ngày 30 có kỳ thi."],["三十日に友だちに会います。","Ngày 30 tôi gặp bạn."],["社長は三十歳です。","Giám đốc 30 tuổi."],["三十分日本語を勉強します。","Tôi học tiếng Nhật 30 phút."],["会社に三十人の社員がいます。","Trong công ty có 30 nhân viên."]]],["ひゃく","ひゃく","Số 100",[["りんごは百円です。","Quả táo giá 100 yên."],["百円でりんごを買います。","Tôi mua táo với 100 yên."],["学校に百人の学生がいます。","Trong trường có 100 học sinh."],["百円の切手を買います。","Tôi mua tem 100 yên."],["漢字を百回練習します。","Tôi luyện chữ Hán 100 lần."]]],["せん","せん","Số 1000",[["このかばんは千円です。","Cái cặp này giá 1000 yên."],["このかばんは二千円です。","Cái cặp này giá 2000 yên."],["千人の人が公園にいます。","Có 1000 người trong công viên."],["千円を母にもらいました。","Tôi đã nhận 1000 yên từ mẹ."],["千円の切手を二枚買います。","Tôi mua hai con tem 1000 yên."]]],["いちまん","いちまん","Số 10000",[["この時計は一万円です。","Chiếc đồng hồ này giá 10.000 yên."],["一万円で時計を買いました。","Tôi đã mua đồng hồ với 10.000 yên."],["一万円を母に借りました。","Tôi đã vay mẹ 10.000 yên."],["一万円のカメラを買います。","Tôi mua máy ảnh 10.000 yên."],["旅行に一万円使います。","Tôi dùng 10.000 yên cho chuyến du lịch."]]]]],
+    ["Đếm đồ vật", [["ひとつ","ひとつ","1 cái",[["りんごをひとつください。","Cho tôi một quả táo."],["りんごをひとつ食べます。","Tôi ăn một quả táo."],["冷蔵庫にケーキがひとつあります。","Trong tủ lạnh có một cái bánh ngọt."],["りんごはひとつだけ食べます。","Tôi chỉ ăn một quả táo."],["サンドイッチをひとつ買います。","Tôi mua một cái sandwich."]]],["ふたつ","ふたつ","2 cái",[["みかんをふたつください。","Cho tôi hai quả quýt."],["りんごをふたつ食べます。","Tôi ăn hai quả táo."],["テーブルにみかんがふたつあります。","Trên bàn có hai quả quýt."],["ケーキをふたつ買いました。","Tôi đã mua hai cái bánh ngọt."],["パンをふたつ食べました。","Tôi đã ăn hai cái bánh mì."]]],["みっつ","みっつ","3 cái",[["ケーキをみっつください。","Cho tôi ba cái bánh ngọt."],["りんごをみっつ食べました。","Tôi đã ăn ba quả táo."],["みかんをみっつ買います。","Tôi mua ba quả quýt."],["冷蔵庫に卵がみっつあります。","Trong tủ lạnh có ba quả trứng."],["パンをみっつ食べます。","Tôi ăn ba cái bánh mì."]]],["よっつ","よっつ","4 cái",[["卵をよっつ買います。","Tôi mua bốn quả trứng."],["りんごをよっつ買いました。","Tôi đã mua bốn quả táo."],["みかんをよっつ食べます。","Tôi ăn bốn quả quýt."],["テーブルにケーキがよっつあります。","Trên bàn có bốn cái bánh ngọt."],["おにぎりをよっつ食べました。","Tôi đã ăn bốn cái cơm nắm."]]],["いつつ","いつつ","5 cái",[["パンをいつつ買います。","Tôi mua năm cái bánh mì."],["りんごをいつつ食べます。","Tôi ăn năm quả táo."],["みかんをいつつ買いました。","Tôi đã mua năm quả quýt."],["冷蔵庫に卵がいつつあります。","Trong tủ lạnh có năm quả trứng."],["お菓子をいつつ食べました。","Tôi đã ăn năm cái bánh kẹo."]]],["むっつ","むっつ","6 cái",[["りんごをむっつ食べました。","Tôi đã ăn sáu quả táo."],["みかんをむっつ買います。","Tôi mua sáu quả quýt."],["りんごをむっつ買いました。","Tôi đã mua sáu quả táo."],["テーブルにパンがむっつあります。","Trên bàn có sáu cái bánh mì."],["チョコレートをむっつ食べます。","Tôi ăn sáu viên sô-cô-la."]]],["ななつ","ななつ","7 cái",[["みかんをななつ食べました。","Tôi đã ăn bảy quả quýt."],["りんごをななつ買います。","Tôi mua bảy quả táo."],["みかんをななつ買いました。","Tôi đã mua bảy quả quýt."],["机の上にお菓子がななつあります。","Trên bàn có bảy cái bánh kẹo."],["アイスクリームをななつ食べました。","Tôi đã ăn bảy cây kem."]]],["やっつ","やっつ","8 cái",[["お菓子をやっつください。","Cho tôi tám cái bánh kẹo."],["りんごをやっつ食べます。","Tôi ăn tám quả táo."],["みかんをやっつ買います。","Tôi mua tám quả quýt."],["冷蔵庫に卵がやっつあります。","Trong tủ lạnh có tám quả trứng."],["ケーキをやっつ買いました。","Tôi đã mua tám cái bánh ngọt."]]],["ここのつ","ここのつ","9 cái",[["りんごをここのつください。","Cho tôi chín quả táo."],["りんごをここのつ食べました。","Tôi đã ăn chín quả táo."],["みかんをここのつ買います。","Tôi mua chín quả quýt."],["テーブルにパンがここのつあります。","Trên bàn có chín cái bánh mì."],["サンドイッチをここのつ買いました。","Tôi đã mua chín cái sandwich."]]],["とお","とお","10 cái",[["みかんをとおください。","Cho tôi mười quả quýt."],["りんごをとお食べました。","Tôi đã ăn mười quả táo."],["みかんをとお買います。","Tôi mua mười quả quýt."],["冷蔵庫に卵がとおあります。","Trong tủ lạnh có mười quả trứng."],["おにぎりをとお作ります。","Tôi làm mười cái cơm nắm."]]],["いくつ","いくつ","Mấy cái",[["りんごはいくつありますか。","Có mấy quả táo?"],["みかんはいくつありますか。","Có mấy quả quýt?"],["りんごはいくつ食べましたか。","Bạn đã ăn mấy quả táo?"],["ケーキはいくつ買いますか。","Bạn mua mấy cái bánh ngọt?"],["りんごはいくつ買いましたか。","Bạn đã mua mấy quả táo?"]]]]],
+    ["Đếm người", [["ひとり","ひとり","1 người",[["一人で勉強します。","Tôi học một mình."],["一人で図書館へ行きます。","Tôi đi thư viện một mình."],["一人で旅行します。","Tôi đi du lịch một mình."],["一人でレストランへ行きます。","Tôi đi nhà hàng một mình."],["教室に学生が一人います。","Trong lớp học có một học sinh."]]],["ふたり","ふたり","2 người",[["二人で映画を見ます。","Hai người chúng tôi xem phim."],["二人で勉強します。","Hai người chúng tôi học cùng nhau."],["二人でごはんを食べます。","Hai người chúng tôi ăn cơm cùng nhau."],["二人で旅行に行きます。","Hai người chúng tôi đi du lịch."],["教室に先生が二人います。","Trong lớp học có hai thầy giáo."]]],["～にん","～にん","~người",[["教室に三人がいます。","Trong lớp học có ba người."],["私のクラスに学生が二十五人います。","Lớp tôi có hai mươi lăm học sinh."],["会社に十人の社員がいます。","Trong công ty có mười nhân viên."],["パーティーに二十人が来ました。","Có hai mươi người đến bữa tiệc."],["二人の子どもがいます。","Tôi có hai đứa con."]]]]],
+    ["Đếm khác", [["～まい","～まい","~tờ (giấy)",[["紙を三枚ください。","Cho tôi ba tờ giấy."],["切手を五枚買います。","Tôi mua năm con tem."],["写真を二枚撮りました。","Tôi đã chụp hai tấm ảnh."],["紙を四枚使います。","Tôi dùng bốn tờ giấy."],["はがきを三枚書きました。","Tôi đã viết ba tấm bưu thiếp."]]],["～さつ","～さつ","~quyển (sách)",[["本を二冊買います。","Tôi mua hai quyển sách."],["本を三冊買いました。","Tôi đã mua ba quyển sách."],["辞書を一冊買います。","Tôi mua một quyển từ điển."],["雑誌を二冊読みます。","Tôi đọc hai quyển tạp chí."],["本を五冊持っています。","Tôi có năm quyển sách."]]],["～ひき","～ひき","~con (động vật nhỏ)",[["犬が二匹います。","Có hai con chó."],["猫が三匹います。","Có ba con mèo."],["私のうちに猫が二匹います。","Nhà tôi có hai con mèo."],["うちに猫が三匹います。","Nhà tôi có ba con mèo."],["公園に犬が五匹います。","Trong công viên có năm con chó."]]],["～ほん","～ほん","~cái (đồ dài)",[["鉛筆を三本買います。","Tôi mua ba cây bút chì."],["ボールペンを二本買います。","Tôi mua hai cây bút bi."],["傘を一本買いました。","Tôi đã mua một cái ô."],["ビールを三本飲みました。","Tôi đã uống ba chai bia."],["机の上に鉛筆が五本あります。","Trên bàn có năm cây bút chì."]]],["～かい","～かい","~lần",[["一か月に二回映画を見ます。","Tôi xem phim hai lần một tháng."],["一週間に三回日本語を勉強します。","Tôi học tiếng Nhật ba lần một tuần."],["一週間に二回プールへ行きます。","Một tuần tôi đi bể bơi hai lần."],["一年に一回旅行します。","Tôi đi du lịch một lần một năm."],["日本へ二回行きました。","Tôi đã đi Nhật hai lần."]]],["～さい","～さい","~tuổi",[["弟は五歳です。","Em trai tôi năm tuổi."],["田中さんは二十五歳です。","Anh Tanaka 25 tuổi."],["先生は三十五歳です。","Thầy giáo 35 tuổi."],["子どもは三歳です。","Đứa trẻ ba tuổi."],["お父さんは五十歳です。","Bố tôi năm mươi tuổi."]]]]],
     ["Thứ trong tuần", [["月曜日","げつようび","Thứ hai",[["月曜日に学校へ行きます。","Thứ hai tôi đi học."],["月曜日は午前九時に学校へ行きます。","Thứ hai lúc 9 giờ sáng tôi đi học."],["月曜日に会議があります。","Thứ hai có cuộc họp."],["月曜日の午前に学校へ行きます。","Sáng thứ hai tôi đi học."],["月曜日に日本語の試験があります。","Thứ hai có bài kiểm tra tiếng Nhật."]]],["火曜日","かようび","Thứ ba",[["火曜日に日本語を勉強します。","Thứ ba tôi học tiếng Nhật."],["火曜日は学校が休みです。","Thứ ba trường nghỉ."],["火曜日の午後に図書館へ行きます。","Chiều thứ ba tôi đi thư viện."],["火曜日に泳ぎます。","Thứ ba tôi đi bơi."],["火曜日は天気がいいです。","Thứ ba thời tiết đẹp."]]],["水曜日","すいようび","Thứ tư",[["水曜日に会社へ行きます。","Thứ tư tôi đi làm."],["水曜日の午前に病院へ行きます。","Sáng thứ tư tôi đi bệnh viện."],["水曜日は会社が休みです。","Thứ tư công ty nghỉ."],["水曜日に買い物に行きます。","Thứ tư tôi đi mua sắm."],["水曜日は暑いです。","Thứ tư trời nóng."]]],["木曜日","もくようび","Thứ năm",[["木曜日に買い物します。","Thứ năm tôi đi mua sắm."],["木曜日の午後にデパートへ行きます。","Chiều thứ năm tôi đi trung tâm thương mại."],["木曜日は雨です。","Thứ năm trời mưa."],["木曜日に本を読みます。","Thứ năm tôi đọc sách."],["木曜日に先生に会います。","Thứ năm tôi gặp thầy giáo."]]],["金曜日","きんようび","Thứ sáu",[["金曜日に映画を見ます。","Thứ sáu tôi xem phim."],["金曜日は楽しいです。","Thứ sáu thật vui."],["金曜日の夜に友だちとごはんを食べます。","Tối thứ sáu tôi ăn cơm cùng bạn."],["金曜日にコンサートへ行きます。","Thứ sáu tôi đi xem hòa nhạc."],["金曜日に早く帰ります。","Thứ sáu tôi về sớm."]]],["土曜日","どようび","Thứ bảy",[["土曜日に友だちに会います。","Thứ bảy tôi gặp bạn."],["土曜日は友達と買い物をします。","Thứ bảy tôi cùng bạn đi mua sắm."],["土曜日に家族と出かけます。","Thứ bảy tôi đi chơi cùng gia đình."],["土曜日の午前に掃除します。","Sáng thứ bảy tôi dọn dẹp."],["土曜日に公園で遊びます。","Thứ bảy tôi chơi ở công viên."]]],["日曜日","にちようび","Chủ nhật",[["日曜日に休みます。","Chủ nhật tôi nghỉ."],["日曜日はうちにいます。","Chủ nhật tôi ở nhà."],["日曜日に図書館で本を読みます。","Chủ nhật tôi đọc sách ở thư viện."],["日曜日はゆっくり休みます。","Chủ nhật tôi nghỉ ngơi thong thả."],["日曜日の午後にテレビを見ます。","Chiều chủ nhật tôi xem tivi."]]]]],
-    ["Hôm nay", [["きょう","kyō","Hôm nay",[["今日は月曜日です。","Hôm nay là thứ hai."],["今日は天気がいいです。","Hôm nay thời tiết đẹp."],["今日は学校へ行きません。","Hôm nay tôi không đi học."],["今日の晩ごはんはカレーライスです。","Bữa tối hôm nay là cơm cà ri."],["今日は友だちに会います。","Hôm nay tôi gặp bạn."]]],["きのう","kinō","Hôm qua",[["きのうは雨でした。","Hôm qua trời mưa."],["きのうは学校へ行きませんでした。","Hôm qua tôi không đi học."],["きのうは学校へ行きました。","Hôm qua tôi đã đi học."],["きのうは忙しかったです。","Hôm qua tôi bận."],["きのうは友だちと映画を見ました。","Hôm qua tôi đã xem phim cùng bạn."]]],["あした","ashita","Ngày mai",[["あしたは土曜日です。","Ngày mai là thứ bảy."],["あしたは雨です。","Ngày mai trời mưa."],["あしたは学校へ行きます。","Ngày mai tôi đi học."],["あしたは友だちに会います。","Ngày mai tôi gặp bạn."],["あしたは買い物に行きます。","Ngày mai tôi đi mua sắm."]]],["あさって","asatte","Ngày mốt",[["あさっては日曜日です。","Ngày mốt là chủ nhật."],["あさっては月曜日です。","Ngày mốt là thứ hai."],["あさっては試験があります。","Ngày mốt có kỳ thi."],["あさっては友だちが来ます。","Ngày mốt bạn tôi đến."],["あさっては旅行に行きます。","Ngày mốt tôi đi du lịch."]]],["おととい","ototoi","Ngày hôm kia",[["おとといは金曜日でした。","Ngày hôm kia là thứ sáu."],["おとといは雨でした。","Ngày hôm kia trời mưa."],["おとといは学校が休みでした。","Ngày hôm kia trường nghỉ."],["おとといは友だちに会いました。","Ngày hôm kia tôi đã gặp bạn."],["おとといは買い物をしました。","Ngày hôm kia tôi đã đi mua sắm."]]],["まいにち","mainichi","Mỗi ngày",[["まいにち日本語を勉強します。","Mỗi ngày tôi học tiếng Nhật."],["まいにち六時に起きます。","Mỗi ngày tôi dậy lúc 6 giờ."],["まいにち学校へ行きます。","Mỗi ngày tôi đi học."],["まいにちテレビを見ます。","Mỗi ngày tôi xem tivi."],["まいにち朝ごはんを食べます。","Mỗi ngày tôi ăn sáng."]]]]],
+    ["Hôm nay", [["きょう","きょう","Hôm nay",[["今日は月曜日です。","Hôm nay là thứ hai."],["今日は天気がいいです。","Hôm nay thời tiết đẹp."],["今日は学校へ行きません。","Hôm nay tôi không đi học."],["今日の晩ごはんはカレーライスです。","Bữa tối hôm nay là cơm cà ri."],["今日は友だちに会います。","Hôm nay tôi gặp bạn."]]],["きのう","きのう","Hôm qua",[["きのうは雨でした。","Hôm qua trời mưa."],["きのうは学校へ行きませんでした。","Hôm qua tôi không đi học."],["きのうは学校へ行きました。","Hôm qua tôi đã đi học."],["きのうは忙しかったです。","Hôm qua tôi bận."],["きのうは友だちと映画を見ました。","Hôm qua tôi đã xem phim cùng bạn."]]],["あした","あした","Ngày mai",[["あしたは土曜日です。","Ngày mai là thứ bảy."],["あしたは雨です。","Ngày mai trời mưa."],["あしたは学校へ行きます。","Ngày mai tôi đi học."],["あしたは友だちに会います。","Ngày mai tôi gặp bạn."],["あしたは買い物に行きます。","Ngày mai tôi đi mua sắm."]]],["あさって","あさって","Ngày mốt",[["あさっては日曜日です。","Ngày mốt là chủ nhật."],["あさっては月曜日です。","Ngày mốt là thứ hai."],["あさっては試験があります。","Ngày mốt có kỳ thi."],["あさっては友だちが来ます。","Ngày mốt bạn tôi đến."],["あさっては旅行に行きます。","Ngày mốt tôi đi du lịch."]]],["おととい","おととい","Ngày hôm kia",[["おとといは金曜日でした。","Ngày hôm kia là thứ sáu."],["おとといは雨でした。","Ngày hôm kia trời mưa."],["おとといは学校が休みでした。","Ngày hôm kia trường nghỉ."],["おとといは友だちに会いました。","Ngày hôm kia tôi đã gặp bạn."],["おとといは買い物をしました。","Ngày hôm kia tôi đã đi mua sắm."]]],["まいにち","まいにち","Mỗi ngày",[["まいにち日本語を勉強します。","Mỗi ngày tôi học tiếng Nhật."],["まいにち六時に起きます。","Mỗi ngày tôi dậy lúc 6 giờ."],["まいにち学校へ行きます。","Mỗi ngày tôi đi học."],["まいにちテレビを見ます。","Mỗi ngày tôi xem tivi."],["まいにち朝ごはんを食べます。","Mỗi ngày tôi ăn sáng."]]]]],
     ["Tháng", [["一月","いちがつ","Tháng 1",[["一月は寒いです。","Tháng 1 trời lạnh."],["一月に雪が降ります。","Tháng 1 tuyết rơi."],["一月一日に神社へ行きます。","Ngày 1 tháng 1 tôi đi đền thờ."],["一月に旅行します。","Tháng 1 tôi đi du lịch."],["一月にお正月があります。","Tháng 1 có Tết."]]],["二月","にがつ","Tháng 2",[["二月に雪が降ります。","Tháng 2 tuyết rơi."],["二月は寒いです。","Tháng 2 trời lạnh."],["二月に日本へ行きます。","Tháng 2 tôi đi Nhật Bản."],["二月は短いです。","Tháng 2 là tháng ngắn."],["二月に試験があります。","Tháng 2 có kỳ thi."]]],["三月","さんがつ","Tháng 3",[["三月は暖かいです。","Tháng 3 trời ấm."],["三月に花見をします。","Tháng 3 tôi đi ngắm hoa."],["三月に旅行に行きます。","Tháng 3 tôi đi du lịch."],["三月に新しい本を買います。","Tháng 3 tôi mua sách mới."],["三月は春です。","Tháng 3 là mùa xuân."]]],["四月","しがつ","Tháng 4",[["四月に日本語を始めます。","Tháng 4 tôi bắt đầu học tiếng Nhật."],["四月は暖かいです。","Tháng 4 trời ấm."],["四月に新しい仕事を始めます。","Tháng 4 tôi bắt đầu công việc mới."],["四月に花がきれいです。","Tháng 4 hoa đẹp."],["四月に母に会います。","Tháng 4 tôi gặp mẹ."]]],["五月","ごがつ","Tháng 5",[["五月に旅行します。","Tháng 5 tôi đi du lịch."],["五月は暖かいです。","Tháng 5 trời ấm."],["五月に子供の日があります。","Tháng 5 có Ngày Thiếu nhi."],["五月に山へ行きます。","Tháng 5 tôi đi núi."],["五月に新しい車を買います。","Tháng 5 tôi mua xe mới."]]],["六月","ろくがつ","Tháng 6",[["六月は雨が多いです。","Tháng 6 mưa nhiều."],["六月に雨が降ります。","Tháng 6 trời mưa."],["六月は暑いです。","Tháng 6 trời nóng."],["六月に海へ行きます。","Tháng 6 tôi đi biển."],["六月に試験があります。","Tháng 6 có kỳ thi."]]],["七月","しちがつ","Tháng 7",[["七月は暑いです。","Tháng 7 trời nóng."],["七月に海で泳ぎます。","Tháng 7 tôi bơi ở biển."],["七月はとても暑いです。","Tháng 7 trời rất nóng."],["七月に山へ行きます。","Tháng 7 tôi đi núi."],["七月に家族と旅行します。","Tháng 7 tôi đi du lịch cùng gia đình."]]],["八月","はちがつ","Tháng 8",[["八月に海へ行きます。","Tháng 8 tôi đi biển."],["八月は暑いです。","Tháng 8 trời nóng."],["八月に祭りがあります。","Tháng 8 có lễ hội."],["八月にプールで泳ぎます。","Tháng 8 tôi bơi ở bể bơi."],["八月に雨がたくさん降ります。","Tháng 8 mưa nhiều."]]],["九月","くがつ","Tháng 9",[["九月は涼しいです。","Tháng 9 trời mát."],["九月に学校へ行きます。","Tháng 9 tôi đi học."],["九月は秋です。","Tháng 9 là mùa thu."],["九月に本をたくさん読みます。","Tháng 9 tôi đọc nhiều sách."],["九月に試験があります。","Tháng 9 có kỳ thi."]]],["十月","じゅうがつ","Tháng 10",[["十月に紅葉を見ます。","Tháng 10 tôi ngắm lá đỏ."],["十月は涼しいです。","Tháng 10 trời mát."],["十月に体育の日があります。","Tháng 10 có Ngày Thể thao."],["十月に山へ行きます。","Tháng 10 tôi đi núi."],["十月は秋です。","Tháng 10 là mùa thu."]]],["十一月","じゅういちがつ","Tháng 11",[["十一月に試験があります。","Tháng 11 có kỳ thi."],["十一月は寒いです。","Tháng 11 trời lạnh."],["十一月に紅葉を見ます。","Tháng 11 tôi ngắm lá đỏ."],["十一月に日本へ行きます。","Tháng 11 tôi đi Nhật Bản."],["十一月に新しいコートを買います。","Tháng 11 tôi mua áo khoác mới."]]],["十二月","じゅうにがつ","Tháng 12",[["十二月にクリスマスがあります。","Tháng 12 có lễ Giáng sinh."],["十二月は寒いです。","Tháng 12 trời lạnh."],["十二月に雪が降ります。","Tháng 12 tuyết rơi."],["十二月にお正月の準備をします。","Tháng 12 tôi chuẩn bị đón Tết."],["十二月にうちを掃除します。","Tháng 12 tôi dọn dẹp nhà cửa."]]],["今月","こんげつ","Tháng này",[["今月は忙しいです。","Tháng này tôi bận."],["今月は日本語の試験があります。","Tháng này có bài kiểm tra tiếng Nhật."],["今月は雨が多いです。","Tháng này mưa nhiều."],["今月に家族に会います。","Tháng này tôi gặp gia đình."],["今月はお金がありません。","Tháng này tôi không có tiền."]]],["来月","らいげつ","Tháng sau",[["来月は日本へ行きます。","Tháng sau tôi sẽ đi Nhật Bản."],["来月は忙しいです。","Tháng sau tôi bận."],["来月に試験があります。","Tháng sau có kỳ thi."],["来月は友だちが来ます。","Tháng sau bạn tôi đến."],["来月は旅行に行きます。","Tháng sau tôi đi du lịch."]]],["先月","せんげつ","Tháng trước",[["先月はベトナムへ行きました。","Tháng trước tôi đã đi Việt Nam."],["先月は天気がよかったです。","Tháng trước thời tiết đẹp."],["先月に試験がありました。","Tháng trước có kỳ thi."],["先月は友だちに会いました。","Tháng trước tôi đã gặp bạn."],["先月は雨が多かったです。","Tháng trước mưa nhiều."]]]]],
     ["Ngày trong tháng", [["一日","ついたち","Ngày 1",[["一日は休みです。","Ngày 1 được nghỉ."],["一日は月曜日です。","Ngày 1 là thứ hai."],["一日に学校へ行きます。","Ngày 1 tôi đi học."],["一日は私の誕生日です。","Ngày 1 là sinh nhật của tôi."],["一日に友だちが来ます。","Ngày 1 bạn tôi đến."]]],["二日","ふつか","Ngày 2",[["二日は火曜日です。","Ngày 2 là thứ ba."],["二日は母の誕生日です。","Ngày 2 là sinh nhật của mẹ."],["二日に学校が休みです。","Ngày 2 trường nghỉ."],["二日に買い物をします。","Ngày 2 tôi đi mua sắm."],["二日に試験があります。","Ngày 2 có kỳ thi."]]],["三日","みっか","Ngày 3",[["三日に友だちに会います。","Ngày 3 tôi gặp bạn."],["三日は水曜日です。","Ngày 3 là thứ tư."],["三日に映画を見ます。","Ngày 3 tôi xem phim."],["三日は休みです。","Ngày 3 được nghỉ."],["三日に買い物に行きます。","Ngày 3 tôi đi mua sắm."]]],["四日","よっか","Ngày 4",[["四日に買い物に行きます。","Ngày 4 tôi đi mua sắm."],["四日は母の誕生日です。","Ngày 4 là sinh nhật mẹ tôi."],["四日に友だちに会います。","Ngày 4 tôi gặp bạn."],["四日は休みです。","Ngày 4 được nghỉ."],["四日に電話します。","Ngày 4 tôi gọi điện."]]],["五日","いつか","Ngày 5",[["五日は誕生日です。","Ngày 5 là sinh nhật."],["五日にデパートへ行きます。","Ngày 5 tôi đi trung tâm thương mại."],["五日に学校へ行きます。","Ngày 5 tôi đi học."],["五日に友だちが来ます。","Ngày 5 bạn tôi đến."],["五日に映画を見ます。","Ngày 5 tôi xem phim."]]],["六日","むいか","Ngày 6",[["六日に映画を見ます。","Ngày 6 tôi xem phim."],["六日に病院へ行きます。","Ngày 6 tôi đi bệnh viện."],["六日に買い物に行きます。","Ngày 6 tôi đi mua sắm."],["六日は私の誕生日です。","Ngày 6 là sinh nhật của tôi."],["六日に友だちに会います。","Ngày 6 tôi gặp bạn."]]],["七日","なのか","Ngày 7",[["七日は日曜日です。","Ngày 7 là chủ nhật."],["七日に神社へ行きます。","Ngày 7 tôi đi đền thờ."],["七日に買い物をします。","Ngày 7 tôi đi mua sắm."],["七日に学校へ行きません。","Ngày 7 tôi không đi học."],["七日に試験があります。","Ngày 7 có kỳ thi."]]],["八日","ようか","Ngày 8",[["八日に友だちが来ます。","Ngày 8 bạn tôi đến."],["八日は休みです。","Ngày 8 được nghỉ."],["八日に学校へ行きます。","Ngày 8 tôi đi học."],["八日は私の誕生日です。","Ngày 8 là sinh nhật của tôi."],["八日に映画を見ます。","Ngày 8 tôi xem phim."]]],["九日","ここのか","Ngày 9",[["九日に電話します。","Ngày 9 tôi gọi điện."],["九日にコンサートへ行きます。","Ngày 9 tôi đi xem hòa nhạc."],["九日に友だちに会います。","Ngày 9 tôi gặp bạn."],["九日は休みです。","Ngày 9 được nghỉ."],["九日に買い物に行きます。","Ngày 9 tôi đi mua sắm."]]],["十日","とおか","Ngày 10",[["十日にデパートへ行きます。","Ngày 10 tôi đi trung tâm thương mại."],["十日に図書館へ行きます。","Ngày 10 tôi đi thư viện."],["十日に友だちが来ます。","Ngày 10 bạn tôi đến."],["十日は私の誕生日です。","Ngày 10 là sinh nhật của tôi."],["十日に試験があります。","Ngày 10 có kỳ thi."]]],["何日","なんにち","Ngày mấy",[["今日は何日ですか。","Hôm nay là ngày mấy?"],["あしたは何日ですか。","Ngày mai là ngày mấy?"],["誕生日は何日ですか。","Sinh nhật là ngày mấy?"],["試験は何日ですか。","Kỳ thi là ngày mấy?"],["休みは何日までですか。","Kỳ nghỉ đến ngày mấy?"]]]]]
   ];
@@ -15881,14 +15909,12 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     try{ window.localStorage.setItem(SK_FB_KEY, JSON.stringify(a)); }catch(_){}
   }
   /* Mọi góp ý (khung trong flashcard lẫn mục cuối trang) đều qua hàm này:
-     ghi Firestore collection sk_feedback (public create-only theo rules,
-     ẩn danh được — cùng pattern sk_reports), ctx cho biết bài — và từ, nếu
-     gửi từ khung của từ. Ghi lỗi (mất mạng / chưa kết nối Firebase) thì
-     lưu bản sao dự phòng vào localStorage để không mất góp ý. done(ok)
-     gọi khi biết kết quả: ok=true đã ghi Firestore, ok=false chỉ lưu local. */
+     gửi qua Cloud Function submitInbox (m-51, 21/11 — thay ghi trực tiếp
+     Firestore collection sk_feedback), ctx cho biết bài — và từ, nếu gửi
+     từ khung của từ. Ghi lỗi (mất mạng / server throttle) thì lưu bản sao
+     dự phòng vào localStorage để không mất góp ý. done(ok) gọi khi biết
+     kết quả: ok=true đã tới máy chủ, ok=false chỉ lưu local. */
   function fbSave(text, ctx, done){
-    var db = fbDb();
-    if(!db){ fbSaveLocal(text, ctx); if(done) done(false); return; }
     var doc = {
       text: text, ctx: ctx || "",
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -15896,7 +15922,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       email: (typeof signedInEmail === "string" && signedInEmail) ? signedInEmail : null,
       deviceId: exRepDeviceId()
     };
-    db.collection("sk_feedback").add(doc).then(function(){
+    skSubmitInbox("feedback", doc).then(function(){
       if(done) done(true);
     }).catch(function(){
       fbSaveLocal(text, ctx);
@@ -21750,8 +21776,8 @@ function furiHTML(text){
       skSessionHeartbeatStart();
       return Promise.resolve();
     }
-    var myId = "dev-unknown";
-    try{ myId = exRepDeviceId() || "dev-unknown"; }catch(_){}
+    var myId = "";
+    try{ myId = exRepDeviceId() || exRepRamDeviceId(); }catch(_){ myId = exRepRamDeviceId(); }
     var label = skSessionDeviceLabel();
     var col = db.collection("kanji_progress").doc(uid).collection("sessions");
     var ref = col.doc(myId);
@@ -22471,7 +22497,15 @@ function furiHTML(text){
     var ob = document.getElementById("offlineBar");
     if(ob) ob.classList.toggle("show", !online);
     var banner = document.getElementById("pwaBanner");
-    if(banner) banner.hidden = installed;
+    if(banner) banner.hidden = installed || skIsNativeApp(); /* M-2 (SK-M2-PWA-HIDE): an banner PWA trong app boc native */
+    /* M-2: an the PWA o tab Cai dat + chip Sora "Cai app" trong app boc
+       native — renderPWA() chay o init nen an ngay tu lan mo app. */
+    if(skIsNativeApp()){
+      var pwaCard = document.querySelector(".pwacard");
+      if(pwaCard) pwaCard.hidden = true;
+      var installChip = document.querySelector('[data-assistant-topic="install"]');
+      if(installChip) installChip.hidden = true;
+    }
     pwaBtns.forEach(function(b){
       if(!b) return;
       if(installed){ b.disabled = true; b.textContent = "Đã cài ✓"; }
@@ -25514,10 +25548,21 @@ function furiHTML(text){
     return (s || "").toLowerCase().replace(/đ/g, "d").normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim();
   }
+  /* M-2 (SK-M2-PWA-HIDE): Sora chay trong IIFE rieng nen khong thay
+     skIsNativeApp() cua script chinh — kiem tra Capacitor truc tiep
+     (cung logic nhu skIsNativeApp). */
+  function soraIsNative(){
+    try{
+      return typeof window.Capacitor !== "undefined" && window.Capacitor &&
+        typeof window.Capacitor.isNativePlatform === "function" &&
+        !!window.Capacitor.isNativePlatform();
+    }catch(_){ return false; }
+  }
   function findTopic(query){
     var q = " " + norm(query) + " ";
     var best = null, bestScore = 0;
     TOPICS.forEach(function(t){
+      if(t.id === "install" && soraIsNative()) return; /* M-2 (SK-M2-PWA-HIDE): an cau tra loi cai app trong app boc native */
       var score = 0;
       t.keywords.forEach(function(k){
         if(q.indexOf(" " + k + " ") !== -1 || q.indexOf(k) !== -1) score += k.length;

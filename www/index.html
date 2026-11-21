@@ -5117,11 +5117,6 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
         <button class="pathbtn" id="pathChangeBtn" style="margin-left:auto;" aria-label="Đổi cấp đang học — mở phần chọn cấp">⇄ Đổi</button>
       </div>
       <div class="detailbody">
-        <h2 class="secttl" id="planSectTitle">Lộ trình 30 ngày</h2>
-        <div class="pathprog" id="pathProgCard"></div>
-        <div class="pathmap" id="pathMap"></div>
-        <p class="pmap-hint" id="pathMapHint">Bấm vào ngày đang học (hoặc ngày đã xong) để xem chi tiết nhiệm vụ và học ngay.</p>
-        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.55; margin:10px 2px 0;">Mỗi tuần đi đủ 7 ngày theo nhịp <b style="color:var(--ink);">Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử</b>, lặp lại 4 tuần; ngày 29 tổng ôn, ngày 30 thi thử tổng kết. Học xong ngày nào thì bấm <b style="color:var(--ink);">Đánh dấu đã xong</b> ở ngày đó để mở khóa ngày tiếp theo.</p>
         <h2 class="secttl" style="margin-top:2px;">Bạn đã đạt trình độ nào?</h2>
         <p style="font-size:13px; color:var(--ink-2); line-height:1.55; margin:0 2px 12px;">Chọn cấp JLPT bạn <b style="color:var(--ink);">đã đạt được</b> (khai một lần sau khi đăng ký, đổi lại lúc nào cũng được). App bỏ qua phần bạn đã biết và soạn lộ trình bắt đầu từ cấp độ tương ứng — chính tuyến vẫn là thang Tân binh → Tướng đã chốt của SoraKanji.</p>
         <div class="lvgrid" id="lvGrid">
@@ -5133,6 +5128,11 @@ Bấm một chủ đề gợi ý bên dưới, hoặc tự gõ câu hỏi của 
           <button class="lvpick" data-plv="5"><b>N1</b><span>Đã xong N1 · nâng cao</span></button>
         </div>
         <p id="pathSummary" style="font-size:13.5px; font-weight:700; color:var(--amber); margin:12px 2px 0; line-height:1.5; min-height:20px;"></p>
+        <h2 class="secttl" id="planSectTitle">Lộ trình 30 ngày</h2>
+        <div class="pathprog" id="pathProgCard"></div>
+        <div class="pathmap" id="pathMap"></div>
+        <p class="pmap-hint" id="pathMapHint">Bấm vào ngày đang học (hoặc ngày đã xong) để xem chi tiết nhiệm vụ và học ngay.</p>
+        <p style="font-size:12.5px; color:var(--ink-2); line-height:1.55; margin:10px 2px 0;">Mỗi tuần đi đủ 7 ngày theo nhịp <b style="color:var(--ink);">Kanji → Từ vựng → Ngữ pháp → Nghe → Đọc hiểu → Ôn tập → Thi thử</b>, lặp lại 4 tuần; ngày 29 tổng ôn, ngày 30 thi thử tổng kết. Học xong ngày nào thì bấm <b style="color:var(--ink);">Đánh dấu đã xong</b> ở ngày đó để mở khóa ngày tiếp theo.</p>
         <h2 class="secttl">Chính tuyến của bạn</h2>
         <div id="pathRoadmap"></div>
         <button class="cta" id="pathApply" style="margin-top:14px;">Lưu lộ trình này</button>
@@ -5854,9 +5854,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      cache khi đăng xuất, không cần sửa thêm.
      Mua gói: trên mobile web (PWA) trang gói có nút mua mở trang thanh
      toán VietQR (xem khối "THANH TOÁN VIETQR TRÊN MOBILE WEB" bên dưới);
-     trong app bọc Capacitor nút mua bị ẩn (App Store 3.1.1, IAP sau) và
-     trang gói chỉ còn hướng dẫn mua bằng chữ (mở Chrome, đăng nhập tại
-     sorakanji.com, mua bằng VND). */
+     trong app bọc Capacitor nút mua hiện và chạy IAP (StoreKit 2,
+     SK-IAP-V1); không còn hướng dẫn mua trên web trên trang gói
+     (quy tắc App Store 3.1.1). */
   var SK_PREMIUM_KEY = "sk_premium";
   var SV_FREE_PER_CAT = 1; /* 1 video Shadowing miễn phí đầu tiên của mỗi thể loại (5 tab = 5 video) */
   var SV_PREVIEW_SECS = 30; /* Xem thử: video Shadowing không free, chưa Premium chỉ phát tới 30 giây */
@@ -10926,11 +10926,14 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("kanaHira").addEventListener("click", function(){ setKanaMode(0); });
   document.getElementById("kanaKata").addEventListener("click", function(){ setKanaMode(1); });
   function kanaFlashDeck(){
+    /* say = chữ kana để TTS đọc tiếng Nhật: reading là romaji ("a", "ka")
+       nên trình phát đọc say trước (say || reading || word); mặt sau thẻ
+       vẫn hiện romaji như cũ. */
     var words = [];
     [KANA, KANA_D, KANA_Y].forEach(function(rows){
       rows.forEach(function(c){
         if(!c) return;
-        words.push({word:c[kanaMode], reading:c[2], hanViet:"", meaning:"", ex:null, img:null, lv:null, from:""});
+        words.push({word:c[kanaMode], reading:c[2], say:c[kanaMode], hanViet:"", meaning:"", ex:null, img:null, lv:null, from:""});
       });
     });
     return words;
@@ -12794,11 +12797,17 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
      lật lên trên câu. Đang phát mà câu hiện tại đổi thì bong bóng bám theo */
   function sv2ShowExp(i){
     if(!SV2_SUBS[i] || !SV2_SUBS[i].exp){ sv2HideExp(); return; }
-    sv2ExpIdx = i; sv2ExpMode = "sent";
+    /* K-9 (mirror guard m-22 ở sv2WordTap): bong bóng giải thích đã bị gỡ
+       (rời trang/bài) trước khi tick chạy — bỏ qua luôn, không throw ở
+       textContent/parentNode bên dưới. */
     var exp = document.getElementById("sv2Exp");
-    document.getElementById("sv2ExpTitle").textContent = "GIẢI THÍCH · CÂU " + (i + 1);
-    document.getElementById("sv2ExpText").textContent = SV2_SUBS[i].exp;
+    var _sv2T = document.getElementById("sv2ExpTitle");
+    var _sv2X = document.getElementById("sv2ExpText");
     var box = document.getElementById("sv2Subs");
+    if(!exp || !_sv2T || !_sv2X || !box) return;
+    sv2ExpIdx = i; sv2ExpMode = "sent";
+    _sv2T.textContent = "GIẢI THÍCH · CÂU " + (i + 1);
+    _sv2X.textContent = SV2_SUBS[i].exp;
     if(exp.parentNode !== box) box.appendChild(exp);
     exp.classList.add("show");
     sv2PlaceExp();
@@ -16069,10 +16078,13 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
     document.getElementById("wvFlashCount").hidden = done;
     document.getElementById("wvFlashDone").hidden = !done;
     /* Hết bài thì ẩn cả nút thêm vào ôn tập + ô câu ví dụ + khung góp ý (không còn “từ đang hiện”) */
+    /* m-A1: deck kana không lưu vào Ôn tập (thẻ chỉ có chữ + romaji,
+       nghĩa trống) và không có câu ví dụ — ẩn nút lưu vàng + panel
+       ví dụ khi đang ở deck kana, kể cả khi chưa học hết bài. */
     var fAddWrap = document.getElementById("wvFAddWrap");
-    if(fAddWrap) fAddWrap.style.display = done ? "none" : "";
+    if(fAddWrap) fAddWrap.style.display = (done || kanaDeck) ? "none" : "";
     var fExPanel = document.getElementById("wvFEx");
-    if(fExPanel) fExPanel.style.display = done ? "none" : "";
+    if(fExPanel) fExPanel.style.display = (done || kanaDeck) ? "none" : "";
     var fFbPanel = document.getElementById("wvFFb");
     if(fFbPanel) fFbPanel.style.display = done ? "none" : "";
     if(done){
@@ -16103,6 +16115,9 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
       '<div class="fmean">' + esc(v.meaning) + '</div>';
     var svBtn = document.getElementById("wvFlashSave");
     if(svBtn){
+      /* m-A1: nút lưu ở header là cùng 1 hành động lưu thẻ — ẩn luôn
+         khi deck kana (chỉ ẩn #wvFAddWrap thì chưa đủ). */
+      svBtn.style.display = kanaDeck ? "none" : "";
       var svOn = isWordSaved(v.word, v.reading);
       svBtn.classList.toggle("on", svOn);
       var svTx = document.getElementById("wvFlashSaveTx");
@@ -16139,7 +16154,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   document.getElementById("wvFlashSpeak").addEventListener("click", function(ev){
     ev.stopPropagation();
     if(apOn) return; /* đang tự động phát: máy đang đọc theo lịch */
-    if(wvFIdx < wvDeck.length) speakJP(wvDeck[wvFIdx].reading || wvDeck[wvFIdx].word, 0.85);
+    if(wvFIdx < wvDeck.length) speakJP(wvDeck[wvFIdx].say || wvDeck[wvFIdx].reading || wvDeck[wvFIdx].word, 0.85);
   });
   document.getElementById("wvFlashOk").addEventListener("click", function(){ nextWvFlash(true); });
   document.getElementById("wvFlashNo").addEventListener("click", function(){ nextWvFlash(false); });
@@ -16298,7 +16313,7 @@ KanjiCanvas.refPatterns = [["一",1,[[[19,131],[38,126],[78,127],[118,131],[156,
   }
   function apSpeakOnce(gen, done){
     var v = wvDeck[wvFIdx];
-    var text = v ? (v.reading || v.word) : "";
+    var text = v ? (v.say || v.reading || v.word) : "";
     var fired = false;
     function fin(){
       if(fired) return;
@@ -18757,8 +18772,11 @@ function furiHTML(text){
   var PLAN_GLYPHS = { kanji:"漢", vocab:"語", grammar:"文", listen:"聞", read:"読", review:"復", exam:"試" };
   var planDoneMem = {}; /* dự phòng khi localStorage không dùng được */
 
+  function planCourseLvFor(lvIdx){
+    return ["N5", "N4", "N3", "N2", "N1", "N1"][lvIdx] || "N5";
+  }
   function planCourseLv(){
-    return ["N5", "N4", "N3", "N2", "N1", "N1"][appliedLv] || "N5";
+    return planCourseLvFor(appliedLv);
   }
   function planDoneGet(lv){
     var n = planDoneMem[lv];
@@ -18888,14 +18906,18 @@ function furiHTML(text){
     }
   }
   var planSheetDay = 0; /* ngày đang mở trong panel chi tiết */
+  var planSheetLv = null; /* cấp của ngày đang mở trong panel: pathLv khi mở từ
+     overlay Lộ trình, appliedLv khi mở từ bản đồ Home — để nút Học ngay /
+     Đánh dấu đã xong dùng đúng cấp, không chạm tiến độ cấp khác */
   function closePlanSheet(){
     document.getElementById("planScrim").classList.remove("open");
     var sh = document.getElementById("planSheet");
     sh.classList.remove("open");
     sh.setAttribute("aria-hidden", "true");
   }
-  function openPlanDay(d){
-    var lv = planCourseLv();
+  function openPlanDay(d, lv){
+    lv = lv || planCourseLv();
+    planSheetLv = lv;
     var done = planDoneGet(lv);
     var task = planDays(lv)[d - 1];
     if(!task) return;
@@ -18965,13 +18987,13 @@ function furiHTML(text){
     el.querySelectorAll(".pnode").forEach(function(b){
       b.addEventListener("click", function(){
         var day = parseInt(b.getAttribute("data-pday"), 10);
-        var curDone = planDoneGet(planCourseLv());
+        var curDone = planDoneGet(lv);
         if(day > curDone + 1){
           if(hintEl) hintEl.textContent =
             "Ngày " + day + " đang khóa — hoàn thành ngày trước để mở khóa.";
           return;
         }
-        openPlanDay(day);
+        openPlanDay(day, lv);
       });
     });
   }
@@ -18984,10 +19006,13 @@ function furiHTML(text){
     renderRoadInto(document.getElementById("pathMapHome"), lv, planDoneGet(lv), planDays(lv), null);
   }
   function renderPathMap(){
-    var lv = planCourseLv();
+    /* Overlay chạy theo cấp ĐANG CHỌN ở bảng khai (pathLv) — bấm cấp nào
+       lộ trình dưới đổi ngay sang cấp đó, không chờ bấm Lưu. Home
+       (renderPathMapHome) vẫn theo cấp ĐÃ LƯU (appliedLv). */
+    var lv = planCourseLvFor(pathLv);
     var done = planDoneGet(lv);
     var days = planDays(lv);
-    var r = REALMS[appliedLv];
+    var r = REALMS[pathLv];
     document.getElementById("pathTitle").textContent = "Lộ trình · " + lv;
     document.getElementById("planSectTitle").textContent = "Lộ trình 30 ngày · " + lv;
     document.getElementById("pathProgCard").innerHTML =
@@ -19076,7 +19101,7 @@ function furiHTML(text){
   document.getElementById("planSheetClose").addEventListener("click", closePlanSheet);
   document.getElementById("planScrim").addEventListener("click", closePlanSheet);
   document.getElementById("planSheetGo").addEventListener("click", function(){
-    var lv = planCourseLv();
+    var lv = planSheetLv || planCourseLv();
     var task = planDays(lv)[planSheetDay - 1];
     closePlanSheet();
     if(!task) return;
@@ -19084,7 +19109,7 @@ function furiHTML(text){
     openPlanTask(task, lv);
   });
   document.getElementById("planSheetDone").addEventListener("click", function(){
-    var lv = planCourseLv();
+    var lv = planSheetLv || planCourseLv();
     var done = planDoneGet(lv);
     if(planSheetDay !== done + 1) return; /* chỉ ngày đang học mới đánh dấu xong được */
     planDoneSet(lv, done + 1);
@@ -19304,7 +19329,10 @@ function furiHTML(text){
   }
 
   /* ---------- Kinh tế app: EXP · Xu · Điểm đóng góp ---------- */
-  var state = { tuvi:1240, linh:320, cong:145, duelLeft:3, wins:3, losses:1 };
+  /* Seed ví tài khoản mới (USER QUYẾT 21/11 14:10): EXP 0 (Tân binh),
+     Xu 50 (quà tặng), điểm đóng góp 0, thắng/thua 0 — duelLeft giữ 3
+     (hạn mức đấu/ngày). Chỉ áp khi chưa có dữ liệu lưu. */
+  var state = { tuvi:0, linh:50, cong:0, duelLeft:3, wins:0, losses:0 };
   /* Cửa hàng (Lỗi 1): vật phẩm đã mua + khung đang đeo — lưu vào sk_progress
      (trường shop) cùng ví, khôi phục ở loadProgress. Khóa món = data-frame
      (khung) hoặc data-name (vật phẩm khác). */
@@ -20806,6 +20834,8 @@ function furiHTML(text){
       "auth/network-request-failed": "Không kết nối được mạng — kiểm tra kết nối rồi thử lại.",
       "auth/popup-closed-by-user": "Bạn đã đóng cửa sổ đăng nhập Google trước khi hoàn tất.",
       "auth/cancelled-popup-request": "Cửa sổ đăng nhập Google đang mở rồi — bạn hoàn tất ở cửa sổ đó nhé.",
+      "auth/operation-not-supported-in-this-environment": "Trình duyệt này chưa hỗ trợ cách đăng nhập này — bạn thử trình duyệt khác nhé.",
+      "auth/popup-blocked": "Trình duyệt đã chặn cửa sổ đăng nhập — bạn cho phép cửa sổ bật lên rồi thử lại nhé.",
       "auth/redirect-operation-pending": "Đang chờ kết quả đăng nhập Google — bạn đợi giây lát rồi thử lại nhé.",
       "auth/unauthorized-domain": "Trang này chưa được cấp phép đăng nhập Google — bạn thử trên sorakanji.com sau khi app được đẩy lên nhé.",
       "auth/operation-not-allowed": "Cách đăng nhập này chưa được bật — bạn thử cách khác nhé.",
@@ -21128,7 +21158,8 @@ function furiHTML(text){
     if(el) el.textContent = t || "";
   }
   /* Tai gia tu StoreKit + dien vao the goi. Goi moi lan mo trang goi;
-     cache sau lan thanh cong dau tien. */
+     chi cache khi StoreKit tra it nhat 1 san pham (M-5: cache rong [] la
+     truthy nen se ghim gia "--" ca phien neu cache ket qua rong). */
   var skIapProductsCache = null, skIapProductsLoading = false;
   function skIapRenderPrices(prods){
     var map = {};
@@ -21150,13 +21181,14 @@ function furiHTML(text){
       skShowPlansMsg("Chưa tải được bảng giá từ App Store — kiểm tra mạng rồi mở lại trang này nhé.");
       return;
     }
-    if(skIapProductsCache){ skIapRenderPrices(skIapProductsCache); return; }
+    if(skIapProductsCache && skIapProductsCache.length){ skIapRenderPrices(skIapProductsCache); return; }
     if(skIapProductsLoading) return;
     skIapProductsLoading = true;
     plugin.getProducts({productIdentifiers: [SK_IAP_PRODUCTS.year, SK_IAP_PRODUCTS.lifetime]}).then(function(res){
       skIapProductsLoading = false;
-      skIapProductsCache = (res && res.products) || [];
-      skIapRenderPrices(skIapProductsCache);
+      var prods = (res && res.products) || [];
+      if(prods.length) skIapProductsCache = prods; /* M-5: khong cache ket qua rong */
+      skIapRenderPrices(prods);
     }).catch(function(){
       skIapProductsLoading = false;
       if(yEl) yEl.textContent = "—";
@@ -21440,10 +21472,14 @@ function furiHTML(text){
     var auth = skAuth();
     closeLogin();
     /* Two-session: dừng heartbeat/listener + xóa doc sessions/{deviceId}
-       của thiết bị này (fire-and-forget, song song với đồng bộ cuối — không
-       await, không kéo dài timeout 2s). Chỉ xóa khi thiết bị này đang giữ
-       session; doc của thiết bị khác không bị đụng tới. */
-    try{ skSessionLogout(); }catch(_){}
+       của thiết bị này. W21-2-mobile: signOut phải chờ xóa doc xong —
+       delete gửi sau khi token mất sẽ bị rules từ chối và doc ở lại tới
+       5 phút, chặn máy thứ 3 đăng nhập. Promise của skSessionLogout luôn
+       resolve (fail-open) nên đăng xuất không bao giờ kẹt; timeout 2s
+       của đồng bộ cuối vẫn giới hạn tổng thời gian chờ. Chỉ xóa khi thiết
+       bị này đang giữ session; doc của thiết bị khác không bị đụng tới. */
+    var skSessLogoutP = null;
+    try{ skSessLogoutP = skSessionLogout(); }catch(_){ skSessLogoutP = null; }
     function doSignOut(){
       if(skIsNativeApp()){
         /* Dang xuat ca phien Google native (GIDSignIn giu tai khoan da chon
@@ -21454,17 +21490,42 @@ function furiHTML(text){
       else{ applyAuthUser(null); } /* SDK chưa nạp được: dọn phiên cục bộ */
     }
     /* Đồng bộ lần cuối trước khi đăng xuất (tối đa 2 giây) để không mất
-       thay đổi chưa kịp đẩy — xong (hoặc hết giờ) thì đăng xuất như cũ. */
+       thay đổi chưa kịp đẩy — xong (hoặc hết giờ) thì đăng xuất như cũ.
+       W21-2-mobile: signOut chỉ chạy khi CẢ đồng bộ cuối VÀ xóa doc
+       session đều xong (hoặc hết 2s). */
     if(auth && typeof SKSync !== "undefined"){
       var skLogoutDone = false;
       var skLogoutTimer = setTimeout(function(){
         if(!skLogoutDone){ skLogoutDone = true; doSignOut(); }
       }, 2000);
+      var skLogoutFinish = function(){
+        if(!skLogoutDone){ skLogoutDone = true; clearTimeout(skLogoutTimer); doSignOut(); }
+      };
       try{
-        SKSync.syncAll().then(function(){
-          if(!skLogoutDone){ skLogoutDone = true; clearTimeout(skLogoutTimer); doSignOut(); }
-        });
-      }catch(_){ clearTimeout(skLogoutTimer); doSignOut(); }
+        var skLogoutWaits = [SKSync.syncAll()];
+        if(skSessLogoutP && typeof skSessLogoutP.then === "function") skLogoutWaits.push(skSessLogoutP);
+        /* Chờ cả hai settle (kể cả khi một bên reject) rồi mới signOut;
+           timeout 2s vẫn là giới hạn trên. */
+        Promise.all(skLogoutWaits.map(function(p){
+          return Promise.resolve(p).then(function(){}, function(){});
+        })).then(skLogoutFinish);
+      }catch(_){
+        /* syncAll ném đồng bộ: vẫn chờ xóa doc session xong (timeout 2s
+           vẫn chạy) rồi mới signOut. */
+        if(skSessLogoutP && typeof skSessLogoutP.then === "function") skSessLogoutP.then(skLogoutFinish, skLogoutFinish);
+        else skLogoutFinish();
+      }
+    }else if(skSessLogoutP && typeof skSessLogoutP.then === "function"){
+      /* Không có SKSync (SDK chưa nạp): vẫn chờ xóa doc xong rồi mới
+         signOut, tối đa 2s — promise luôn resolve nên không kẹt. */
+      var skLogoutDone2 = false;
+      var skLogoutTimer2 = setTimeout(function(){
+        if(!skLogoutDone2){ skLogoutDone2 = true; doSignOut(); }
+      }, 2000);
+      var skLogoutFinish2 = function(){
+        if(!skLogoutDone2){ skLogoutDone2 = true; clearTimeout(skLogoutTimer2); doSignOut(); }
+      };
+      skSessLogoutP.then(skLogoutFinish2, skLogoutFinish2);
     }else{ doSignOut(); }
   }
   /* ---------- Xóa tài khoản (Apple bắt buộc, Guideline 5.1.1) ----------
@@ -21844,8 +21905,18 @@ function furiHTML(text){
         if(!skSessRef) return;
         /* Doc đã bị xóa → re-check thay vì ghi (KHÔNG hồi sinh doc đã xóa). */
         if(!skSessDocExists){ skSessionRecheck(); return; }
-        var p = skSessRef.set({lastSeen: skSessionServerTs()}, {merge: true});
-        if(p && p.catch) p.catch(function(){});
+        /* M-RES (21/11): heartbeat KHONG BAO GIO duoc tao doc — dung update()
+           thay cho set(..., {merge:true}): update() fail NOT_FOUND khi doc da
+           bi xoa (vd claim cua may khac xoa doc stale trong luc may nay
+           offline, snapshot xoa chua toi kip) -> chay re-check nhu nhanh
+           doc-mat hien co. set() se hoi sinh doc va pha gioi han 2 may. */
+        var p = skSessRef.update({lastSeen: skSessionServerTs()});
+        if(p && p.catch) p.catch(function(err){
+          /* Chi NOT_FOUND moi la doc-mat: danh dau mat + re-check (kick neu
+             con may khac fresh, khong con ai thi claim lai). Loi khac (mat
+             mang...) bo qua nhu cu — tick sau thu lai. */
+          if(err && err.code === "not-found"){ skSessDocExists = false; skSessionRecheck(); }
+        });
       }else{
         if(skSessClaiming) return;
         var auth = null, u = null;
@@ -21868,34 +21939,41 @@ function furiHTML(text){
     skSessClaiming = false;
   }
   /* Đăng xuất: dừng local + xóa doc sessions/{deviceId} CỦA MÌNH
-     (fire-and-forget). CHỈ xóa khi thiết bị này đang giữ session — thiết bị
+     (trả Promise — doLogout chờ xóa xong mới signOut, xem W21-2-mobile).
+     CHỈ xóa khi thiết bị này đang giữ session — thiết bị
      fail-open (chưa giữ) mà xóa mù sẽ giết session của thiết bị khác. Doc
      của thiết bị khác KHÔNG bị đụng tới. Admin không tạo session nên không xóa.
      m-28: xác minh deviceId trên server trước khi xóa (cờ held trong RAM có
      thể đã stale sau khi thiết bị khác claim). */
+  /* Tra ve Promise resolve khi xoa doc xong (hoac khi khong co gi de xoa /
+     loi — LUON resolve, khong bao gio reject, de dang xuat khong ket).
+     doLogout cho promise nay truoc khi signOut (W21-2-mobile): delete gui
+     sau khi token mat se bi rules tu choi va doc o lai toi 5 phut. */
   function skSessionLogout(){
     var uid = skSessUid, held = skSessHeld, myId = skSessDeviceId;
     skSessionStop();
-    if(!held || !uid || !myId) return;
-    if(skSessionIsAdmin(uid)) return;
+    if(!held || !uid || !myId) return Promise.resolve();
+    if(skSessionIsAdmin(uid)) return Promise.resolve();
     try{
       var db = exRepDb();
-      if(!db) return;
+      if(!db) return Promise.resolve();
       var ref = db.collection("kanji_progress").doc(uid).collection("sessions").doc(myId);
       /* m-28: chỉ xóa khi doc vẫn thuộc thiết bị này — cờ held trong RAM có
          thể đã stale (thiết bị khác đã claim trong lúc máy này offline, xem
          M-08); xóa mù sẽ giết session hợp lệ của thiết bị đang giữ. Đọc thất
          bại (mất mạng) thì thôi — doc tự stale sau 5 phút. */
       var g = ref.get();
-      if(g && g.then) g.then(function(snap){
+      if(g && g.then) return g.then(function(snap){
         try{
           if(snap && snap.exists && (snap.data() || {}).deviceId === myId){
-            var p = ref.delete();
-            if(p && p.catch) p.catch(function(){});
+            /* Tra promise cua delete de caller cho xoa xong moi signOut. */
+            return ref.delete();
           }
         }catch(_){}
-      }).catch(function(){});
-    }catch(_){}
+        return null;
+      }).catch(function(){ return null; });
+      return Promise.resolve();
+    }catch(_){ return Promise.resolve(); }
   }
   function skSessionShowOverlay(kind, d){
     var ov = document.getElementById("skSessionOverlay");
@@ -22815,6 +22893,24 @@ function furiHTML(text){
  * used. Chống hồi sinh Tăng Tốc đã dùng khi gộp với máy cũ (union
  * owned cũ hồi lại vật phẩm). Doc cũ không có bộ đếm: khóa trong
  * owned coi như bought = 1. expBoostUntil vẫn max-wins như M-14.
+ * + M-18 (2026-11-21): pushWallet dùng baseline làm mốc kể cả khi
+ * firstSync (trước đây luôn dùng SYNC_SEED nên retry sau 1 lần ghi
+ * lỗi giữa migration cộng lại delta vào ví server); ensureMigrated
+ * thêm per-doc catch kiểu M-10 ở cả 2 nhánh — 1 doc lỗi không abort
+ * migration, doc lỗi được lần syncAll sau gộp bù.
+ * + M-19 (2026-11-21): duelLeft tách khỏi mô hình delta — ví server
+ * lưu {date, left} (ngày local, cùng quy ước dayKeyOf() của app);
+ * trong ngày vẫn delta như cũ, sang ngày mới thì máy đầu tiên chốt
+ * giá trị tuyệt đối, máy sau chỉ trừ lượt đã dùng/mua thêm kể từ lúc
+ * reset 3 lượt (2 máy cùng reset không còn 3+3=6). Doc cũ lưu số
+ * thuần vẫn đọc được (coi như ngày ""). Định dạng local (adapter)
+ * giữ nguyên số thuần — app không đổi gì.
+ * + M-20 (2026-11-21): clawback nhiệm vụ nguyên tử — syncMissions
+ * chạy đọc missions + ghi marker clawback + điều chỉnh ví trong 1
+ * transaction (đọc lại doc tươi trong transaction nên 2 lần chạy
+ * chồng chỉ 1 lần trừ); thêm reentrancy guard để syncMissions không
+ * chạy chồng trên cùng 1 máy (lần gọi sau nhận chung promise của
+ * lần đang chạy).
  *
  * Dùng Firebase compat SDK (firebase.firestore()) — cả 2 bản app đều đang
  * dùng compat nên module này thả vào được cả 2 mà không cần sửa import.
@@ -22841,11 +22937,16 @@ function furiHTML(text){
 
   /* ---------------- cấu hình ---------------- */
 
-  // Số dư gốc khi cài app lần đầu (hồ sơ mẫu trong code hiện tại).
-  // Đồng bộ lần đầu dùng (local - SEED) làm hoạt động ròng của máy đó.
-  // Nếu app đổi số dư khởi đầu thì PHẢI đổi cả hằng này.
-  var SYNC_SEED = { tuvi: 1240, linh: 320, cong: 145, duelLeft: 3, wins: 3, losses: 1 };
+  // Số dư gốc khi cài app lần đầu (USER QUYẾT 21/11 14:10: EXP 0,
+  // Xu 50 quà tặng, điểm đóng góp 0, thắng/thua 0; duelLeft giữ 3 —
+  // hạn mức đấu/ngày). Đồng bộ lần đầu dùng (local - SEED) làm hoạt
+  // động ròng của máy đó. Nếu app đổi số dư khởi đầu thì PHẢI đổi
+  // cả hằng này.
+  var SYNC_SEED = { tuvi: 0, linh: 50, cong: 0, duelLeft: 3, wins: 0, losses: 0 };
   var WALLET_FIELDS = ["tuvi", "linh", "cong", "duelLeft", "wins", "losses"];
+  // M-19: các field ví đi theo mô hình delta. duelLeft KHÔNG nằm đây —
+  // nó reset theo ngày nên sync riêng dạng {date, left} (xem pushWallet).
+  var WALLET_NUM_FIELDS = ["tuvi", "linh", "cong", "wins", "losses"];
 
   var MISSION_KEYS = ["kanji", "quiz", "review", "exam", "rot"];
   var MISSION_REWARDS = { kanji: 40, quiz: 30, review: 35, exam: 60, rot: 30 };
@@ -22858,6 +22959,7 @@ function furiHTML(text){
 
   var LS_DEVICE = "sk_device_id";       // id thiết bị (local-only)
   var LS_BASELINE = "sk_sync_baseline"; // mốc ví lúc đồng bộ lần cuối
+  var LS_BASELINE_DUEL = "sk_sync_baseline_duel"; // M-19: mốc lượt đấu {date, left}
   var LS_MIGRATED = "sk_sync_migrated"; // đã đồng bộ lần đầu chưa
   var LS_SEEN = "sk_sync_seen";         // docId -> updatedAt đã thấy
   var LS_META = "sk_sync_meta_";        // + docId: bản đóng dấu lần cuối
@@ -22875,6 +22977,7 @@ function furiHTML(text){
     "sk_grammar_learned", "sk_sync_uid", "sk_sync_wu",
     "sk_sync_words", "sk_sync_saved_keys",
     "sk_sync_baseline", "sk_sync_migrated", "sk_sync_seen",
+    "sk_sync_baseline_duel", // M-19: mốc lượt đấu (đi kèm sk_sync_baseline)
     "sk_parentdoc"
     // sk_vocab_prog_* (web): xóa bằng cách quét prefix, xem clearLocalForLogout
     // sk_sync_meta_*: xóa bằng cách quét prefix
@@ -22889,6 +22992,7 @@ function furiHTML(text){
   var pushTimers = {};     // docId -> timeout
   var unsubListener = null;
   var syncingAll = false;
+  var missionsInFlight = null; // M-20: promise của lần syncMissions đang chạy (chống chạy chồng)
   var enabled = true; // công tắc đồng bộ (Cài đặt mobile: settings.sync)
   var parentEnsureTried = {}; // uid -> true: đã thử tạo doc cha trong lần tải trang này
 
@@ -22929,6 +23033,18 @@ function furiHTML(text){
     catch (_) { return dflt; }
   }
   function lsSetJSON(key, obj) { lsSet(key, JSON.stringify(obj)); }
+
+  /* M-10: bọc 1 bước đồng bộ — lỗi chỉ log rồi tiếp tục (trả "error"),
+   * không abort cả chuỗi. Dùng chung cho syncAllIds + ensureMigrated
+   * (M-18: cả 2 nhánh migration cũng catch từng doc). */
+  function guarded(fn, label) {
+    return function () {
+      return Promise.resolve().then(fn).catch(function (err) {
+        log("Đồng bộ lỗi (" + label + "): " + ((err && err.message) || err));
+        return "error";
+      });
+    };
+  }
 
   function getDeviceId() {
     if (deviceId) return deviceId;
@@ -23752,9 +23868,18 @@ function furiHTML(text){
   }
 
   /* ---------------- wallet: delta qua transaction ----------------
-   * Đẩy: delta = local - baseline (lần đầu: local - SEED). Đọc server trong
-   * transaction rồi ghi server + delta (nguyên tử, an toàn khi 2 máy ghi
-   * cùng lúc). Kéo: lấy server làm local mới, baseline = server. */
+   * Đẩy: delta = local - baseline (lần đầu chưa có baseline: local - SEED).
+   * Đọc server trong transaction rồi ghi server + delta (nguyên tử, an
+   * toàn khi 2 máy ghi cùng lúc). Kéo: lấy server làm local mới,
+   * baseline = server.
+   * M-19: duelLeft KHÔNG đi theo mô hình delta — nó reset 3 lượt mỗi
+   * ngày nên delta coi reset như "kiếm được" (2 máy cùng reset -> 6
+   * lượt). Ví server lưu duelLeft dạng {date, left} (ngày local, cùng
+   * quy ước dayKeyOf() của app — ngày missions.date của máy, fallback
+   * ngày hôm nay). Trong cùng 1 ngày vẫn delta như cũ; sang ngày mới
+   * thì máy đầu tiên chốt giá trị tuyệt đối, máy sau chỉ cộng/trừ phần
+   * đã dùng/mua thêm kể từ lúc reset 3 lượt. Định dạng local (adapter)
+   * vẫn là số thuần — app không đổi gì. */
   function walletLocal() {
     var w = cfg.adapter.readLocal("wallet");
     if (w === undefined) return undefined;
@@ -23766,20 +23891,83 @@ function furiHTML(text){
   function baselineGet() { return lsGetJSON(LS_BASELINE, null); }
   function baselineSet(b) { lsSetJSON(LS_BASELINE, b); }
 
+  /* Ngày local dạng YYYY-MM-DD (giờ máy — cùng quy ước dayKeyOf() của
+   * app mobile; KHÔNG dùng toISOString vì đó là ngày UTC). */
+  function todayStr() {
+    var d = new Date();
+    function p(n) { return (n < 10 ? "0" : "") + n; }
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+  }
+
+  /* Ngày mà lượt đấu local đang thuộc về = ngày missions của máy
+   * (ensureMissionDay đặt lại missions.date và duelLeft = 3 cùng lúc,
+   * nên missions.date chính là ngày reset gần nhất). App mở xuyên nửa
+   * đêm chưa rollover thì missions.date vẫn là hôm qua — duelLeft lúc
+   * đó là số thừa hôm qua, không được coi là của hôm nay. Không đọc
+   * được missions (máy mới) thì dùng ngày hôm nay. */
+  function duelDayLocal() {
+    var today = todayStr();
+    try {
+      var m = cfg.adapter.readLocal("missions");
+      var d = m && m.date;
+      if (typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d) && d <= today) return d;
+    } catch (_) {}
+    return today;
+  }
+
+  /* Chuẩn hoá duelLeft trên server về {date, left}. Doc cũ (trước M-19)
+   * lưu số thuần -> {date: "", left: n} (không rõ ngày = cũ nhất, mọi
+   * giá trị có ngày đều mới hơn nó). Chỉ chặn dưới 0 — KHÔNG chặn trên
+   * 3 vì shop bán thêm lượt (duelLeft++ không giới hạn). */
+  function normalizeDuel(v) {
+    if (v && typeof v === "object") {
+      return { date: (typeof v.date === "string") ? v.date : "",
+               left: Math.max(0, num(v.left, SYNC_SEED.duelLeft)) };
+    }
+    return { date: "", left: Math.max(0, num(v, SYNC_SEED.duelLeft)) };
+  }
+
+  /* Mốc lượt đấu lúc đồng bộ lần cuối — LUÔN là {ngày local của máy,
+   * lượt đấu local sau lần đồng bộ đó} (xem pushWallet/pullWallet).
+   * Máy cũ chưa có key này thì lấy số trong baseline ví (ngày ""). */
+  function duelBaselineGet() {
+    var b = lsGetJSON(LS_BASELINE_DUEL, null);
+    if (b) return normalizeDuel(b);
+    var w = baselineGet();
+    if (w) return { date: "", left: Math.max(0, num(w.duelLeft, SYNC_SEED.duelLeft)) };
+    return { date: "", left: SYNC_SEED.duelLeft };
+  }
+  function duelBaselineSet(s) { lsSetJSON(LS_BASELINE_DUEL, { date: s.date, left: s.left }); }
+
+  /* Sao chép duelLeft trên server nguyên trạng qua lần ghi ví không
+   * liên quan lượt đấu (clawback...): KHÔNG chạy qua num() vì giá trị
+   * mới là object {date, left} — num() sẽ phá nó thành số 3. */
+  function copyDuel(next, cur) {
+    if (cur && cur.duelLeft !== undefined) next.duelLeft = cur.duelLeft;
+  }
+
   function pushWallet(uid, firstSync) {
     var local = walletLocal();
     if (local === undefined) return Promise.resolve(false);
     var base = baselineGet();
     var deltas = {}, hasDelta = false;
-    WALLET_FIELDS.forEach(function (f) {
-      var ref = firstSync ? SYNC_SEED[f] : (base ? num(base[f], SYNC_SEED[f]) : SYNC_SEED[f]);
+    WALLET_NUM_FIELDS.forEach(function (f) {
+      // M-18: baseline đã tồn tại thì dùng nó làm mốc kể cả khi
+      // firstSync — lần thử migration trước đã push + set baseline
+      // rồi thì retry không được cộng lại (local - SEED).
+      var ref = base ? num(base[f], SYNC_SEED[f]) : SYNC_SEED[f];
       var d = num(local[f], SYNC_SEED[f]) - ref;
       deltas[f] = d;
       if (d !== 0) hasDelta = true;
     });
+    // M-19: trạng thái lượt đấu local (ngày + số lượt còn lại).
+    var day = duelDayLocal();
+    var localDuel = { date: day, left: Math.max(0, num(local.duelLeft, SYNC_SEED.duelLeft)) };
+    var baseDuel = duelBaselineGet();
+    var duelChanged = (baseDuel.date !== day) || (localDuel.left !== baseDuel.left);
     // Không có delta (local == baseline) thì khỏi ghi — lần đầu
     // (firstSync) vẫn ghi để tạo doc server khi chưa có.
-    if (!hasDelta && !firstSync) return Promise.resolve(false);
+    if (!hasDelta && !duelChanged && !firstSync) return Promise.resolve(false);
     var ref = coll(uid).doc("wallet");
     return cfg.db.runTransaction(function (tx) {
       return tx.get(ref).then(function (snap) {
@@ -23787,19 +23975,53 @@ function furiHTML(text){
         var next = {};
         if (!cur) {
           // Server chưa có: local là bản duy nhất (kể cả lần đầu).
-          WALLET_FIELDS.forEach(function (f) { next[f] = num(local[f], SYNC_SEED[f]); });
+          WALLET_NUM_FIELDS.forEach(function (f) { next[f] = num(local[f], SYNC_SEED[f]); });
+          next.duelLeft = { date: localDuel.date, left: localDuel.left };
         } else {
-          WALLET_FIELDS.forEach(function (f) {
+          WALLET_NUM_FIELDS.forEach(function (f) {
             next[f] = num(cur[f], SYNC_SEED[f]) + deltas[f];
           });
+          var serverDuel = normalizeDuel(cur.duelLeft);
+          if (serverDuel.date < day) {
+            // Server còn ngày cũ hơn ngày local: máy này chốt trạng
+            // thái lượt đấu của ngày hiện tại (reset 3 lượt hay đã
+            // dùng/mua thêm đều nằm trong localDuel.left).
+            next.duelLeft = { date: day, left: localDuel.left };
+          } else if (serverDuel.date === day) {
+            var left;
+            if (baseDuel.date === day) {
+              // Đã đồng bộ trong ngày: delta lượt đấu trong ngày.
+              left = serverDuel.left + (localDuel.left - baseDuel.left);
+            } else {
+              // Lần đầu đồng bộ trong ngày: trừ số lượt đã dùng (cộng
+              // số lượt đã mua) kể từ lúc reset 3 lượt vào trạng thái
+              // hôm nay của server — KHÔNG cộng cả 3 lượt reset (đó
+              // là lỗi M-19: 2 máy cùng reset thành 6).
+              left = serverDuel.left + (localDuel.left - SYNC_SEED.duelLeft);
+            }
+            next.duelLeft = { date: day, left: Math.max(0, left) };
+          } else if (baseDuel.date === day) {
+            // Server ở ngày mới hơn ngày local (máy này chưa rollover
+            // nhưng máy khác đã sang ngày mới): thay đổi kể từ lần
+            // đồng bộ gần nhất trong ngày local chỉ có thể là dùng/mua
+            // lượt thật (reset luôn đi kèm đổi ngày) nên delta an toàn.
+            next.duelLeft = { date: serverDuel.date,
+              left: Math.max(0, serverDuel.left + (localDuel.left - baseDuel.left)) };
+          } else {
+            // Server ở ngày mới hơn mà máy này chưa đồng bộ lần nào
+            // trong ngày local: ngày local đã qua, không đụng vào
+            // lượt đấu của ngày mới trên server.
+            copyDuel(next, cur);
+          }
         }
         tx.set(ref, wrap(next));
         return next;
       });
     }).then(function (next) {
       baselineSet(clone(local));
+      duelBaselineSet(localDuel);
       markSeen("wallet", now());
-      return hasDelta;
+      return hasDelta || duelChanged;
     });
   }
 
@@ -23809,10 +24031,24 @@ function furiHTML(text){
     return readServerDoc(uid, "wallet").then(function (env) {
       if (!env || !env.data) return false;
       var server = {};
-      WALLET_FIELDS.forEach(function (f) { server[f] = num(env.data[f], SYNC_SEED[f]); });
-      if (same(server, local)) { baselineSet(clone(server)); return false; }
+      WALLET_NUM_FIELDS.forEach(function (f) { server[f] = num(env.data[f], SYNC_SEED[f]); });
+      var day = duelDayLocal();
+      var serverDuel = normalizeDuel(env.data.duelLeft);
+      // M-19: chỉ kéo duelLeft khi server đang ở ngày hôm nay trở đi
+      // (ngày mới hơn = lệch đồng hồ máy khác, vẫn là trạng thái mới
+      // nhất). Server còn ngày cũ thì giữ lượt đấu local — app đã
+      // reset 3 lượt lúc sang ngày, kéo số cũ về sẽ cướp lượt.
+      var duelCurrent = serverDuel.date >= todayStr();
+      server.duelLeft = duelCurrent ? serverDuel.left : num(local.duelLeft, SYNC_SEED.duelLeft);
+      var newDuelBaseline = { date: day, left: server.duelLeft };
+      if (same(server, local)) {
+        baselineSet(clone(server));
+        duelBaselineSet(newDuelBaseline);
+        return false;
+      }
       cfg.adapter.writeLocal("wallet", clone(server));
       baselineSet(clone(server));
+      duelBaselineSet(newDuelBaseline);
       markSeen("wallet", env.updatedAt || 0);
       if (cfg.adapter.onMerged) cfg.adapter.onMerged("wallet");
       return true;
@@ -23820,16 +24056,21 @@ function furiHTML(text){
   }
 
   /* Điều chỉnh ví 1 lần (dùng cho clawback thưởng nhiệm vụ trùng): trừ cả
-   * server lẫn local + baseline cùng 1 lượng để không lệch nhau. */
+   * server lẫn local + baseline cùng 1 lượng để không lệch nhau.
+   * M-19: duelLeft sao chép nguyên trạng (object {date, left}), không
+   * chạy qua num(). M-20: syncMissions không còn gọi hàm này (clawback
+   * chạy trong transaction chung với missions) — giữ lại cho code khác
+   * dùng sau này. */
   function adjustWallet(uid, adj) {
     var ref = coll(uid).doc("wallet");
     return cfg.db.runTransaction(function (tx) {
       return tx.get(ref).then(function (snap) {
         if (!snap || !snap.exists) return null;
         var cur = snap.data().data || {}, next = {};
-        WALLET_FIELDS.forEach(function (f) {
+        WALLET_NUM_FIELDS.forEach(function (f) {
           next[f] = num(cur[f], SYNC_SEED[f]) + num(adj[f], 0);
         });
+        copyDuel(next, cur);
         tx.set(ref, wrap(next));
         return next;
       });
@@ -23923,7 +24164,21 @@ function furiHTML(text){
 
   /* ---------------- missions (có clawback) ---------------- */
 
+  /* M-20: reentrancy guard — listener (startListener) gọi pushDoc trực
+   * tiếp có thể chồng lên syncMissions của syncAll/schedulePush. Lần
+   * gọi sau nhận chung promise của lần đang chạy thay vì chạy 1 lần
+   * gộp/clawback thứ 2 trên cùng 1 máy. */
   function syncMissions(uid) {
+    if (missionsInFlight) return missionsInFlight;
+    missionsInFlight = syncMissionsRun(uid).then(function (r) {
+      missionsInFlight = null; return r;
+    }, function (err) {
+      missionsInFlight = null; throw err;
+    });
+    return missionsInFlight;
+  }
+
+  function syncMissionsRun(uid) {
     var localRaw = cfg.adapter.readLocal("missions");
     if (localRaw === undefined) return Promise.resolve("skip");
     var meta = metaGet("missions") || {};
@@ -23958,24 +24213,69 @@ function furiHTML(text){
         if (cfg.adapter.onMerged) cfg.adapter.onMerged("missions");
         return "pulled";
       }
-      var r = mergeMissions(localSync, serverData, now());
-      var merged = r.data;
-      var dups = r.duplicateGrants;
-      var serverChanged = !same(merged, serverData);
-      var localChanged = !same(merged, localSync);
-      var p = Promise.resolve();
-      if (dups.length) {
-        // Trừ lại 1 lần thưởng cho mỗi nhiệm vụ bị nhận trùng.
-        var adj = { tuvi: 0 };
-        dups.forEach(function (d) {
-          adj.tuvi -= (d.amount || 0);
-          merged.clawback[d.mission] = true;
+      // M-20: gộp + clawback NGUYÊN TỬ trong 1 transaction — đọc lại
+      // doc missions TƯƠI trong transaction (không dùng bản đọc ngoài),
+      // gộp lại, trừ ví và ghi marker clawback cùng 1 lần commit. Ghi
+      // lỗi -> cả ví lẫn marker đều không đổi, lần sau phát hiện lại
+      // và chỉ trừ 1 lần. 2 máy chạy chồng: transaction sau đọc được
+      // marker của transaction trước (Firestore retry khi conflict)
+      // nên mergeMissions lọc trùng đã trừ, không trừ lần 2.
+      var missionsRef = coll(uid).doc("missions");
+      var walletRef = coll(uid).doc("wallet");
+      return cfg.db.runTransaction(function (tx) {
+        return tx.get(missionsRef).then(function (msnap) {
+          var fresh = (msnap && msnap.exists) ? (msnap.data().data || null) : null;
+          var r = fresh ? mergeMissions(localSync, fresh, now())
+                        : { data: clone(localSync), duplicateGrants: [] };
+          var merged = r.data;
+          var dups = r.duplicateGrants;
+          var serverChanged = !same(merged, fresh);
+          if (!dups.length && !serverChanged) {
+            return { merged: merged, serverChanged: false, adj: null };
+          }
+          var adj = null;
+          if (dups.length) {
+            // Trừ lại 1 lần thưởng cho mỗi nhiệm vụ bị nhận trùng.
+            adj = { tuvi: 0 };
+            dups.forEach(function (d) {
+              adj.tuvi -= (d.amount || 0);
+              merged.clawback[d.mission] = true;
+            });
+            serverChanged = true;
+          }
+          if (!adj) {
+            tx.set(missionsRef, wrap(merged));
+            return { merged: merged, serverChanged: serverChanged, adj: null };
+          }
+          return tx.get(walletRef).then(function (wsnap) {
+            if (wsnap && wsnap.exists) {
+              var cur = wsnap.data().data || {}, next = {};
+              WALLET_NUM_FIELDS.forEach(function (f) {
+                next[f] = num(cur[f], SYNC_SEED[f]) + num(adj[f], 0);
+              });
+              copyDuel(next, cur); // M-19: giữ nguyên {date, left}
+              tx.set(walletRef, wrap(next));
+            } else {
+              adj = null; // không có ví server thì không trừ local (như adjustWallet cũ)
+            }
+            tx.set(missionsRef, wrap(merged));
+            return { merged: merged, serverChanged: serverChanged, adj: adj };
+          });
         });
-        serverChanged = true;
-        p = p.then(function () { return adjustWallet(uid, adj); });
-      }
-      if (serverChanged) p = p.then(function () { return writeServerDoc(uid, "missions", merged); });
-      return p.then(function () {
+      }).then(function (res) {
+        var merged = res.merged;
+        var serverChanged = res.serverChanged;
+        var localChanged = !same(merged, localSync);
+        // Clawback đã commit trên server -> trừ local + baseline cùng
+        // 1 lượng để không lệch (như adjustWallet cũ).
+        if (res.adj) {
+          var localW = walletLocal();
+          if (localW !== undefined) {
+            WALLET_FIELDS.forEach(function (f) { localW[f] = num(localW[f], 0) + num(res.adj[f], 0); });
+            cfg.adapter.writeLocal("wallet", localW);
+            baselineSet(clone(localW));
+          }
+        }
         if (serverChanged) markSeen("missions", now()); else markSeen("missions", serverAt);
         var applied = convert.missionsFromSync(merged, meta);
         // Lưu granted/clawback vào meta (không ghi xuống localStorage app).
@@ -24116,14 +24416,7 @@ function furiHTML(text){
     // plan30 làm mất cả jlpt/examBest/videos/settings/avatar/savedWords
     // + pullWallet). Bọc cả 2 đầu ví: lỗi đẩy ví không chặn các doc
     // khác, lỗi kéo ví không làm hỏng lần đồng bộ đã xong.
-    function guarded(fn, label) {
-      return function () {
-        return Promise.resolve().then(fn).catch(function (err) {
-          log("Đồng bộ lỗi (" + label + "): " + ((err && err.message) || err));
-          return "error";
-        });
-      };
-    }
+    // (guarded: hàm dùng chung ở mục tiện ích.)
     var chain = Promise.resolve();
     chain = chain.then(guarded(function () { return pushWallet(uid, false); }, "wallet-push"));
     chain = chain.then(guarded(function () { return syncMissions(uid); }, "missions"));
@@ -24144,9 +24437,11 @@ function furiHTML(text){
         // Server trống: đẩy toàn bộ local lên (ví: server = local).
         return pushWallet(uid, true).then(function () {
           var chain = Promise.resolve();
+          // M-18: catch từng doc (kiểu M-10) — 1 doc lỗi không abort
+          // migration; doc lỗi được lần syncAll sau gộp bù.
           FIXED_DOCS.forEach(function (id) {
             if (id === "wallet") return;
-            chain = chain.then(function () {
+            chain = chain.then(guarded(function () {
               var raw = cfg.adapter.readLocal(id);
               if (raw === undefined || raw == null) return;
               if (id === "missions") {
@@ -24173,12 +24468,12 @@ function furiHTML(text){
               return writeServerDoc(uid, id, data).then(function () {
                 metaSet(id, fromSyncData(id, data, meta2).meta);
               });
-            });
+            }, id));
           });
           var vocabKeys = [];
           try { vocabKeys = cfg.adapter.listVocabKeys() || []; } catch (_) {}
           vocabKeys.forEach(function (k) {
-            chain = chain.then(function () {
+            chain = chain.then(guarded(function () {
               var id = VOCAB_PREFIX + k;
               var raw = cfg.adapter.readLocal(id);
               if (raw === undefined || raw == null) return;
@@ -24186,24 +24481,26 @@ function furiHTML(text){
               return writeServerDoc(uid, id, vData).then(function () {
                 metaSet(id, clone(vData)); // A14: lưu meta như syncOne
               });
-            });
+            }, VOCAB_PREFIX + k));
           });
           return chain;
         }).then(function () { lsSet(LS_MIGRATED, "1"); return true; });
       }
-      // Server đã có: gộp lần đầu (ví dùng công thức local - SEED).
+      // Server đã có: gộp lần đầu (ví dùng công thức local - SEED,
+      // hoặc local - baseline nếu lần thử trước đã push — M-18).
       return pushWallet(uid, true).then(function () {
         return allDocIds(uid);
       }).then(function (allIds) {
+        // M-18: catch từng doc (kiểu M-10) như nhánh trên.
         var chain = Promise.resolve();
-        chain = chain.then(function () { return syncMissions(uid); });
+        chain = chain.then(guarded(function () { return syncMissions(uid); }, "missions"));
         allIds.forEach(function (id) {
           if (id === "wallet" || id === "missions") return;
-          if (id === "savedWords") { chain = chain.then(function () { return syncSavedWords(uid); }); }
-          else if (id === "videos") { chain = chain.then(function () { return syncVideos(uid); }); }
-          else { chain = chain.then(function () { return syncOne(uid, id); }); }
+          if (id === "savedWords") { chain = chain.then(guarded(function () { return syncSavedWords(uid); }, id)); }
+          else if (id === "videos") { chain = chain.then(guarded(function () { return syncVideos(uid); }, id)); }
+          else { chain = chain.then(guarded(function () { return syncOne(uid, id); }, id)); }
         });
-        return chain.then(function () { return pullWallet(uid); });
+        return chain.then(guarded(function () { return pullWallet(uid); }, "wallet-pull"));
       }).then(function () { lsSet(LS_MIGRATED, "1"); return true; });
     });
   }

@@ -175,7 +175,8 @@ IAP_JS = '''  /* ---------- Mua goi trong app (IAP, StoreKit 2) — SK-IAP-V1 --
     if(el) el.textContent = t || "";
   }
   /* Tai gia tu StoreKit + dien vao the goi. Goi moi lan mo trang goi;
-     cache sau lan thanh cong dau tien. */
+     chi cache khi StoreKit tra it nhat 1 san pham (M-5: cache rong [] la
+     truthy nen se ghim gia "--" ca phien neu cache ket qua rong). */
   var skIapProductsCache = null, skIapProductsLoading = false;
   function skIapRenderPrices(prods){
     var map = {};
@@ -197,13 +198,14 @@ IAP_JS = '''  /* ---------- Mua goi trong app (IAP, StoreKit 2) — SK-IAP-V1 --
       skShowPlansMsg("Chưa tải được bảng giá từ App Store — kiểm tra mạng rồi mở lại trang này nhé.");
       return;
     }
-    if(skIapProductsCache){ skIapRenderPrices(skIapProductsCache); return; }
+    if(skIapProductsCache && skIapProductsCache.length){ skIapRenderPrices(skIapProductsCache); return; }
     if(skIapProductsLoading) return;
     skIapProductsLoading = true;
     plugin.getProducts({productIdentifiers: [SK_IAP_PRODUCTS.year, SK_IAP_PRODUCTS.lifetime]}).then(function(res){
       skIapProductsLoading = false;
-      skIapProductsCache = (res && res.products) || [];
-      skIapRenderPrices(skIapProductsCache);
+      var prods = (res && res.products) || [];
+      if(prods.length) skIapProductsCache = prods; /* M-5: khong cache ket qua rong */
+      skIapRenderPrices(prods);
     }).catch(function(){
       skIapProductsLoading = false;
       if(yEl) yEl.textContent = "—";
@@ -462,6 +464,22 @@ def main():
         "I2b comment trang thanh toan")
     print("ap dung I2b comment trang thanh toan OK")
 
+    # I2c (M-1) — comment JS khoi Premium: "nut mua bi an... chi con huong
+    # dan mua bang chu" da sai sau transform #4 — nut mua hien va chay IAP.
+    s = replace_once(
+        s, "     Mua gói: trên mobile web (PWA) trang gói có nút mua mở trang thanh\n"
+           "     toán VietQR (xem khối \"THANH TOÁN VIETQR TRÊN MOBILE WEB\" bên dưới);\n"
+           "     trong app bọc Capacitor nút mua bị ẩn (App Store 3.1.1, IAP sau) và\n"
+           "     trang gói chỉ còn hướng dẫn mua bằng chữ (mở Chrome, đăng nhập tại\n"
+           "     sorakanji.com, mua bằng VND). */",
+        "     Mua gói: trên mobile web (PWA) trang gói có nút mua mở trang thanh\n"
+        "     toán VietQR (xem khối \"THANH TOÁN VIETQR TRÊN MOBILE WEB\" bên dưới);\n"
+        "     trong app bọc Capacitor nút mua hiện và chạy IAP (StoreKit 2,\n"
+        "     SK-IAP-V1); không còn hướng dẫn mua trên web trên trang gói\n"
+        "     (quy tắc App Store 3.1.1). */",
+        "I2c comment JS khoi Premium (M-1)")
+    print("ap dung I2c comment JS khoi Premium (M-1) OK")
+
     # I3 — xoa banner sale .pw-sale (gia sale web khong ap cho IAP) + rule
     # CSS cua no (chet sau khi xoa banner).
     s = replace_once(
@@ -663,7 +681,7 @@ def main():
     # Kiem tra sau: moi khoi chi xuat hien dung so lan du kien; gia hardcode
     # + huong dan mua web da bien mat khoi ban boc.
     checks = [
-        (MARKER, 6, "marker SK-IAP-V1 (module JS + 5 comment)"),
+        (MARKER, 7, "marker SK-IAP-V1 (module JS + 6 comment, ke ca I2c M-1)"),
         ('id="pwPriceYear"', 1, "span gia Nam"),
         ('id="pwPriceLifetime"', 1, "span gia Tron doi"),
         ('id="pwRestoreBtn"', 1, "nut Khoi phuc"),

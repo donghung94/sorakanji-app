@@ -72,7 +72,7 @@ jobs:
       - run: npx cap sync ios
 
       # Fail fast if the sync lost the wrapped code. Markers of the current
-      # wrap (live mobile + 3 transforms): native-auth helper, Firebase
+      # wrap (live mobile + 4 transforms): native-auth helper, Firebase
       # plugin bridge, BridgePlayer (YouTube error-153 bridge), githack
       # asset URLs. (The old check grepped svuNativeCaptions, which no
       # longer exists in the wrapped file.)
@@ -83,6 +83,7 @@ jobs:
           grep -q 'FirebaseAuthentication' "$F" && echo 'ok: Firebase plugin bridge'
           grep -q 'BRIDGEPLAYER-TRANSFORM' "$F" && echo 'ok: BridgePlayer'
           grep -q 'raw.githack.com/donghung94/beta2.0/main/mobile/assets/' "$F" && echo 'ok: githack asset URLs'
+          grep -q 'SK-IAP-V1' "$F" && echo 'ok: IAP markers'
 
       - name: Archive (unsigned)
         run: |
@@ -91,6 +92,14 @@ jobs:
             -destination 'generic/platform=iOS' \
             -archivePath build/App.xcarchive archive \
             CODE_SIGNING_ALLOWED=NO
+
+      # build-51 shipped without GoogleService-Info.plist in the .app
+      # (pbxproj did not reference it) — the build still succeeded and the
+      # failure was only found by inspecting the .ipa by hand. Fail here
+      # instead of shipping a build with broken native sign-in.
+      - name: Verify GoogleService-Info.plist in archive
+        run: |
+          test -f build/App.xcarchive/Products/Applications/App.app/GoogleService-Info.plist
 
       - name: Package IPA
         run: |

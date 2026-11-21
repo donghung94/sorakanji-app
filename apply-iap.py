@@ -36,8 +36,20 @@ PWA/WEB GIU NGUYEN 100%: transform chi ap len file boc; moi nhanh IAP deu
 nam sau skIsNativeApp(). Luong VietQR tren PWA khong doi (skStartCheckout
 van chay luong cu khi khong phai native).
 
-Idempotent: danh dau SK-IAP-V1 — chay lai tren file da transform thi khong
-doi gi. Anchor thieu -> FAIL LOUD (exit 1), khong bao gio bo qua lang le.
+M-2 (21/11) — an cac muc PWA trong app boc native (cung script nay, marker
+rieng SK-M2-PWA-HIDE): (a) banner #pwaBanner cuoi Home, (b) the Cai dat
+.pwacard "App tren dien thoai (PWA)", (c) cau tra loi Sora ve "cai app"
+(topic id "install" — an chip goi y + bo qua topic trong findTopic).
+An bang [hidden] (da co rule [hidden]{display:none !important} toan cuc)
++ gate skIsNativeApp() trong renderPWA() (chay o init). Sora chay trong
+IIFE rieng nen KHONG thay skIsNativeApp() cua script chinh — dung helper
+rieng soraIsNative() kiem tra window.Capacitor truc tiep (cung logic).
+M-2 chay TRUOC check idempotent IAP de ap duoc ca len file da co IAP
+(wrap v6 tro di); moi buoc co marker + post-check rieng.
+
+Idempotent: danh dau SK-IAP-V1 + SK-M2-PWA-HIDE — chay lai tren file da
+transform thi khong doi gi. Anchor thieu -> FAIL LOUD (exit 1), khong bao
+gio bo qua lang le.
 """
 import json
 import re
@@ -46,6 +58,7 @@ import sys
 from pathlib import Path
 
 MARKER = "SK-IAP-V1"
+M2_MARKER = "SK-M2-PWA-HIDE"
 
 IAP_CSS = (
     "  .pw-iap-row{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}\n"
@@ -395,6 +408,76 @@ def replace_once(s, old, new, name):
     return s.replace(old, new)
 
 
+def apply_m2(s):
+    """M-2: an banner PWA + the PWA + cau tra loi Sora "cai app" trong app boc
+    native. Chay doc lap voi I1–I16 (co marker + post-check rieng) de ap
+    duoc ca len file da transform IAP. Tra ve html da sua."""
+    # M2-1 — renderPWA(): banner hidden khi native; an the .pwacard o tab
+    # Cai dat + chip Sora "Cai app" (renderPWA chay o init nen an ngay tu
+    # lan mo app; [hidden] co rule !important toan cuc nen an duoc ca .card
+    # display:block va button .assistant-chip).
+    s = replace_once(
+        s,
+        '    var banner = document.getElementById("pwaBanner");\n'
+        "    if(banner) banner.hidden = installed;\n",
+        '    var banner = document.getElementById("pwaBanner");\n'
+        "    if(banner) banner.hidden = installed || skIsNativeApp(); /* M-2 (SK-M2-PWA-HIDE): an banner PWA trong app boc native */\n"
+        "    /* M-2: an the PWA o tab Cai dat + chip Sora \"Cai app\" trong app boc\n"
+        "       native — renderPWA() chay o init nen an ngay tu lan mo app. */\n"
+        "    if(skIsNativeApp()){\n"
+        '      var pwaCard = document.querySelector(".pwacard");\n'
+        "      if(pwaCard) pwaCard.hidden = true;\n"
+        "      var installChip = document.querySelector('[data-assistant-topic=\"install\"]');\n"
+        "      if(installChip) installChip.hidden = true;\n"
+        "    }\n",
+        "M2-1 renderPWA an banner + the PWA + chip Sora")
+    print("ap dung M2-1 renderPWA an banner + the PWA + chip Sora OK")
+
+    # M2-2a — helper soraIsNative() truoc findTopic(): Sora chay trong IIFE
+    # rieng nen KHONG thay skIsNativeApp() cua script chinh — kiem tra
+    # window.Capacitor truc tiep (cung logic 4 dieu kien nhu skIsNativeApp).
+    s = replace_once(
+        s,
+        "  function findTopic(query){\n",
+        "  /* M-2 (SK-M2-PWA-HIDE): Sora chay trong IIFE rieng nen khong thay\n"
+        "     skIsNativeApp() cua script chinh — kiem tra Capacitor truc tiep\n"
+        "     (cung logic nhu skIsNativeApp). */\n"
+        "  function soraIsNative(){\n"
+        "    try{\n"
+        "      return typeof window.Capacitor !== \"undefined\" && window.Capacitor &&\n"
+        "        typeof window.Capacitor.isNativePlatform === \"function\" &&\n"
+        "        !!window.Capacitor.isNativePlatform();\n"
+        "    }catch(_){ return false; }\n"
+        "  }\n"
+        "  function findTopic(query){\n",
+        "M2-2a helper soraIsNative")
+    print("ap dung M2-2a helper soraIsNative OK")
+
+    # M2-2b — findTopic(): bo qua topic "install" khi native (cau hoi go
+    # "cai app"/"offline" khong con tra ve huong dan cai PWA). Chip goi y
+    # da an o M2-1 nen khong bam duoc vao topic nay.
+    s = replace_once(
+        s,
+        "    TOPICS.forEach(function(t){\n      var score = 0;\n",
+        "    TOPICS.forEach(function(t){\n"
+        '      if(t.id === "install" && soraIsNative()) return; /* M-2 (SK-M2-PWA-HIDE): an cau tra loi cai app trong app boc native */\n'
+        "      var score = 0;\n",
+        "M2-2b findTopic bo topic install khi native")
+    print("ap dung M2-2b findTopic bo topic install khi native OK")
+
+    for sub, want, name in [
+        (M2_MARKER, 3, "marker SK-M2-PWA-HIDE (renderPWA + soraIsNative + findTopic)"),
+        ("function soraIsNative()", 1, "soraIsNative"),
+        ("pwaCard.hidden = true", 1, "an the .pwacard"),
+        ("installChip.hidden = true", 1, "an chip Sora install"),
+        ('t.id === "install" && soraIsNative()', 1, "findTopic bo topic install"),
+    ]:
+        n = s.count(sub)
+        if n != want:
+            fail("kiem tra sau M-2: %s xuat hien %d lan (can %d)" % (name, n, want))
+    return s
+
+
 def node_check_inline(html):
     """node --check tung script inline (bo qua script co src)."""
     scripts = re.findall(r"<script>(.*?)</script>", html, re.S)
@@ -416,11 +499,21 @@ def main():
     if not target.exists():
         fail("khong thay file: %s" % target)
     s = target.read_text(encoding="utf-8")
-    if MARKER in s:
-        print("%s: da transform (tim thay %s), khong doi gi" % (target, MARKER))
-        return
     if 'id="pwPlansOverlay"' not in s or "skCheckoutInit" not in s:
         fail("%s: khong phai mobile/index.html (thieu pwPlansOverlay/skCheckoutInit)" % target)
+    # M-2 chay TRUOC check IAP de ap duoc ca len file da co IAP (wrap v6+).
+    m2_applied = False
+    if M2_MARKER not in s:
+        s = apply_m2(s)
+        m2_applied = True
+    if MARKER in s:
+        if m2_applied:
+            node_check_inline(s)
+            target.write_text(s, encoding="utf-8")
+            print("%s: da co IAP, chi ap dung M-2 (%d byte)" % (target, len(s.encode("utf-8"))))
+        else:
+            print("%s: da transform (tim thay %s + %s), khong doi gi" % (target, MARKER, M2_MARKER))
+        return
 
     # I1 — CSS khoi IAP (hang nut Khoi phuc/Quan ly + ghi chu).
     s = replace_once(
@@ -682,6 +775,7 @@ def main():
     # + huong dan mua web da bien mat khoi ban boc.
     checks = [
         (MARKER, 7, "marker SK-IAP-V1 (module JS + 6 comment, ke ca I2c M-1)"),
+        (M2_MARKER, 3, "marker SK-M2-PWA-HIDE (renderPWA + soraIsNative + findTopic)"),
         ('id="pwPriceYear"', 1, "span gia Nam"),
         ('id="pwPriceLifetime"', 1, "span gia Tron doi"),
         ('id="pwRestoreBtn"', 1, "nut Khoi phuc"),

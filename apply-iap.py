@@ -12,8 +12,8 @@ Giai phap (theo ~/workspace/store-track/iap-plan/PLAN.md §5): plugin
 @capgo/native-purchases v8.x (StoreKit 2, iOS 15+), lazy-load qua
 window.Capacitor.registerPlugin("NativePurchases") — KHONG can bundle them JS.
 
-  - Trang goi (#pwPlansOverlay): gia lay tu StoreKit (priceString) — BO gia
-    hardcode 360.000đ/799.000đ/999.000đ/2.499.000đ + dong "Tiet kiem" + banner
+  - Trang goi (#pwPlansOverlay): gia ban lay tu StoreKit (priceString) — BO gia
+    hardcode 360.000đ/449.000đ/999.000đ/1.199.000đ + dong "Tiet kiem" + banner
     sale .pw-sale; nut Mua hien lai trong app boc (IAP), khoi .pw-guide doi
     thanh nut Khoi phuc giao dich (bat buoc theo App Store Review Guidelines)
     + Quan ly goi (manageSubscriptions) + ghi chu tu gia han.
@@ -90,7 +90,7 @@ IAP_JS = '''  /* ---------- Mua goi trong app (IAP, StoreKit 2) — SK-IAP-V1 --
      SAU KHI server appleVerifyPurchase xac thuc xong (autoFinishTransactions
      = false trong capacitor.config + configure() + autoAcknowledgePurchases
      = false tung lan mua). Premium mo qua listener onSnapshot co san.
-     Gia hien thi lay tu StoreKit (priceString) — KHONG hardcode gia. */
+     Gia BAN hien thi lay tu StoreKit (priceString) — KHONG hardcode gia ban. Gia GOC gach ngang la gia tri hien thi co dinh (~528k Nam / ~1.411k Tron doi = gia goc web / 0.85, lam tron); StoreKit khong co gia goc. */
   var SK_IAP_PRODUCTS = {
     year: "com.sorakanji.app.premium.year",
     lifetime: "com.sorakanji.app.premium.lifetime"
@@ -585,12 +585,14 @@ def main():
         "I3 xoa CSS pw-sale")
     print("ap dung I3 xoa banner sale OK")
 
-    # I4 — gia Goi Nam: bo hardcode + gia goc + "Tiet kiem" -> placeholder
-    # StoreKit dien vao; dong "~990d/ngay" (suy ra tu gia web) -> tu gia han.
+    # I4 — gia Goi Nam: bo hardcode web + "Tiet kiem" -> placeholder
+    # StoreKit dien gia ban vao; giu span pw-old voi gia goc app co dinh
+    # 528.000d (gia goc web / 0.85, lam tron); dong "~990d/ngay" (suy ra tu
+    # gia web) -> tu gia han.
     s = replace_once(
-        s, '            <span class="pw-price">360.000đ</span><span class="pw-old">799.000đ</span>\n'
-           '            <span class="pw-save">Tiết kiệm 439.000đ</span>',
-        '            <span class="pw-price" id="pwPriceYear">…</span>',
+        s, '            <span class="pw-price">360.000đ</span><span class="pw-old">449.000đ</span>\n'
+           '            <span class="pw-save">Tiết kiệm 89.000đ</span>',
+        '            <span class="pw-price" id="pwPriceYear">…</span><span class="pw-old">528.000đ</span>',
         "I4 gia Goi Nam")
     s = replace_once(
         s, '<div class="pw-per">Chỉ ~990đ/ngày</div>',
@@ -598,11 +600,11 @@ def main():
         "I4 dong gia/ngay")
     print("ap dung I4 gia Goi Nam OK")
 
-    # I5 — gia Goi Tron doi: tuong tu.
+    # I5 — gia Goi Tron doi: tuong tu (gia goc app co dinh 1.411.000d).
     s = replace_once(
-        s, '            <span class="pw-price">999.000đ</span><span class="pw-old">2.499.000đ</span>\n'
-           '            <span class="pw-save">Tiết kiệm 1.500.000đ</span>',
-        '            <span class="pw-price" id="pwPriceLifetime">…</span>',
+        s, '            <span class="pw-price">999.000đ</span><span class="pw-old">1.199.000đ</span>\n'
+           '            <span class="pw-save">Tiết kiệm 200.000đ</span>',
+        '            <span class="pw-price" id="pwPriceLifetime">…</span><span class="pw-old">1.411.000đ</span>',
         "I5 gia Goi Tron doi")
     print("ap dung I5 gia Goi Tron doi OK")
 
@@ -636,7 +638,7 @@ def main():
     # I9 — Sora FAQ topic premium: viet lai cho native (khong gia hardcode,
     # khong huong dan mua web). 2 doan con lien tuc — thay tung doan.
     s = replace_once(
-        s, 'Gói Premium mở toàn bộ nội dung N3–N1, ôn thi Tokutei xây dựng, xem trọn vẹn mọi video Shadowing và tạo video không giới hạn: Gói Năm 360.000đ (giá gốc 799.000đ, dùng 12 tháng), Gói Trọn đời 999.000đ (giá gốc 2.499.000đ, dùng vĩnh viễn). Giá giảm đến 06/12/2026.',
+        s, 'Gói Premium mở toàn bộ nội dung N3–N1, ôn thi Tokutei xây dựng, xem trọn vẹn mọi video Shadowing và tạo video không giới hạn: Gói Năm 360.000đ (giá gốc 449.000đ, dùng 12 tháng), Gói Trọn đời 999.000đ (giá gốc 1.199.000đ, dùng vĩnh viễn). Giá giảm đến 06/12/2026.',
         'Gói Premium mở toàn bộ nội dung N3–N1, ôn thi Tokutei xây dựng, xem trọn vẹn mọi video Shadowing và tạo video không giới hạn: Gói Năm (dùng 12 tháng) và Gói Trọn đời (dùng vĩnh viễn) — giá hiển thị trên trang gói.',
         "I9 Sora FAQ gia")
     s = replace_once(
@@ -761,7 +763,7 @@ def main():
            "     chữ; IAP sẽ thay thế sau theo plan riêng. Phát hiện native qua\n"
            "     window.Capacitor, an toàn khi Capacitor vắng mặt (PWA).\n"
            "     Giá: Năm 360.000đ, Trọn đời 999.000đ (giảm đến 06/12/2026, sau đó về\n"
-           "     giá gốc 799.000đ / 2.499.000đ — cùng luật skPrice của web). */",
+           "     giá gốc 449.000đ / 1.199.000đ — cùng luật skPrice của web). */",
         "     GATE NATIVE (App Store 3.1.1): trong app bọc Capacitor, KHÔNG hiện\n"
         "     luồng VietQR — nút mua chạy IAP (StoreKit, SK-IAP-V1) thay cho VietQR.\n"
         "     Phát hiện native qua window.Capacitor, an toàn khi Capacitor vắng mặt\n"
@@ -792,9 +794,13 @@ def main():
         ("function skIapHandleTransaction(", 1, "skIapHandleTransaction"),
         ("pw-sale", 0, "banner sale + CSS cua no (da xoa)"),
         ("360.000đ", 0, "gia hardcode 360.000d"),
-        ("799.000đ", 0, "gia hardcode 799.000d"),
+        ("799.000đ", 0, "gia hardcode 799.000d (cu)"),
+        ("449.000đ", 0, "gia goc web Nam khong duoc lo vao ban boc"),
         ("999.000đ", 0, "gia hardcode 999.000d"),
-        ("2.499.000đ", 0, "gia hardcode 2.499.000d"),
+        ("2.499.000đ", 0, "gia hardcode 2.499.000d (cu)"),
+        ("1.199.000đ", 0, "gia goc web Tron doi khong duoc lo vao ban boc"),
+        ("528.000đ", 1, "gia goc hien thi app Nam"),
+        ("1.411.000đ", 1, "gia goc hien thi app Tron doi"),
         ("Tiết kiệm ", 0, "dong Tiet kiem"),
         ("Chỉ ~990đ/ngày", 0, "dong gia/ngay"),
         ("Cách mua gói", 0, "tieu de huong dan mua web"),
